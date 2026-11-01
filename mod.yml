@@ -1,10 +1,11 @@
-title: KH1FM Sora Restore Check v3
+title: KH1FM Aqua Motion Test v2
 game: kh1
-originalAuthor: User-supplied Sora assets; diagnostic package by OpenAI Codex
+originalAuthor: Raven Fang concept; conversion by OpenAI Codex
 description: >-
-  Restores the two previously supplied Sora movesets without conversion.
-  Checks save loading and native movement after the failed Aqua tests.
-  Disable Aqua v1/v2 and Nine Styles / Dual Wield during this check.
+  Revised standalone Aqua body-motion test. Corrected MSET terminal boundaries
+  and Guard request; original idle, walking, running and Glide retained.
+  Disable Aqua v1, Nine Styles / Dual Wield v52 and other moveset replacements.
+  Runtime stability requires an isolated test.
 assets:
 - name: xa_ex_0010.mset
   method: copy
