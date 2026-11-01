@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "assets": [
+    {
+      "name": "xa_ex_0010.mset",
+      "sha256": "553d336e63ab8b37df68a4d5c0489ca5f36c17090875edc79ef16e1645ec5314"
+    },
+    {
+      "name": "xa_ex_0010_he.mset",
+      "sha256": "e870e5b8130954f520aa59248f24b0c580438a5f9c868725b51fd1c8c432e561"
+    }
+  ]
+}

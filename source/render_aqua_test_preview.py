@@ -14,8 +14,8 @@ ROLES={'center':0,'koshi':3,'hara':76,'mune':78,'kubi':147,'atama':151,
 SKELETON={'bones':[{'name':name,'index':index} for name,index in ROLES.items()]}
 
 
-def render(workspace):
-    package=workspace/'KH1FM_Aqua_Motion_Test_v1';out=package/'preview';out.mkdir(exist_ok=True)
+def render(workspace,package_name='KH1FM_Aqua_Motion_Test_v2'):
+    package=workspace/package_name;out=package/'preview';out.mkdir(exist_ok=True)
     model=read_model((workspace/'sora_source/Custom Movesets KH1/xa_ex_0010.mdls').read_bytes())
     bank=read_mset((package/'assets/xa_ex_0010.mset').read_bytes())
     report=json.loads((package/'validation.json').read_text())
@@ -34,7 +34,7 @@ def render(workspace):
             draw_pose(draw,body,SKELETON,(340+col*192,top+144),scale=.78)
             draw.text((290+col*192,top+155),f'{t:.1f}',font=font(12),fill='#acb9ce')
     image.save(out/'motion_sheet.png')
-    selected=[('Ground combo','ground first'),('Air combo','air first'),('Guard body','Guard startup'),('Cartwheel','Dodge Roll / Cartwheel')]
+    selected=[('Ground combo','ground first'),('Air combo','air first'),('Guard body','Guard'),('Cartwheel','Dodge Roll / Cartwheel')]
     frames=[]
     for progress in np.linspace(0,1,40):
         img=Image.new('RGB',(1120,410),'#111926');d=ImageDraw.Draw(img)
@@ -54,4 +54,6 @@ def render(workspace):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--workspace',type=Path,default=Path(__file__).resolve().parents[1])
-    render(parser.parse_args().workspace.resolve())
+    parser.add_argument('--package-name',default='KH1FM_Aqua_Motion_Test_v2')
+    args=parser.parse_args()
+    render(args.workspace.resolve(),args.package_name)

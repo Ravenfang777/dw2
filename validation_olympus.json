@@ -8,17 +8,21 @@
   "secondary_rest_joints": 171,
   "unit_ratio": 80.23470324782181,
   "mapped_bind_matrix_error": 1.695142401558769e-06,
-  "replaced_motions": 11,
-  "preserved_other_motions": 69,
-  "verified_integer_frame_poses": 498,
+  "replaced_motions": 9,
+  "preserved_other_motions": 71,
+  "verified_integer_frame_poses": 470,
   "max_position_roundtrip_error": 0.1253873706111861,
   "max_basis_roundtrip_error": 0.0024744414166687906,
   "max_mapped_segment_length_error": 2.4382251656595612e-14,
   "action_maps_byte_identical": true,
-  "verified_between_frame_poses": 1461,
+  "verified_between_frame_poses": 1383,
   "max_between_frame_position_error": 0.19091586098734759,
   "max_between_frame_basis_error": 0.0052606381974828476,
   "max_native_root_helper_matrix_error": 0.0,
+  "terminal_boundary_padding_preserved": true,
+  "terminal_section_boundary": 2757872,
+  "motion_bank_empty_end_boundaries_relocated": true,
+  "native_idle_walk_run_and_glide_preserved": true,
   "native_helper_keys_and_prefixes_preserved": true,
   "game_runtime_tested": false,
   "rotation_transfer": "Native donor helper hierarchy and constant per-bone bind calibration; world-rotation-copy flags",
@@ -27,7 +31,7 @@
     "sora_mset": "9be6c17dfe6d87cd6da910aaabc359f58af121ee8462e4c8a63076e4d6a37797",
     "aqua_pam": "a17ef18580487feeb1b2d50195faf3afce6bd7d33e940f9d3bb9818dbd0f8d60"
   },
-  "output_sha256": "741bc361485253c8f41a56bae267ef9248924ecc73f424541d4f3d4f52befa82",
+  "output_sha256": "e870e5b8130954f520aa59248f24b0c580438a5f9c868725b51fd1c8c432e561",
   "motions": [
     {
       "action": "ground first",
@@ -226,89 +230,21 @@
       "retargeted_bytes": 100288
     },
     {
-      "action": "Guard startup",
-      "request": 188,
+      "action": "Guard",
+      "request": 212,
       "donor": "400",
-      "source_range": [
-        0.0,
-        20.0
-      ],
-      "request_hex": "0xBC",
-      "native_slot": 53,
-      "native_frames": 10,
+      "request_hex": "0xD4",
+      "native_slot": 72,
+      "native_frames": 54,
       "native_fps": 60.0,
       "source_frames": 40,
       "source_fps": 30,
-      "body_height_samples": 39,
-      "max_checked_height_interpolation_error": 0.10904201838665983,
+      "body_height_samples": 145,
+      "max_checked_height_interpolation_error": 0.10317261218081342,
       "anatomical_support_height": true,
       "sample_source_range": [
         0.0,
-        20.0
-      ],
-      "dynamic_body_tracks": 1,
-      "helper_tracks": 91,
-      "native_helper_records": 11,
-      "retarget_helper_records": 70,
-      "source_helper_joints": 23,
-      "calibration_helpers": 35,
-      "constants": 2637,
-      "shared_keys": 1802,
-      "original_bytes": 13776,
-      "retargeted_bytes": 68272
-    },
-    {
-      "action": "Guard hold",
-      "request": 189,
-      "donor": "400",
-      "source_range": [
-        20.0,
-        20.0
-      ],
-      "request_hex": "0xBD",
-      "native_slot": 54,
-      "native_frames": 60,
-      "native_fps": 60.0,
-      "source_frames": 40,
-      "source_fps": 30,
-      "body_height_samples": 119,
-      "max_checked_height_interpolation_error": 0.0,
-      "anatomical_support_height": true,
-      "sample_source_range": [
-        20.0,
-        20.0
-      ],
-      "dynamic_body_tracks": 0,
-      "helper_tracks": 28,
-      "native_helper_records": 11,
-      "retarget_helper_records": 70,
-      "source_helper_joints": 23,
-      "calibration_helpers": 35,
-      "constants": 2637,
-      "shared_keys": 834,
-      "original_bytes": 17168,
-      "retargeted_bytes": 55776
-    },
-    {
-      "action": "Guard recovery",
-      "request": 190,
-      "donor": "400",
-      "source_range": [
-        20.0,
-        0.0
-      ],
-      "request_hex": "0xBE",
-      "native_slot": 55,
-      "native_frames": 12,
-      "native_fps": 60.0,
-      "source_frames": 40,
-      "source_fps": 30,
-      "body_height_samples": 43,
-      "max_checked_height_interpolation_error": 0.0662412168078248,
-      "anatomical_support_height": true,
-      "sample_source_range": [
-        20.0,
-        0.0
+        39.0
       ],
       "dynamic_body_tracks": 1,
       "helper_tracks": 87,
@@ -317,9 +253,9 @@
       "source_helper_joints": 23,
       "calibration_helpers": 35,
       "constants": 2637,
-      "shared_keys": 1840,
-      "original_bytes": 14256,
-      "retargeted_bytes": 69328
+      "shared_keys": 3361,
+      "original_bytes": 22688,
+      "retargeted_bytes": 102096
     },
     {
       "action": "Dodge Roll / Cartwheel",

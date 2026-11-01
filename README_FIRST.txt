@@ -1,47 +1,58 @@
-KH1FM AQUA MOTION TEST v1
-For your KH1 Final Mix PC / Steam setup with OpenKH Panacea
+KH1FM AQUA MOTION TEST v2 - REVISED ISOLATION TEST
+KH1 Final Mix PC / Steam, OpenKH Panacea
 
-This is the first standalone body-animation test for the BBS Aqua concept.
-It targets ordinary Sora and his Olympus moveset. It is not yet a selectable
-style inside Nine Styles / Dual Wield v52.
+Use v2 in place of Aqua v1. This revision corrects a stale terminal boundary
+left when v1 enlarged the MSET, and assigns Barrier to the Guard motion
+observed in your log (request D4). v1 had incorrectly replaced Glide's
+startup/hold/recovery motions. v2 restores those from your original inputs.
 
-INSTALL AND TEST
-1. Fully exit the game. In OpenKH, select Kingdom Hearts 1 and import this ZIP.
-   If your manager requires a folder, extract it into a mod folder with mod.yml
-   directly inside that folder.
-2. Disable Nine Styles / Dual Wield v52 and other mods that replace Sora's
-   animations, character model, or combat motions. Enable Aqua Motion Test v1.
-3. Use Mod Loader > Build and Run. Load a save with Guard and Dodge Roll
-   equipped. No new ability or style selection is needed.
-4. Start in a normal-Sora world such as Traverse Town. Temporarily unequip
-   combo modifiers/extra finishers for the first basic-combo check. Try ground
-   attacks, aerial attacks, Guard, and Dodge Roll. Then check Olympus.
+Your returned log also shows Nine Styles / Dual Wield v52 actively replacing
+poses, with Master and Dark Riku selected. That prevents an isolated Aqua
+motion test. The log contains no exception or fault address establishing
+which component caused your crash. This revision is not game-tested here.
 
-IN THIS BUILD
-- Four basic ground-motion slots use Aqua clips 300 / 301 / 302 / 304.
-- Three basic air-motion slots use Aqua clips 305 / 306 / 309.
-- Guard startup/hold/recovery use phases of Aqua clip 400 (Barrier body).
-- Dodge Roll uses Aqua clip 009 (Cartwheel).
+EXACT TEST SETUP
+1. Fully exit Kingdom Hearts Final Mix.
+2. In OpenKH's KH1 mod list, disable Aqua v1, Nine Styles / Dual Wield v52,
+   and any other Sora model, moveset, or combat-animation replacements.
+   Import this ZIP and enable only Aqua Motion Test v2 among those mods.
+3. Choose Mod Loader > Build Only.
+4. Extract this ZIP somewhere writable and run CHECK_AQUA_TEST.cmd.
+   It uses the OpenKH folder from your log by default. If it cannot find that
+   folder, drag your OpenKH folder onto CHECK_AQUA_TEST.cmd instead.
+   It checks the compiled MSET hashes and looks for the old dual-wield DLL.
+   It also collects up to three recent KH1 Windows Application Error events.
+   It only reads your installation; it writes Aqua_Test_Check.txt beside itself.
+5. Resolve any FAIL entries. Then launch through OpenKH with the same mod list.
 
-The attack ordering is an initial mapping for gameplay review. Source motions
-are fitted to KH1's existing clip lengths. Damage, attack/contact events,
-movement distance, guard rules, and invulnerability timing remain native KH1.
-This means a new swing may need later tuning to match its damage window.
-Barrier's bubble effects and BBS-style defense behavior are not included.
-Halloween Town and Atlantica use other character/motion variants and are
-outside this build. No new DLL or save patch is included.
+TEST MOVEMENT FIRST
+Load a normal-Sora save in Traverse Town. Stand still, walk, run, stop and
+turn, then jump and land. These motion records retain your original Sora
+bytes in v2. Stop here if movement is wrong or the game crashes.
 
-PLEASE SEND BACK
-A short video of a ground combo, an air combo, Guard taking a hit, and several
-Cartwheels, with the world name and whether lock-on is active. Show any twisted
-limbs, floating feet, unusual travel, missing animations, or crash. This build
-has passed offline decoding/pose checks; it has not been run in the game here.
+If that passes, equip Guard and Dodge Roll, temporarily unequip extra combo
+modifiers/finishers, and test one ground attack, the full ground combo, air
+attacks, Guard, and Cartwheel. Check Olympus after ordinary Sora is stable.
+
+RETURN
+Aqua_Test_Check.txt plus whether the crash happens during basic movement or
+only after a particular attack/Guard/Cartwheel. A short video will help judge
+the idle and poses. Run the checker again after a crash to capture any new
+Windows error event. An old kh1-dual-wield.log is not an Aqua-load confirmation:
+this standalone asset test includes no DLL and does not create that log.
+
+CONTENTS AND LIMITS
+- Ground: donor clips 300 / 301 / 302 / 304; initial attack ordering.
+- Air: donor clips 305 / 306 / 309.
+- Guard: donor clip 400, fitted to the native Guard clip duration.
+- Dodge Roll: donor clip 009 (Cartwheel).
+Normal Sora and Olympus movesets are included. Native KH1 damage, timing,
+actor travel and defensive rules remain. Barrier's bubble/360-degree BBS
+behavior, a selectable style in v52, Halloween and Atlantica are not included.
 
 TO REMOVE
-Disable this mod, fully close the game, and rebuild in OpenKH. Re-enable v52
-when you want to return to that separate test.
+Disable v2, fully exit, and rebuild. The checker does not change game files.
 
-DETAILS
-validation.json and validation_olympus.json record structural and pose checks.
-preview/ contains offline skeleton diagnostics, not gameplay footage.
-source/ contains the converter, tests, rebuild instructions, and format credits.
+validation.json and validation_olympus.json describe offline checks; they
+cannot establish runtime loader behavior or fix the cause of an unidentified
+crash. source/ includes the converter, regression checks and credits.

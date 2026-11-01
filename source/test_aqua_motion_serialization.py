@@ -8,7 +8,7 @@ from scipy.spatial.transform import Rotation
 
 import build_aqua_motion_test as builder
 from bbs_source_inspector import Animation,Channel
-from kh1_motion_source import Model,parse_motion,pose,helper_pose
+from kh1_motion_source import Model,parse_motion,pose,helper_pose,relocate_mset,u32
 
 
 def fixture():
@@ -72,6 +72,35 @@ class HelperSerializationTests(unittest.TestCase):
         _,motion,model,cal,animation,_=convert(.5,.5)
         self.assertTrue(np.array_equal(pose(model,motion,0),pose(model,motion,1)))
         self.assertEqual(len(motion.helper_channels),2)  # original and its root-output duplicate
+
+
+class ContainerRelocationTests(unittest.TestCase):
+    def fixture(self):
+        source=bytearray(312)
+        struct.pack_into('<5I',source,0,3,128,256,288,320)
+        bank=bytearray(128);bank[:4]=b'MMTN'
+        struct.pack_into('<I',bank,4,120)
+        for at in [0x10,0x18]:struct.pack_into('<I',bank,at,128)
+        source[128:256]=bank
+        source[256:]=bytes(range(56))
+        meta={'start':128,'end':256,'bank':bytes(bank),'sections':[128,256,288],'terminal':320}
+        return bytes(source),meta
+
+    def test_terminal_boundary_moves_with_counted_sections(self):
+        source,meta=self.fixture();out=relocate_mset(source,meta,meta['bank']+bytes(64))
+        self.assertEqual([u32(out,4+i*4) for i in range(4)],[128,320,352,384])
+        self.assertEqual(u32(out,16)-len(out),8)
+        self.assertEqual(out[320:],source[256:])
+
+    def test_empty_bank_end_boundaries_follow_growth(self):
+        source,meta=self.fixture();out=relocate_mset(source,meta,meta['bank']+bytes(64))
+        self.assertEqual(u32(out,128+0x10),192)
+        self.assertEqual(u32(out,128+0x18),192)
+        self.assertEqual(u32(out,128+4),184)
+
+    def test_unchanged_bank_roundtrips_every_byte(self):
+        source,meta=self.fixture()
+        self.assertEqual(relocate_mset(source,meta,meta['bank']),source)
 
 
 if __name__=='__main__':unittest.main()

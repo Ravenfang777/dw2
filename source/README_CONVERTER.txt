@@ -22,7 +22,7 @@ From the directory containing these Python scripts:
     python build_aqua_motion_test.py --workspace "D:/AquaWork" --source-name xa_ex_0010_he.mset --report-name validation_olympus.json
     python render_aqua_test_preview.py --workspace "D:/AquaWork"
 
-The builder writes assets and validation into AquaWork/KH1FM_Aqua_Motion_Test_v1.
+The builder writes assets and validation into AquaWork/KH1FM_Aqua_Motion_Test_v2.
 The renderer requires the completed normal validation report.
 
 IMPLEMENTATION
@@ -74,3 +74,11 @@ https://openkh.dev/tool/GUI.ModsManager/creatingMods.html
 The source-code licenses do not grant rights to Kingdom Hearts game assets.
 This private prototype contains modified assets derived from the user's
 provided files. Kingdom Hearts belongs to Disney / Square Enix.
+
+V2 REPAIR NOTES
+The full counted-section array includes a terminal aligned boundary. V2 moves
+that boundary as well as the section starts and preserves the original pad
+length. Empty MMTN end boundaries also follow bank growth. The parser now
+rejects the invalid v1 terminal boundaries. Native action-row evidence in the
+returned log identifies Guard as request D4; BC/BD/BE Glide motions are kept.
+The file corrections do not prove the cause of the reported runtime crash.

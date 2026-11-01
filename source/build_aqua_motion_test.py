@@ -11,10 +11,11 @@ from scipy.spatial.transform import Rotation
 
 from bbs_source_inspector import read_pmo_skeleton,read_pam
 from render_aqua_diagnostics import bind_components,worlds
-from kh1_motion_source import read_model,read_mset,parse_motion,pose,helper_pose,matrix,u32
+from kh1_motion_source import read_model,read_mset,relocate_mset,parse_motion,pose,helper_pose,matrix,u32
 
 
 ROOT=Path(__file__).resolve().parents[1]
+PACKAGE_NAME='KH1FM_Aqua_Motion_Test_v2'
 
 # Anatomical roles, measured against both received skeletons. Sora's duplicate
 # frame/corrective joints share the donor role; his lengths and widths stay his.
@@ -39,9 +40,9 @@ PLAN=[
     {'action':'air first','request':0xCC,'donor':'305'},
     {'action':'air second','request':0xCD,'donor':'306'},
     {'action':'air finisher','request':0xCE,'donor':'309'},
-    {'action':'Guard startup','request':0xBC,'donor':'400','source_range':[0.,20.]},
-    {'action':'Guard hold','request':0xBD,'donor':'400','source_range':[20.,20.]},
-    {'action':'Guard recovery','request':0xBE,'donor':'400','source_range':[20.,0.]},
+    # Observed native action-row witness: row 0x3D starts request 0xD4.
+    # 0xBC..0xBE are Glide phases and must retain their original motions.
+    {'action':'Guard','request':0xD4,'donor':'400'},
     {'action':'Dodge Roll / Cartwheel','request':0xDC,'donor':'009'},
 ]
 
@@ -333,13 +334,9 @@ def build(source_name='xa_ex_0010.mset', report_name='validation.json'):
                         'body_height_samples':len(times),'max_checked_height_interpolation_error':height_error,
                         'anatomical_support_height':not plan['action'].startswith('air '),
                         'sample_source_range':[lo,hi],**metrics})
-    struct.pack_into('<I',new_bank,4,len(new_bank)-8)
-    delta=len(new_bank)-len(bank['bank'])
-    if delta%16:raise AssertionError('Section relocation must preserve 16-byte alignment')
-    result=bytearray(source_mset[:bank['start']]+new_bank+source_mset[bank['end']:])
-    for i,offset in enumerate(bank['sections']):
-        if offset>=bank['end']:struct.pack_into('<I',result,4+i*4,offset+delta)
+    result=relocate_mset(source_mset,bank,new_bank)
     verified=read_mset(bytes(result))
+    assert verified['terminal']-len(result)==bank['terminal']-len(source_mset)
     targets=set(desired_by_slot)
     preserved=0
     for slot,(before,after) in enumerate(zip(bank['motions'],verified['motions'])):
@@ -389,7 +386,7 @@ def build(source_name='xa_ex_0010.mset', report_name='validation.json'):
         raise AssertionError(('Serialized pose does not match retarget',worst_position,worst_basis,worst_length))
     if worst_between_position>2.0 or worst_between_basis>0.01 or worst_root>1e-7:
         raise AssertionError(('Subframe pose or native root movement changed',worst_between_position,worst_between_basis,worst_root))
-    out=ROOT/'KH1FM_Aqua_Motion_Test_v1';(out/'assets').mkdir(parents=True,exist_ok=True)
+    out=ROOT/PACKAGE_NAME;(out/'assets').mkdir(parents=True,exist_ok=True)
     (out/'assets'/source_name).write_bytes(result)
     validation={'passed':True,'asset_name':source_name,'source_core_bank':'data/bbs/arc/pc/p02base.arc::p02ex_001.pam',
                 'source_model_bones':54,'target_model_bones':293,'mapped_target_joints':len(MAPPING),
@@ -402,6 +399,10 @@ def build(source_name='xa_ex_0010.mset', report_name='validation.json'):
                 'max_between_frame_position_error':worst_between_position,
                 'max_between_frame_basis_error':worst_between_basis,
                 'max_native_root_helper_matrix_error':worst_root,
+                'terminal_boundary_padding_preserved':True,
+                'terminal_section_boundary':verified['terminal'],
+                'motion_bank_empty_end_boundaries_relocated':True,
+                'native_idle_walk_run_and_glide_preserved':True,
                 'native_helper_keys_and_prefixes_preserved':True,'game_runtime_tested':False,
                 'rotation_transfer':'Native donor helper hierarchy and constant per-bone bind calibration; world-rotation-copy flags',
                 'source_sha256':{'sora_model':hashlib.sha256(model_data).hexdigest(),
@@ -418,8 +419,10 @@ if __name__=='__main__':
     import argparse
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--workspace',type=Path,default=ROOT)
+    parser.add_argument('--package-name',default=PACKAGE_NAME)
     parser.add_argument('--source-name',default='xa_ex_0010.mset',choices=['xa_ex_0010.mset','xa_ex_0010_he.mset'])
     parser.add_argument('--report-name',default='validation.json')
     args=parser.parse_args()
     ROOT=args.workspace.resolve()
+    PACKAGE_NAME=args.package_name
     build(args.source_name,args.report_name)

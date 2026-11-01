@@ -183,6 +183,11 @@ def read_mset(data):
     count=u32(data,0)
     if not 0<count<=64:raise ValueError('Bad MSET section count')
     sections=[u32(data,4+i*4) for i in range(count)]
+    # Received KH1 containers carry a terminal aligned boundary after the
+    # counted section starts. It can exceed the physical file by pad bytes.
+    terminal=u32(data,4+count*4)
+    if terminal<sections[-1] or terminal>len(data)+127:
+        raise ValueError('Invalid KH1 terminal section boundary')
     for start in sections:
         if start>=len(data):continue
         end=min([v for v in sections if start<v<=len(data)]+[len(data)])
@@ -205,9 +210,27 @@ def read_mset(data):
                     if off<table_end or off>=len(bank):raise ValueError('Bad native motion offset')
                     stop=min([v for v in offsets if v is not None and v>off]+[len(bank)])
                     motions.append(parse_motion(bank[off:stop]))
-                return {'start':at,'end':next_,'bank':bank,'motions':motions,'offsets':offsets,'sections':sections}
+                return {'start':at,'end':next_,'bank':bank,'motions':motions,'offsets':offsets,
+                        'sections':sections,'terminal':terminal}
             at=next_
     raise ValueError('No bounded MMTN chunk')
+
+
+def relocate_mset(source,bank,new_bank):
+    """Replace a bounded MMTN chunk and relocate every outer boundary."""
+    delta=len(new_bank)-len(bank['bank'])
+    if delta%16:raise ValueError('MMTN relocation must retain 16-byte alignment')
+    new_bank=bytearray(new_bank)
+    struct.pack_into('<I',new_bank,4,len(new_bank)-8)
+    # These received-bank empty-subtable boundaries point to the bank end.
+    # Empty tables still remain empty when the bank is enlarged.
+    for pointer_at in [0x10,0x18]:
+        if u32(bank['bank'],pointer_at)==len(bank['bank']) and u32(bank['bank'],pointer_at-4)==0:
+            struct.pack_into('<I',new_bank,pointer_at,len(new_bank))
+    result=bytearray(source[:bank['start']]+new_bank+source[bank['end']:])
+    for i,offset in enumerate(bank['sections']+[bank['terminal']]):
+        if offset>=bank['end']:struct.pack_into('<I',result,4+i*4,offset+delta)
+    return bytes(result)
 
 
 def apply(channels,local,frame):
