@@ -1,0 +1,17 @@
+title: KH1FM Aqua Motion Test v1
+game: kh1
+originalAuthor: Raven Fang concept; conversion by OpenAI Codex
+description: >-
+  Experimental Aqua ground and aerial attack motions, Barrier body pose,
+  and Cartwheel on normal-world Sora and the Olympus moveset.
+  Native KH1 combat rules and timings remain. Standalone test;
+  disable Nine Styles / Dual Wield v52 and other moveset replacements.
+assets:
+- name: xa_ex_0010.mset
+  method: copy
+  source:
+  - name: assets/xa_ex_0010.mset
+- name: xa_ex_0010_he.mset
+  method: copy
+  source:
+  - name: assets/xa_ex_0010_he.mset
