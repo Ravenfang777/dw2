@@ -1,70 +1,52 @@
-AQUA ABILITY TEST v5 - SOURCE AND REPRODUCTION
+AQUA V6 SOURCE AND OFFLINE VALIDATION
 
-This is a small freestanding C Windows x64 DLL with Panacea's OnInit/OnFrame
-exports. The game module is not a DirectInput proxy and installs no code hook.
-It calls the existing verified native pointer-handle function to register its
-encoded menu text. The table extension preserves the first 65 native records.
-Only the new id 117 record and its own ability-list byte are added.
+Normal installation needs only OpenKH/Panacea and the files selected by mod.yml.
+No Python/compiler is needed to play the test.
 
-The ability is named exactly aqua, costs 0 AP, and is first learned unequipped.
-It gates only the tested v4 curve payload. The asset files packaged for OpenKH
-are the original Sora/HE inputs, not permanently edited v4 files. The runtime
-controller admits a strict first-attack fingerprint, then toggles 60 existing
-wrist-key value/tangent triples. Unknown data is rejected before any curve write.
-The slot search admits only normal 98 or Olympus 60. Both original first-attack
-records are byte-identical in the user-provided inputs. Current attacks finish
-before a requested toggle. Cache readmission handles a record reloaded at the
-same address. Actor control, root, events, damage, timing and input stay native.
-
-REBUILD (LINUX)
-Use Python 3, GCC supporting x86-64 -mabi=ms, and GNU ld with i386pep support.
-From this source folder:
+CONTROLLER BUILD (Linux x64 development host)
+From this source directory:
+    python3 generate_data.py
     python3 build.py
     python3 test_runtime.py
-This produces kh1-aqua.dll and runtime_validation.json. No SDK, MinGW runtime,
-Rust runtime or external package download is required by this build workflow.
+Requires GCC, GNU ld with i386pep, and Python 3.12 standard library.
+The build converts GCC ELF relocations to AMD64 COFF, creates Kernel32 imports
+and links a Windows PE32+ DLL. The test maps that actual PE, relocates it and
+executes its exports with MS x64 ABI host stubs. This is not a Windows test.
+Copy the built kh1-aqua.dll into the package's dll folder only after checks pass.
 
-The build translates GCC's ELF64 RELA records to AMD64 COFF with correct implicit
-addends, writes standard Kernel32 import descriptors, and links a PE32+ DLL.
-A DIR64 relocation is included for ASLR. The module imports only Kernel32.
-The artifact has no C/C++ runtime dependency and no static constructors.
+The fixtures are complete original and converted native motion records. The
+header generator verifies that their lengths and 80-byte headers match, then
+emits exact before/after versions of five existing tables: flags, body channel
+descriptors, key records, body constants, and helper channel descriptors.
+The DLL admits all nine motions before writing any of them. Runtime header
+pointers may be relative or native encoded handles; their storage is retained.
 
-TEST LIMITS
-The actual emitted PE image is loaded at a different address in a Linux test
-host, its base relocations applied, and imports bound to Win64-ABI mocks.
-Tests execute its actual OnInit/OnFrame through a Win64 calling bridge.
-They check lowercase text encoding, native table preservation, initial unequip,
-normal and Olympus/encoded pointers, ON/OFF exact roundtrip to the tested v4
-bytes, safe full-list handling, rejection of foreign/schema changes, mid-attack
-deferral, record reload, removal, unsupported-build and old-DLL suspension.
-This is not a Windows loader, Panacea, or live-game test. Those remain pending.
-fixtures/ contains the original and v4 user-provided first-attack records used
-for exact-byte expectations. The provided aqua_data.h is sufficient to rebuild;
-generate_data.py documents the optional derivation from the earlier workspace.
+BODY RETARGET GENERATION (optional)
+Requires NumPy, SciPy and Pillow in addition to Python. The user-provided PMO,
+PAM and original Sora model are included under retargeting. The generator uses
+the original MSETs in ../assets as input, so it can rebuild from this package:
+    python3 retargeting/tools/build_aqua_compact_fk.py .
+Then rerun generate_data.py, build.py and test_runtime.py above.
+The retarget generator's pose sampling cache is reproducible and not packaged.
 
-VERIFIED STEAM ADDRESSES / PROVENANCE
-The build stamp 1721645006 and translations come from the user-provided v52
-source notes and binary Rva mapping. They agree with the user's bank-safe Lua
-controller and MP controller pointer addresses:
-  Sora actor pointer:     0x2537E48
-  Pointer-bank table:     0x2EE3980
-  Ability table pointer:  0x2D36D48
-  Pointer-to-handle:      0x38AD90
-  Loaded save pointer:    0x2868BA0
-  Fallback save block:    0x2DE9360 (ability bytes +0x44,48 slots)
-  Actor motion array:     +0x1D4 (encoded pointer)
-  Actor request:          +0x164
-Only the verified Steam build is admitted. No game executable, executable
-instruction dump, external process writer, or game code hook is included.
+The fit preserves all native counts and allocation sizes. Unused helper channels
+are neutralized and their existing key capacity is reused for FK body curves.
+The travel helper and every ancestor keep their original channels and keys.
+No helper hierarchy is expanded. Existing body channels/constants become the
+compact FK animation; unused body channels are harmless repeated unit-scale
+curves. Every original byte is available for restoration when aqua is off.
 
-CREDITS / LICENSING
-Ability-table layout, native text encoding and grant/removal behavior follow
-the user's v52 source/reference for JamesPMx / PM2CRAZY's KH2-Combat-in-KH1,
-upstream base 4adb946b642f6b9bd84f83d12ec16944e0638b8b,
-user derivative 54d18b73d6b4359476e97a887332fefcc44a5cdd:
-https://github.com/PM2CRAZY/KH2-Combat-in-KH1
-The C gate, GCC/COFF builder and test host were added by OpenAI Codex.
-licenses/ contains the upstream MIT OR Apache-2.0 license texts and the
-unchanged historical notice describing that separate upstream project.
-Game assets/fixtures are from the user's provided files. Kingdom Hearts is
-owned by Disney / Square Enix. Source licenses do not license the game assets.
+MAPPING AND LIMITS
+C8/C9/CA/CB -> Aqua 300/301/302/304 ground records.
+CC/CD/CE -> Aqua 305/306/309 aerial records.
+D4 -> Aqua 400 Barrier pose; DC -> Aqua 009 Cartwheel pose.
+These are visual action assignments using the native KH1 action map. KH1 still
+selects chain steps/finishers and supplies timing, hits, guard coverage, dodge
+travel/invincibility, sounds and effects. No BBS gameplay engine is included.
+The sparse fixed-capacity fit approximates donor rotations; curve_validation.json
+records measured errors. Neither the preview nor the mock host tests is a game
+execution. Live Windows/KH1 compatibility remains to be tested by the user.
+
+The runtime addresses and ability interface were derived from the user's v52
+reference and Lua controllers. Existing source/notice licenses are retained in
+licenses. The old kh1-dual-wield.dll is not included or required by this build.

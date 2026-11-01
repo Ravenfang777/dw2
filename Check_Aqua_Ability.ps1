@@ -5,9 +5,9 @@ function Note([string]$Text) {
     $lines.Add($Text)
     Write-Host $Text
 }
-$reportPath = Join-Path $PSScriptRoot 'Aqua_Ability_Check.txt'
+$reportPath = Join-Path $PSScriptRoot 'Aqua_Body_Combo_Check_v6.txt'
 try {
-    Note 'KH1FM AQUA ABILITY TEST v5 - READ-ONLY INSTALLATION AND CRASH CHECK'
+    Note 'KH1FM AQUA BODY COMBO TEST v6 - READ-ONLY INSTALLATION AND CRASH CHECK'
     Note ('Checked: ' + (Get-Date).ToString('o'))
     if ([string]::IsNullOrWhiteSpace($OpenKHRoot)) {
         $OpenKHRoot = Join-Path $env:USERPROFILE 'Desktop\Organized Projects\0 Kingdom Hearts Mods\openkh'
@@ -32,9 +32,9 @@ try {
             $hash = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()
             Note ($asset.name + ' SHA256=' + $hash)
             if ($hash -eq $asset.sha256) {
-                Note ('PASS: Aqua v5 asset matches: ' + $asset.name)
+                Note ('PASS: Aqua v6 asset matches: ' + $asset.name)
             } else {
-                Note ('FAIL: Compiled file does not match the Aqua v5 asset: ' + $asset.name)
+                Note ('FAIL: Compiled file does not match the Aqua v6 asset: ' + $asset.name)
                 $installOK = $false
             }
         }
@@ -78,5 +78,5 @@ try {
     $lines | Set-Content -LiteralPath $reportPath -Encoding UTF8
     Write-Host ''
     Write-Host ('Report saved: ' + $reportPath)
-    Write-Host 'Return Aqua_Ability_Check.txt with your test result.'
+    Write-Host 'Return Aqua_Body_Combo_Check_v6.txt with your test result.'
 }

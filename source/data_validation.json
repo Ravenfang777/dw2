@@ -1,54 +1,7 @@
 {
-  "source_sha256": "60d43ee9b2e2744fd4c2c62cdf98b1e412aa28e48f2e6c0201bcb04a932dbb7b",
-  "v4_sha256": "c7cf80bdbe57dcb99b9956e75e2c42dc7c50851dded5ac5755d8eee9c00ee944",
-  "patches": 60,
-  "normal_slot": 98,
-  "olympus_slot": 60,
-  "normal_and_olympus_first_attack_identical": true,
-  "unchanged_anchor_keys": [
-    880,
-    892,
-    893,
-    905,
-    906,
-    915,
-    946,
-    958,
-    959,
-    969,
-    970,
-    981
-  ],
-  "scalar_fingerprint": [
-    [
-      4,
-      48
-    ],
-    [
-      8,
-      1114636288
-    ],
-    [
-      16,
-      293
-    ],
-    [
-      24,
-      151
-    ],
-    [
-      32,
-      32
-    ],
-    [
-      44,
-      11
-    ],
-    [
-      52,
-      205
-    ]
-  ],
-  "key_bytes": 17584,
-  "motion_bytes": 22336
+  "passed": true,
+  "motions": 9,
+  "source": "Packaged full-byte original and Aqua fixtures",
+  "all_headers_and_motion_sizes_identical": true,
+  "all_changes_inside_existing_body_and_helper_tables": true
 }

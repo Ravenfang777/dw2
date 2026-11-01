@@ -1,41 +1,22 @@
 {
-  "ability_name": "aqua",
-  "ability_id": 117,
-  "AP": 0,
-  "initially_equipped": false,
-  "on_disk_msets_are_original": true,
-  "supported_test_banks": [
-    "normal Sora physical98",
-    "Olympus physical60"
-  ],
-  "motion_scope": "first ground attack arm paths from tested v4",
-  "dll_exports": [
-    "DllMain",
-    "OnInit",
-    "OnFrame"
-  ],
-  "test_results": {
-    "passed": true,
-    "tests": 11,
-    "failures": 0,
-    "errors": 0,
-    "executed_actual_pe_dll": true,
-    "win64_abi_and_imports_mocked": true,
-    "windows_or_game_executed": false
-  },
-  "runtime_game_tested": false,
-  "assets": [
-    {
-      "name": "xa_ex_0010.mset",
-      "sha256": "60d43ee9b2e2744fd4c2c62cdf98b1e412aa28e48f2e6c0201bcb04a932dbb7b"
-    },
-    {
-      "name": "xa_ex_0010_he.mset",
-      "sha256": "9be6c17dfe6d87cd6da910aaabc359f58af121ee8462e4c8a63076e4d6a37797"
-    },
-    {
-      "name": "dll/kh1-aqua.dll",
-      "sha256": "0657dcf9aa1cc2ccefe6f43a38e7b175f16eb71215840381afac4c3fea19577f"
-    }
+  "version": 6,
+  "offline_checks_passed": true,
+  "game_runtime_tested": false,
+  "motions": 9,
+  "pose_samples": 1853,
+  "max_pose_position_fit_error": 4.67360770204139,
+  "max_pose_basis_fit_error": 0.07578036140965153,
+  "max_segment_length_error": 8.171241461241152e-14,
+  "native_travel_error": 0.0,
+  "original_motion_lengths_headers_and_counts_preserved": true,
+  "helper_slots": 11,
+  "original_msets_on_disk": true,
+  "actual_pe_mock_tests": 16,
+  "dll_sha256": "a96e7b6acea00601981a81d3f0cd1f7f1190892fbc6c1d172f6cb30d17ef5f6a",
+  "previous_user_v5_log_confirms_ability_and_arm_gate_in_olympus": true,
+  "limitations": [
+    "Animation/body test; native KH1 combat rules and action selection retained",
+    "Barrier coverage/effects are not yet implemented",
+    "Windows/game execution of v6 pending"
   ]
 }

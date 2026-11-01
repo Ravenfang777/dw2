@@ -30,14 +30,22 @@ class Host:
         self.actor=self.buffer(bytes(0x800));w32(self.actor+0x374,1);w64(self.game+0x2537e48,self.actor)
         self.save=self.game+0x2de9360;put(self.save+4,b'\x64\x05\x0a');put(self.save+0x44,b'\x81\x82\x00')
         self.native_table=bytes((i*7)%256 for i in range(65*12));self.original_table=self.buffer(self.native_table);w64(self.game+0x2d36d48,self.original_table)
-        self.original_motion=(ROOT/'fixtures/original_C8.bin').read_bytes()
-        self.motion=self.buffer(self.original_motion);self.key_offset=r32(self.motion+40)
-        if encoded_fields:
-            for off in [20,28,36,40,48,56,60,68,76]:
-                value=r32(self.motion+off)
-                if value and value<len(self.original_motion):w32(self.motion+off,bridge.bridge_encode(self.motion+value))
-        self.runtime_original=C.string_at(self.motion,len(self.original_motion))
-        self.array=self.buffer(bytes(128*4));w32(self.array+slot*4,bridge.bridge_encode(self.motion));w32(self.actor+0x1d4,bridge.bridge_encode(self.array));self.slot=slot
+        self.records=json.loads((ROOT/'curve_validation.json').read_text())['motions']
+        self.array=self.buffer(bytes(128*4));self.slot=slot;self.motions={};self.runtime_originals={}
+        for record in self.records:
+            request=record['request'];data=(ROOT/f'fixtures/original_{request:02X}.bin').read_bytes()
+            motion=self.buffer(data);self.motions[request]=motion
+            if encoded_fields:
+                for off in [20,28,36,40,48,56,60,68,76]:
+                    value=r32(motion+off)
+                    if value and value<len(data):w32(motion+off,bridge.bridge_encode(motion+value))
+            self.runtime_originals[request]=C.string_at(motion,len(data))
+            physical=record['olympus_slot'] if slot==60 else record['normal_slot']
+            w32(self.array+physical*4,bridge.bridge_encode(motion))
+        self.motion=self.motions[0xc8];self.original_motion=(ROOT/'fixtures/original_C8.bin').read_bytes()
+        self.key_offset=struct.unpack_from('<I',self.original_motion,40)[0]
+        self.runtime_original=self.runtime_originals[0xc8]
+        w32(self.actor+0x1d4,bridge.bridge_encode(self.array))
         # Native pointer-to-handle helper uses the ABI of the existing reference.
         put(self.game+0x38ad90,b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeHandle'))+b'\xff\xe0')
         self.load_pe()
@@ -81,45 +89,85 @@ class Host:
     def equip(self,on):
         data=bytearray(self.abilities());i=next(i for i,v in enumerate(data) if v&127==117);data[i]=117 if on else 245;put(self.save+0x44,bytes(data))
     def decode(self,h):return r64(self.game+0x2ee3980+((h&0x7fffffff)>>25)*8)+(h&0x1ffffff)
-    def body(self):return C.string_at(self.motion,len(self.original_motion))
+    def body(self,request=0xc8):return C.string_at(self.motions[request],len(self.runtime_originals[request]))
+    def expected(self,request,on):
+        data=bytearray((ROOT/f'fixtures/{"aqua" if on else "original"}_{request:02X}.bin').read_bytes())
+        data[:80]=self.runtime_originals[request][:80]
+        return bytes(data)
+    def assert_all(self,test,on):
+        for r in self.records:test.assertEqual(self.body(r['request']),self.expected(r['request'],on),hex(r['request']))
 
 class RuntimeTests(unittest.TestCase):
-    def test_actual_pe_registers_lowercase_aqua_unequipped_and_preserves_native_table(self):
+    def test_actual_pe_registers_lowercase_aqua_off_preserving_all_native_abilities_and_bodies(self):
         h=Host();before=h.abilities();h.frame();table=r64(h.game+0x2d36d48)
         self.assertEqual(C.string_at(table,65*12),h.native_table)
         self.assertEqual(h.abilities()[:3],b'\x81\x82\xf5');self.assertEqual(h.abilities()[3:],before[3:])
         row=table+116*12;self.assertEqual(C.c_ubyte.from_address(row).value,0)
         self.assertEqual(C.string_at(h.decode(r32(row+4)),5),b'\x45\x55\x59\x45\x00')
-        self.assertEqual(h.body(),h.runtime_original)
-    def test_normal_gate_on_matches_tested_v4_and_off_restores_every_motion_byte(self):
-        h=Host();h.frame();h.equip(True);h.frame()
-        probe=(ROOT/'fixtures/v4_C8.bin').read_bytes()
-        self.assertEqual(h.body(),probe)
-        h.equip(False);h.frame();self.assertEqual(h.body(),h.runtime_original)
-    def test_olympus_slot_and_encoded_runtime_pointers_use_the_same_verified_gate(self):
-        h=Host(slot=60,encoded_fields=True);h.frame();h.equip(True);h.frame()
-        self.assertNotEqual(h.body(),h.runtime_original)
-        self.assertIn('AQUA bank physical slot=0x3C',bridge.bridge_log().decode())
-        h.equip(False);h.frame();self.assertEqual(h.body(),h.runtime_original)
-    def test_full_ability_list_does_not_evict_or_write_any_native_entry(self):
-        h=Host();put(h.save+0x44,bytes(range(1,49)));before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);self.assertEqual(h.body(),h.runtime_original)
-    def test_foreign_curve_change_rejects_all_motion_writes(self):
-        h=Host();h.frame();h.equip(True);w32(h.motion+h.key_offset+950*16+4,0x7f123456);before=h.body();h.frame();self.assertEqual(h.body(),before)
-    def test_switch_waits_for_current_first_attack_to_finish(self):
-        h=Host();h.frame();h.equip(True);w32(h.actor+0x164,0xc8);h.frame();self.assertEqual(h.body(),h.runtime_original)
-        w32(h.actor+0x164,0);h.frame();self.assertNotEqual(h.body(),h.runtime_original)
-    def test_uninstall_removes_only_aqua(self):
-        h=Host(remove=1);put(h.save+0x44,b'\x81\x75\x82\x00');h.frame();self.assertEqual(h.abilities()[:4],b'\x81\x82\x00\x00');self.assertEqual(h.body(),h.runtime_original)
-    def test_unknown_build_disables_before_ability_or_curve_writes(self):
-        h=Host(stamp=1);before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);self.assertEqual(h.body(),h.runtime_original);self.assertEqual(r64(h.game+0x2d36d48),h.original_table)
-    def test_old_styles_dll_suspends_standalone_controller(self):
-        h=Host(conflict=1);before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);self.assertEqual(h.body(),h.runtime_original)
-    def test_reloaded_record_at_same_addresses_is_readmitted_and_patched(self):
-        h=Host();h.frame();h.equip(True);h.frame();self.assertNotEqual(h.body(),h.runtime_original)
-        put(h.motion,h.runtime_original);h.frame();self.assertNotEqual(h.body(),h.runtime_original)
-        h.equip(False);h.frame();self.assertEqual(h.body(),h.runtime_original)
-    def test_changed_motion_schema_causes_no_partial_writes(self):
-        h=Host();h.frame();h.equip(True);w32(h.motion+44,70);before=h.body();h.frame();self.assertEqual(h.body(),before)
+        h.assert_all(self,False)
+    def test_normal_all_nine_on_exactly_match_fixtures_and_off_restores_every_byte(self):
+        h=Host();h.frame();h.equip(True);h.frame();h.assert_all(self,True)
+        h.equip(False);h.frame();h.assert_all(self,False)
+        self.assertIn('AQUA BANK: normal Sora',bridge.bridge_log().decode())
+    def test_olympus_all_nine_with_native_encoded_data_pointers_restore_exactly(self):
+        h=Host(slot=60,encoded_fields=True);h.frame();h.equip(True);h.frame();h.assert_all(self,True)
+        self.assertIn('AQUA BANK: Olympus',bridge.bridge_log().decode())
+        h.equip(False);h.frame();h.assert_all(self,False)
+    def test_full_list_does_not_evict_or_write_a_native_entry_or_any_body(self):
+        h=Host();put(h.save+0x44,bytes(range(1,49)));before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);h.assert_all(self,False)
+    def test_foreign_change_in_last_record_blocks_writes_to_every_record(self):
+        h=Host();h.frame();h.equip(True);p=h.motions[0xdc];offset=r32(p+40);w32(p+offset+4,0x7f123456)
+        before={r['request']:h.body(r['request']) for r in h.records};h.frame()
+        for request,data in before.items():self.assertEqual(h.body(request),data)
+        log=bridge.bridge_log().decode();self.assertIn('AQUA rejected request=0xDC',log);self.assertIn('AQUA admission stage=0x38',log)
+    def test_unknown_schema_in_late_record_blocks_earlier_record_writes(self):
+        h=Host();h.frame();h.equip(True);w32(h.motions[0xce]+44,70);before={r['request']:h.body(r['request']) for r in h.records};h.frame()
+        for request,data in before.items():self.assertEqual(h.body(request),data)
+    def test_every_tested_action_defers_a_body_switch_until_finished(self):
+        h=Host();h.frame();h.equip(True)
+        for action in [0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xd4,0xdc]:
+            w32(h.actor+0x164,action);h.frame();h.assert_all(self,False)
+        w32(h.actor+0x164,0);h.frame();h.assert_all(self,True)
+    def test_unequip_during_guard_waits_then_restores_all_original_data(self):
+        h=Host();h.frame();h.equip(True);h.frame();h.equip(False);w32(h.actor+0x164,0xd4);h.frame();h.assert_all(self,True)
+        w32(h.actor+0x164,0);h.frame();h.assert_all(self,False)
+    def test_uninstall_removes_only_aqua_and_restores_previously_patched_bodies(self):
+        h=Host(remove=1);put(h.save+0x44,b'\x81\x75\x82\x00')
+        for r in h.records:put(h.motions[r['request']],h.expected(r['request'],True))
+        h.frame();self.assertEqual(h.abilities()[:4],b'\x81\x82\x00\x00');h.assert_all(self,False)
+    def test_unknown_build_never_writes_abilities_table_or_bodies(self):
+        h=Host(stamp=1);before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);h.assert_all(self,False);self.assertEqual(r64(h.game+0x2d36d48),h.original_table)
+    def test_legacy_styles_dll_suspends_controller_without_any_changes(self):
+        h=Host(conflict=1);before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);h.assert_all(self,False)
+    def test_a_single_record_reloaded_at_same_address_is_readmitted_with_others_still_patched(self):
+        h=Host();h.frame();h.equip(True);h.frame();h.assert_all(self,True)
+        put(h.motions[0xcd],h.runtime_originals[0xcd]);h.frame();h.assert_all(self,True)
+        h.equip(False);h.frame();h.assert_all(self,False)
+    def test_live_bank_switch_then_unequip_restores_each_bank_when_active(self):
+        h=Host();h.frame();h.equip(True);h.frame();h.assert_all(self,True)
+        old_motions,old_originals,old_array=h.motions,h.runtime_originals,h.array
+        old_bytes={request:h.body(request) for request in old_motions}
+        h.motions={};h.runtime_originals={};h.array=h.buffer(bytes(128*4))
+        for r in h.records:
+            request=r['request'];data=(ROOT/f'fixtures/original_{request:02X}.bin').read_bytes();p=h.buffer(data)
+            for off in [20,28,36,40,48,56,60,68,76]:
+                value=r32(p+off)
+                if value and value<len(data):w32(p+off,bridge.bridge_encode(p+value))
+            h.motions[request]=p;h.runtime_originals[request]=C.string_at(p,len(data));w32(h.array+r['olympus_slot']*4,bridge.bridge_encode(p))
+        w32(h.actor+0x1d4,bridge.bridge_encode(h.array));h.frame();h.assert_all(self,True)
+        h.equip(False);h.frame();h.assert_all(self,False)
+        for request,data in old_bytes.items():self.assertEqual(C.string_at(old_motions[request],len(data)),data)
+        h.motions,h.runtime_originals,h.array=old_motions,old_originals,old_array
+        w32(h.actor+0x1d4,bridge.bridge_encode(old_array));h.frame();h.assert_all(self,False)
+    def test_invalid_data_pointer_cannot_cause_writes_to_other_valid_records(self):
+        h=Host();h.frame();h.equip(True);w32(h.motions[0xcd]+40,0)
+        before={r['request']:h.body(r['request']) for r in h.records};h.frame()
+        for request,data in before.items():self.assertEqual(h.body(request),data)
+    def test_preexisting_equipped_aqua_is_respected_without_duplicate_grant(self):
+        h=Host();put(h.save+0x44,b'\x81\x75\x82\x00');before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);h.assert_all(self,True)
+    def test_unloaded_actor_cannot_trigger_stale_curve_writes(self):
+        h=Host();h.frame();h.equip(True);h.frame();w64(h.game+0x2537e48,0);h.equip(False);h.frame();h.assert_all(self,True)
+        w64(h.game+0x2537e48,h.actor);h.frame();h.assert_all(self,False)
 
 if __name__=='__main__':
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(RuntimeTests))

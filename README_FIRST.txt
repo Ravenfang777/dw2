@@ -1,60 +1,77 @@
-KH1FM AQUA ABILITY TEST v5
+KH1FM AQUA BODY COMBO TEST v6
 Steam Global / OpenKH Panacea
 
-NEW ABILITY: aqua
-AP cost: 0. Initially unequipped. Ability id 117 (reserved for this test).
+ABILITY: aqua (lowercase), 0 AP, ability id117
+Newly learned aqua starts unequipped. An existing saved selection is respected.
 
-Equip aqua to enable the tested v4 arm motion on the FIRST ordinary ground
-attack. Unequip it to restore the original Sora curves. The current test still
-changes only that attack's arm paths; it is not yet the full Aqua moveset.
+WHAT V6 TESTS
+Equipping aqua switches nine original animation records to retargeted Aqua
+body poses: four ground attack records, three aerial attack records, the
+Barrier pose on Guard, and the Cartwheel pose on Dodge Roll. Unequipping aqua
+restores all nine original records. Normal Sora and Olympus are supported.
 
-BOTH SAVE LOCATIONS
-The Olympus clip uses the same original attack data as the normal Sora clip.
-V4 deliberately left the Olympus file untouched, explaining the world-specific
-result. V5 recognizes both physical slots: 98 normal Sora and 60 Olympus.
-Your town recording is Traverse Town. Both locations are supported by this probe.
+This is a body-animation test. KH1 still chooses the combo sequence and uses
+its original hitboxes, attack/guard timing, defensive coverage, invincibility,
+travel distance, effects and sounds. Barrier is not yet a 360-degree defense
+or a new visual effect. Cartwheel uses the native Dodge Roll movement/window.
 
-INSTALL
+INSTALL AND TEST
 1. Fully close the game.
-2. Disable Aqua v1, v2, Sora Restore Check v3, Aqua Arm Probe v4, and Nine Styles /
-   Dual Wield v52. Keep other moveset/model/combat-animation replacements off.
-3. Import this ZIP and enable Aqua Ability Test v5. Use Build and Run.
-4. Load a save. Open Sora's Abilities menu and find aqua. It starts UNEQUIPPED.
-5. Test a normal first ground attack with aqua OFF, then ON, then OFF again.
-   Unequip attack replacements such as Slapshot/Sliding Dash/Vortex for this
-   comparison. Equip/unequip while standing idle, and let each single swing end.
-6. Repeat the comparison in the Coliseum save and the Traverse Town save.
+2. Disable Aqua v1-v5, Sora Restore Check v3, and Nine Styles / Dual Wield v52.
+   Keep other Sora model/moveset replacements disabled for this comparison.
+3. Import this ZIP into OpenKH. Enable Aqua Body Combo Test v6. Build and Run.
+4. Load the Olympus save. Leave Guard and Dodge Roll equipped. Turn off attack
+   replacements such as Slapshot, Sliding Dash, Vortex, Stun Impact, Ripple
+   Drive, Zantetsuken and Hurricane Blast for the ordinary-combo test.
+5. With aqua OFF, try a ground combo, a jumping aerial combo, Guard and Dodge
+   Roll. Equip aqua while idle and repeat. Unequip it and repeat once more.
+   Allow each action to finish before opening the menu. Use Combo Master if
+   needed to continue combos while striking empty air.
+6. Repeat on the Traverse Town save. Test walking/running/jumping between
+   actions, and loading the other save from a fresh launch.
 
 RETURN
-A short OFF/ON/OFF video and kh1-aqua.log. The DLL creates that log beside:
-    C:\Steam\steamapps\common\KINGDOM HEARTS -HD 1.5+2.5 ReMIX-\KINGDOM HEARTS FINAL MIX.exe
-The log records ability registration/selection, admitted bank slots, and native
-attack requests. If aqua is missing, return the log before changing other mods.
-CHECK_ABILITY.cmd can confirm the built files if needed; run it after extracting
-this ZIP and after an OpenKH build. It writes Aqua_Ability_Check.txt beside itself.
+A short OFF / ON / OFF video and the NEW kh1-aqua.log from beside the game EXE.
+The first log line must say AQUA BODY COMBO TEST v6. A successful application
+logs AQUA MOTIONS ENABLED and the bank name. Turning aqua off logs AQUA MOTIONS
+DISABLED. If the body change does not appear, return the log as it stands.
 
-WHAT THIS BUILD PRESERVES
-The original Sora MSET files are copied on disk. The DLL checks the live attack
-record before changing the same 60 existing wrist key records as v4. It restores
-the original data when aqua is off. All native headers, helper counts, timings,
-root movement, events and other animations stay original. No HP/MP/damage,
-input, actor position, or extra weapon is written. Full ground/air combos,
-Barrier and Cartwheel will follow after the named ability and gate are verified.
+The log is created beside:
+C:\Steam\steamapps\common\KINGDOM HEARTS -HD 1.5+2.5 ReMIX-\KINGDOM HEARTS FINAL MIX.exe
 
-SAVE / REMOVE THE TEST ABILITY
-The ability is inserted into the loaded ability list. Saving in-game can retain
-that custom ability byte. For a temporary test, you can compare without saving.
-If you saved with aqua and want to remove this module:
-- Put the supplied REMOVE_AQUA_kh1-aqua.ini beside the game EXE, renamed exactly
-  kh1-aqua.ini. Leave this v5 mod enabled for that removal run.
-- Restart, load each save you want cleaned, and check the log for AQUA ABILITY
-  REMOVED. Save in-game to retain removal. Only ability id117 is removed.
-- Exit, remove the INI, disable v5 in OpenKH and rebuild.
+If needed, extract the ZIP and run CHECK_ABILITY.cmd after the OpenKH build.
+It writes Aqua_Body_Combo_Check_v6.txt beside itself and checks file hashes.
+
+HOW THIS DIFFERS FROM V1/V2
+The files installed on disk remain your original Sora and Olympus MSETs.
+The DLL changes data only after all nine live records pass verification.
+The motion records keep their original sizes, headers, channel counts, bone
+count and eleven helper slots. No expanded motion bank or helper hierarchy
+is allocated. The compact FK body reuses existing key capacity; the original
+travel helper and its ancestor tracks remain intact. Unknown/changed data
+causes the controller to wait without writing body data.
+
+The body poses are fitted to this fixed capacity, so they approximate the
+donor motion. The offline preview is a skeleton check, not a game recording.
+Idle, walk, run and other action records are not replaced. Other Sora forms
+or costume animation banks have not been admitted by this test.
+
+SAVE / REMOVE AQUA
+You can compare without saving. Saving in-game may retain ability id117.
+To remove aqua from a save later:
+- Put REMOVE_AQUA_kh1-aqua.ini beside the game EXE, renamed kh1-aqua.ini.
+- Leave v6 enabled, restart, load each save to clean and check for AQUA ABILITY
+  REMOVED in the log. Save in-game to retain the removal.
+- Exit, remove the INI, disable v6 and rebuild.
+Only ability id117 is removed; the other abilities keep their order.
 
 VALIDATION
-The actual compiled DLL was executed in an offline Win64 ABI mock host. The
-checks cover registration, both banks, reversible curve writes, rejection of
-unknown/changed data, full ability-list handling and removal. This was not a
-Windows or game execution. The in-game menu and live gate still need your test.
-The module accepts only the verified Steam executable timestamp; it logs and
-leaves gameplay unchanged on a different build or if v52 is loaded.
+Nine fitted motion records passed 1,853 quarter-frame pose checks. Motion
+sizes and headers match their originals; native travel error was zero in
+the offline evaluator. Sixteen checks executed the actual compiled PE DLL
+in a mock Win64 host, including both banks, exact reversible data changes,
+mid-action deferral, bank reloads, uninstall, and rejection of foreign data.
+These checks do not execute Windows or KH1. V6 still needs your game test.
+
+The v5 log you supplied confirms the aqua ability and its first-attack arm
+gate worked in Olympus. It does not establish v6 body-animation compatibility.
