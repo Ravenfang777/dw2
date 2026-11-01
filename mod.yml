@@ -1,12 +1,16 @@
-title: KH1FM Aqua Arm Probe v4
+title: KH1FM Aqua Ability Test v5
 game: kh1
-originalAuthor: Raven Fang concept; diagnostic conversion by OpenAI Codex
+originalAuthor: Raven Fang concept; ability gate by OpenAI Codex
 description: >-
-  One ground attack's arm paths use Aqua source motion 300.
-  Original file layout, helper count, torso, legs and native movement retained.
-  A diagnostic probe, not the full Aqua moveset. Disable Aqua v1/v2,
-  Sora Restore Check v3, and Nine Styles / Dual Wield for this test.
+  Adds the 0 AP test ability aqua, initially unequipped. Equipping it gates
+  the tested first-ground-attack arm curves on normal Sora and Olympus.
+  Unequipping restores the original curves. Requires Panacea, Steam Global.
+  Standalone test: disable earlier Aqua packages and Nine Styles / Dual Wield.
 assets:
+- name: dll/kh1-aqua.dll
+  method: copy
+  source:
+  - name: dll/kh1-aqua.dll
 - name: xa_ex_0010.mset
   method: copy
   source:

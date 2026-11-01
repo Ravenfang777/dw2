@@ -1,13 +1,17 @@
 {
-  "version": 4,
+  "version": 5,
   "assets": [
     {
       "name": "xa_ex_0010.mset",
-      "sha256": "c7cf80bdbe57dcb99b9956e75e2c42dc7c50851dded5ac5755d8eee9c00ee944"
+      "sha256": "60d43ee9b2e2744fd4c2c62cdf98b1e412aa28e48f2e6c0201bcb04a932dbb7b"
     },
     {
       "name": "xa_ex_0010_he.mset",
       "sha256": "9be6c17dfe6d87cd6da910aaabc359f58af121ee8462e4c8a63076e4d6a37797"
+    },
+    {
+      "name": "dll/kh1-aqua.dll",
+      "sha256": "0657dcf9aa1cc2ccefe6f43a38e7b175f16eb71215840381afac4c3fea19577f"
     }
   ]
 }

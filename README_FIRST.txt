@@ -1,44 +1,60 @@
-KH1FM AQUA ARM PROBE v4
-One ground attack; original native file layout
+KH1FM AQUA ABILITY TEST v5
+Steam Global / OpenKH Panacea
 
-The restore check confirmed your original movesets load and that the old
-dual-wield DLL was absent from the compiled mod folder. Aqua v2 still failed.
-Do not use v1 or v2 for this test.
+NEW ABILITY: aqua
+AP cost: 0. Initially unequipped. Ability id 117 (reserved for this test).
 
-V4 changes the existing wrist-goal curves of the FIRST ordinary ground attack
-using Aqua clip 300. The native arm/shoulder solver follows those goals.
-The torso, legs, root movement, clip durations, event tables, animation offsets,
-helper count and file length remain original. This does not attempt the full
-Aqua combo, Guard or Cartwheel. Expect an altered first swing on native Sora.
+Equip aqua to enable the tested v4 arm motion on the FIRST ordinary ground
+attack. Unequip it to restore the original Sora curves. The current test still
+changes only that attack's arm paths; it is not yet the full Aqua moveset.
 
-EXACT SETUP
+BOTH SAVE LOCATIONS
+The Olympus clip uses the same original attack data as the normal Sora clip.
+V4 deliberately left the Olympus file untouched, explaining the world-specific
+result. V5 recognizes both physical slots: 98 normal Sora and 60 Olympus.
+Your town recording is Traverse Town. Both locations are supported by this probe.
+
+INSTALL
 1. Fully close the game.
-2. Disable Aqua v1, Aqua v2, Sora Restore Check v3, Nine Styles / Dual Wield v52,
-   and other Sora moveset/model/combat-animation replacements.
-3. Import this ZIP, enable Aqua Arm Probe v4, and choose Build Only.
-4. Extract this ZIP somewhere writable and run CHECK_PROBE.cmd. It checks
-   the compiled file hashes and creates Aqua_Arm_Probe_Check.txt beside itself.
-5. Launch through OpenKH with that same mod list. Load the save that failed
-   under v2. In Traverse Town, stand still, walk, stop and jump.
-6. If loading and movement are normal, unequip attack replacements such as
-   Slapshot/Sliding Dash/Vortex for the test, then tap Attack ONCE in empty
-   space and let it finish. Repeat a few single taps. A full combo is not needed.
+2. Disable Aqua v1, v2, Sora Restore Check v3, Aqua Arm Probe v4, and Nine Styles /
+   Dual Wield v52. Keep other moveset/model/combat-animation replacements off.
+3. Import this ZIP and enable Aqua Ability Test v5. Use Build and Run.
+4. Load a save. Open Sora's Abilities menu and find aqua. It starts UNEQUIPPED.
+5. Test a normal first ground attack with aqua OFF, then ON, then OFF again.
+   Unequip attack replacements such as Slapshot/Sliding Dash/Vortex for this
+   comparison. Equip/unequip while standing idle, and let each single swing end.
+6. Repeat the comparison in the Coliseum save and the Traverse Town save.
 
 RETURN
-Aqua_Arm_Probe_Check.txt plus:
-- Did the usual save load, including a second fresh launch?
-- Were idle/walking/jumping normal?
-- Did one ground attack complete normally? A short video of that attack helps.
-If loading or movement fails, return that result before testing attacks.
+A short OFF/ON/OFF video and kh1-aqua.log. The DLL creates that log beside:
+    C:\Steam\steamapps\common\KINGDOM HEARTS -HD 1.5+2.5 ReMIX-\KINGDOM HEARTS FINAL MIX.exe
+The log records ability registration/selection, admitted bank slots, and native
+attack requests. If aqua is missing, return the log before changing other mods.
+CHECK_ABILITY.cmd can confirm the built files if needed; run it after extracting
+this ZIP and after an OpenKH build. It writes Aqua_Ability_Check.txt beside itself.
 
-SCOPE
-Only normal-world Sora's first-ground-attack arm curves are changed. The
-Olympus MSET is an exact copy of your original file, to remove any stale v2
-Olympus replacement. No new ability, selectable style, DLL, or save change.
-The checker also collects available Windows Application Error events; it does
-not read or modify save files. No Windows runtime testing was done here.
+WHAT THIS BUILD PRESERVES
+The original Sora MSET files are copied on disk. The DLL checks the live attack
+record before changing the same 60 existing wrist key records as v4. It restores
+the original data when aqua is off. All native headers, helper counts, timings,
+root movement, events and other animations stay original. No HP/MP/damage,
+input, actor position, or extra weapon is written. Full ground/air combos,
+Barrier and Cartwheel will follow after the named ability and gate are verified.
 
-validation.json at the ZIP root contains the
-actual byte-change bounds and offline pose checks. source/ contains the builder,
-calibration math and format references. Passing these checks does not prove
-runtime stability; this small probe is the next in-game compatibility check.
+SAVE / REMOVE THE TEST ABILITY
+The ability is inserted into the loaded ability list. Saving in-game can retain
+that custom ability byte. For a temporary test, you can compare without saving.
+If you saved with aqua and want to remove this module:
+- Put the supplied REMOVE_AQUA_kh1-aqua.ini beside the game EXE, renamed exactly
+  kh1-aqua.ini. Leave this v5 mod enabled for that removal run.
+- Restart, load each save you want cleaned, and check the log for AQUA ABILITY
+  REMOVED. Save in-game to retain removal. Only ability id117 is removed.
+- Exit, remove the INI, disable v5 in OpenKH and rebuild.
+
+VALIDATION
+The actual compiled DLL was executed in an offline Win64 ABI mock host. The
+checks cover registration, both banks, reversible curve writes, rejection of
+unknown/changed data, full ability-list handling and removal. This was not a
+Windows or game execution. The in-game menu and live gate still need your test.
+The module accepts only the verified Steam executable timestamp; it logs and
+leaves gameplay unchanged on a different build or if v52 is loaded.

@@ -1,72 +1,41 @@
 {
-  "offline_checks_passed": true,
-  "game_runtime_tested": false,
-  "scope": "Aqua 300 arm paths blended into original first ground attack only",
-  "request": "0xC8",
-  "native_slot": 98,
-  "source_clip": "300",
-  "source_animation_frames": 31,
-  "native_frames": 48,
-  "file_size_before": 2435632,
-  "file_size_after": 2435632,
-  "changed_bytes": 657,
-  "patched_existing_key_records": 60,
-  "eligible_float_bytes": 720,
-  "all_changes_inside_existing_wrist_curves": true,
-  "motion_headers_flags_tables_and_counts_identical": true,
-  "existing_helper_count": 11,
-  "helper_count_after": 11,
-  "other_motions_byte_identical": 117,
-  "olympus_file_byte_identical": true,
-  "validated_pose_samples": 192,
-  "non_arm_matrix_error": 0.0,
-  "native_root_motion_error": 0.0,
-  "max_wrist_displacement_from_native": 57.55849883526503,
-  "max_arm_reach_excess": 0.0,
-  "source_sha256": "60d43ee9b2e2744fd4c2c62cdf98b1e412aa28e48f2e6c0201bcb04a932dbb7b",
-  "output_sha256": "c7cf80bdbe57dcb99b9956e75e2c42dc7c50851dded5ac5755d8eee9c00ee944",
-  "curves": [
+  "ability_name": "aqua",
+  "ability_id": 117,
+  "AP": 0,
+  "initially_equipped": false,
+  "on_disk_msets_are_original": true,
+  "supported_test_banks": [
+    "normal Sora physical98",
+    "Olympus physical60"
+  ],
+  "motion_scope": "first ground attack arm paths from tested v4",
+  "dll_exports": [
+    "DllMain",
+    "OnInit",
+    "OnFrame"
+  ],
+  "test_results": {
+    "passed": true,
+    "tests": 11,
+    "failures": 0,
+    "errors": 0,
+    "executed_actual_pe_dll": true,
+    "win64_abi_and_imports_mocked": true,
+    "windows_or_game_executed": false
+  },
+  "runtime_game_tested": false,
+  "assets": [
     {
-      "helper": 7,
-      "kind": 7,
-      "key_count": 13,
-      "changed_key_records": 11,
-      "original_key_indices_and_times_preserved": true
+      "name": "xa_ex_0010.mset",
+      "sha256": "60d43ee9b2e2744fd4c2c62cdf98b1e412aa28e48f2e6c0201bcb04a932dbb7b"
     },
     {
-      "helper": 7,
-      "kind": 8,
-      "key_count": 13,
-      "changed_key_records": 11,
-      "original_key_indices_and_times_preserved": true
+      "name": "xa_ex_0010_he.mset",
+      "sha256": "9be6c17dfe6d87cd6da910aaabc359f58af121ee8462e4c8a63076e4d6a37797"
     },
     {
-      "helper": 7,
-      "kind": 9,
-      "key_count": 10,
-      "changed_key_records": 8,
-      "original_key_indices_and_times_preserved": true
-    },
-    {
-      "helper": 4,
-      "kind": 7,
-      "key_count": 13,
-      "changed_key_records": 11,
-      "original_key_indices_and_times_preserved": true
-    },
-    {
-      "helper": 4,
-      "kind": 8,
-      "key_count": 11,
-      "changed_key_records": 9,
-      "original_key_indices_and_times_preserved": true
-    },
-    {
-      "helper": 4,
-      "kind": 9,
-      "key_count": 12,
-      "changed_key_records": 10,
-      "original_key_indices_and_times_preserved": true
+      "name": "dll/kh1-aqua.dll",
+      "sha256": "0657dcf9aa1cc2ccefe6f43a38e7b175f16eb71215840381afac4c3fea19577f"
     }
   ]
 }
