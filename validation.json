@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "test_round": 4,
   "test_round_label": "revised Test4",
   "offline_checks_passed": true,
@@ -20,14 +20,27 @@
   ],
   "main_ground_combo": [
     "300",
-    "218",
+    "365",
     "366"
   ],
   "main_air_combo": [
     "351",
-    "353",
+    "371",
     "393"
   ],
+  "main_fire_ground_air": [
+    "391",
+    "316"
+  ],
+  "main_cure_ground_air": [
+    "427",
+    "318"
+  ],
+  "main_stop_aero_ground_air": [
+    "317",
+    "390"
+  ],
+  "numbered_profile_animations_preserved_from_v13": true,
   "item_use": "395",
   "item_source_aliases": "007 / 395",
   "glide": "350",
@@ -94,10 +107,11 @@
   ],
   "normal_motion_records_per_profile": 51,
   "olympus_motion_records_per_profile": 50,
-  "unique_generated_pose_variants": 81,
-  "actual_pe_mock_tests": 59,
-  "geometry_assignment_tests": 15,
-  "pose_samples": 17893,
+  "unique_generated_pose_variants": 86,
+  "serialized_profile_transient_assignments": 105,
+  "actual_pe_mock_tests": 64,
+  "geometry_assignment_tests": 17,
+  "pose_samples": 18774,
   "max_pose_position_fit_error": 4.98903332659248,
   "max_non_root_attachment_translation_error": 0.0,
   "max_scale_error": 0.0,
@@ -111,12 +125,12 @@
   "air_dodge_input_diagnostics": true,
   "glide_native_unlock_required": true,
   "glide_direction_changes_keep_pose_progress": true,
-  "dll_sha256": "1ee73d5f740f1654b5342feb98ba7d87bc5097fceff911ae195b4f6e5a5d47d2",
+  "dll_sha256": "dd45cc4ed9d44cb9b2f30b069c3d2c73c558656160a83a899c1839fbdb3cab3c",
   "limitations": [
     "Windows/KH1 execution and rendered appearance pending",
-    "The cause of504 failure has not been confirmed by an in-game log",
+    "Logged Jump-flag rejection reproduced and corrected offline; post-fix KH1 verification pending",
     "Native Glide unlock/input/physics remain;350 phase transitions need in-game testing",
     "504 retains native fall gravity and40-frame timing with no extra invulnerability",
-    "Thunder retains v10 alternate casting durations86/78"
+    "Main Stop/Aero now share Gravity86/78 timing instead of Cure68/68; Thunder86/78 retained"
   ]
 }

@@ -324,7 +324,7 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v13 revised Test 4 loaded by Panacea; main ground300/218/366 air351/353/393; glide350; item007/395; dodge504; LEFT-hand magic");
+    log_text("KH1FM AQUA ANIMATION TEST v14 loaded by Panacea; main ground300/365/366 air351/371/393; Fire391/316 Cure427/318 Stop/Aero317/390; Jump-flag dodge504 fix; LEFT-hand magic");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }

@@ -125,13 +125,16 @@ class Host:
     def body(self,slot=98):return C.string_at(self.motions[slot],len(self.runtime_originals[slot]))
     def expected(self,slot,on):
         r=self.record_by_slot[slot];folder=ROOT/'fixtures'
-        if int(on)>1 and 98<=slot<=104:folder=ROOT/f'sets/p{int(on)-1}/fixtures'
+        if int(on)>1:
+            candidate=ROOT/f'sets/p{int(on)-1}/fixtures'
+            if (candidate/f"aqua_{r['fixture_stem']}.bin").exists():folder=candidate
         data=bytearray((folder/f"{'aqua' if on else 'original'}_{r['fixture_stem']}.bin").read_bytes())
         data[:80]=self.runtime_originals[slot][:80];return bytes(data)
     def assert_all(self,test,on):
         for r in self.records:test.assertEqual(self.body(r['normal_slot']),self.expected(r['normal_slot'],on),r['action'])
         active=self.decode(r32(self.actor+0x1d8))
-        wanted=(ROOT/f"fixtures/requests_{'he' if self.slot==60 else 'normal'}_{'aqua' if on else 'original'}.bin").read_bytes()
+        variant='main' if int(on)==1 else 'aqua' if on else 'original'
+        wanted=(ROOT/f"fixtures/requests_{'he' if self.slot==60 else 'normal'}_{variant}.bin").read_bytes()
         test.assertEqual(C.string_at(active,len(wanted)),wanted)
         test.assertEqual(C.string_at(self.requests,len(self.request_original)),self.request_original)
         if not on:test.assertEqual(r32(self.actor+0x1d8),self.original_request_handle)
@@ -239,7 +242,7 @@ class RuntimeTests(unittest.TestCase):
             elif reason=='attack':kwargs['request']=0xc8
             elif reason=='reaction':kwargs.update(state=4,request=0x4e)
             elif reason=='shortcut':kwargs['down']=6|0x40000
-            elif reason=='command':w32(h.game+0x2d53a40,0x01000002)
+            elif reason=='command':w32(h.game+0x2d53a40,0x02000002)
             elif reason in ['queued','queued_ledge']:w32(h.actor+0x178,1);w32(h.actor+0x17c,0xc8 if reason=='queued' else 0xd)
             elif reason=='nan':kwargs['tilt']=float('nan')
             elif reason=='negative_tilt':kwargs['tilt']=-.1
@@ -274,11 +277,38 @@ class RuntimeTests(unittest.TestCase):
         bridge.bridge_commit(h.actor);h.frame()
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x16c),0)
         self.assertIn('restart committed',bridge.bridge_log().decode())
-    def test_uncommitted_menu_selection_and_fresh_press_without_held_bit_do_not_block_dodge(self):
-        h=Host(air=True);h.arm_air();w32(h.game+0x2d53a40,2)
+    def test_jump_flags_and_fresh_press_without_held_bit_do_not_block_dodge(self):
+        h=Host(air=True);h.arm_air();w32(h.game+0x2d53a40,0x03000000)
         h.control(down=0,pressed=6)
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(bridge.bridge_queue_calls(),1)
         self.assertIn('mask (0 means accepted)=0x0',bridge.bridge_log().decode())
+    def test_logged_high_jump_press_03000000_runs_dodge_instead_of_glide_in_all_profiles_and_banks(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,air=True,encoded_fields=True,control_mode=4);h.frame()
+            for profile in range(5):
+                w32(h.actor+0x164,0);h.equip(True,profile);h.frame()
+                h.control(state=0,request=0,height=0);h.control()
+                h.queue(0xa);h.clock(12);w32(h.game+0x2d53a40,0x03000000)
+                h.control(down=6,pressed=6,state=2,request=0xa)
+                self.assertEqual(h.body(10),h.dodge_body(),(bank,profile))
+                self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(r32(h.actor+0x164),6)
+                self.assertEqual([bridge.bridge_control_word(i)&6 for i in range(4)],[0]*4)
+                self.assertIn('mask (0 means accepted)=0x0',bridge.bridge_log().decode())
+                h.clock(39);h.frame();h.assert_all(self,profile+1)
+    def test_actual_nonzero_native_command_dispatch_remains_excluded(self):
+        for command in [1,2,0x02000002]:
+            h=Host(air=True);h.arm_air();w32(h.game+0x2d53a40,command)
+            h.control(down=6,pressed=6,request=0xa)
+            self.assertEqual(h.body(10),h.expected(10,1),hex(command))
+            self.assertEqual(bridge.bridge_queue_calls(),0)
+            self.assertIn('mask (0 means accepted)=0x100',bridge.bridge_log().decode())
+    def test_log_shaped_jump_press_is_retained_until_delayed_native_restart_commits(self):
+        h=Host(air=True,control_mode=3);h.arm_air();h.queue(0xa)
+        w32(h.game+0x2d53a40,0x03000000);h.clock(23)
+        h.control(down=6,pressed=6,state=2,request=0xa)
+        self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x17c),6)
+        for _ in range(3):h.frame();self.assertEqual(h.body(10),h.dodge_body())
+        bridge.bridge_commit(h.actor);h.frame();self.assertEqual(h.body(10),h.dodge_body())
     def test_uncommitted_dodge_times_out_and_restores_fall_instead_of_staying_active(self):
         h=Host(air=True,control_mode=3);h.arm_air();h.control(down=6,pressed=6)
         for _ in range(20):h.frame()
@@ -341,8 +371,30 @@ class RuntimeTests(unittest.TestCase):
                 targets=[54,55,56,79,80,81] if bank==98 else [17,18,19,41,42,43]
                 self.assertEqual([r32(p+q*4)&0xfff for q in [0x36,0x38,0x39,0x83,0x85,0x86]],targets)
                 self.assertEqual([i//4 for i in range(0,len(h.request_original),4)
-                                  if C.string_at(p+i,4)!=h.request_original[i:i+4]],[0x38,0x85])
+                                  if C.string_at(p+i,4)!=h.request_original[i:i+4]],
+                                  [0x38,0x3b,0x3c,0x85,0x88,0x89] if profile==0 else [0x38,0x85])
             h.equip(False,4);h.frame();h.assert_all(self,False)
+    def test_main_stop_and_aero_resolve_to_gravity_while_numbered_profiles_keep_v13_routes(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True);h.frame()
+            for profile in [0,1,2,3,4,0]:
+                h.equip(True,profile);h.frame();h.assert_all(self,profile+1)
+                p=h.decode(r32(h.actor+0x1d8))
+                g,a=(55,80) if bank==98 else (18,42)
+                for gravity,stop,aero,wanted in [(0x3a,0x3b,0x3c,g),(0x87,0x88,0x89,a)]:
+                    target=r32(p+gravity*4)&0xfff;self.assertEqual(target,wanted)
+                    for q in [stop,aero]:
+                        self.assertEqual(r32(p+q*4)&0xfff,wanted if profile==0 else wanted+1)
+    def test_main_to_numbered_spell_changes_wait_until_idle_and_restore_both_lookup_and_pose(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
+            before=h.snapshot();pointer=r32(h.actor+0x1d8)
+            w32(h.actor+0x164,0x39);h.equip(True,1);h.frame()
+            self.assertEqual(h.snapshot(),before);self.assertEqual(r32(h.actor+0x1d8),pointer)
+            w32(h.actor+0x164,0);h.frame();h.assert_all(self,2)
+            self.assertNotEqual(r32(h.actor+0x1d8),pointer)
+            h.equip(True);h.frame();h.assert_all(self,1)
+            self.assertEqual(r32(h.actor+0x1d8),pointer)
     def test_unknown_request_descriptor_blocks_all_body_writes_and_lookup_changes(self):
         h=Host();h.frame();h.equip(True)
         w32(h.requests+0x38*4,0x1001);before=h.snapshot();pointer=r32(h.actor+0x1d8)

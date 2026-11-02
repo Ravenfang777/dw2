@@ -137,6 +137,7 @@ static void air_input_log(uptr actor,u32 reasons){
     log_number("AQUA AIR INPUT native state=",r32(actor+0x70));
     log_number("AQUA AIR INPUT native request=",r32(actor+0x164));
     log_number("AQUA AIR INPUT native queued count=",r32(actor+0x178));
+    if(r32(actor+0x178))log_number("AQUA AIR INPUT first queued request=",r32(actor+0x17c));
     log_number("AQUA AIR INPUT held=",r32(base+0x298ca94u));
     log_number("AQUA AIR INPUT pressed=",r32(base+0x298ca98u));
     log_number("AQUA AIR INPUT command=",r32(base+0x2d53a40u));
@@ -146,7 +147,7 @@ static void ABI air_control(uptr actor,uptr dir){
     uptr pad=base+0x298ca90u;
     int local=actor==r64(base+SORA_RVA)&&memory(actor,0x448,0)&&memory(pad,0x18,1);
     if(local&&!air_control_seen){
-        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v13");
+        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v14");
         log_number("AQUA CONTROL actor=",actor);
     }
     if(movement_scope(actor)&&memory(pad,0x18,1)&&memory(dir,16,0)){
@@ -166,9 +167,12 @@ static void ABI air_control(uptr actor,uptr dir){
             if(!air_finite(x)||!air_finite(z)||!air_finite(tilt)||tilt<0)reasons|=32u;
             if(!air_free_request(request)||glide_active||glide_stop_active)reasons|=64u;
             if(r32(pad+4)&0x00140000u)reasons|=128u;
-            /* The low command byte can describe a highlighted menu item.
-             * Native control dispatches only with the committed bit set. */
-            if(r32(base+0x2d53a40u)&0x01000000u)reasons|=256u;
+            /* Native control0x2A629A treats bit24 as Jump/landing handling;
+             * it skips command dispatch when this bit is SET. Otherwise,
+             * 0x2A62F8 dispatches only a NONZERO low command byte. The user's
+             * normal airborne Jump value0x03000000 therefore permits dodge. */
+            u32 command=r32(base+0x2d53a40u);
+            if((command&0xffu)&&!(command&0x01000000u))reasons|=256u;
             if(count&&(count!=1u||!air_free_request(r32(actor+0x17c)&0xffffu)))reasons|=512u;
             if(!reasons){
                 typedef int (ABI *CanFn)(uptr);
@@ -216,5 +220,5 @@ static void air_install(void){
     air_original=(AirControlFn)(uptr)page;u8 patch[17];for(unsigned i=0;i<17;i++)patch[i]=0x90;
     magic_jump(patch,(uptr)air_control);copy((void*)a,patch,17);
     kFlushInstructionCache((uptr)-1,(void*)a,17);kVirtualProtect((void*)a,17,old_code,&unused);
-    air_ready=1;log_text("AQUA AIR DODGE READY: v13 queued restart, accepted or blocked input diagnostics; Glide350 opening/hold/stop controller ready");
+    air_ready=1;log_text("AQUA AIR DODGE READY: v14 permits logged Jump flags0x03000000; real native command dispatch blocks dodge; Glide350 controller ready");
 }

@@ -1,6 +1,6 @@
-﻿Ability,Ability id,Action,Aqua clip,Trigger,Normal slot,Olympus slot,Native frames,Always queued native restart,Uncommitted menu item allowed,Normal falling clip,Input restored after control,Native gravity and velocity
-aqua,117,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,506,True,True
-aqua 1,118,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,506,True,True
-aqua 2,119,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,506,True,True
-aqua 3,120,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,506,True,True
-aqua 4,121,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,506,True,True
+﻿Ability,Ability id,Action,Aqua clip,Trigger,Normal slot,Olympus slot,Native frames,Always queued native restart,Logged Jump flags0x03000000 allowed,Native command dispatch candidate excluded,Normal falling clip,Input restored after control,Native gravity and velocity
+aqua,117,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
+aqua 1,118,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
+aqua 2,119,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
+aqua 3,120,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
+aqua 4,121,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True

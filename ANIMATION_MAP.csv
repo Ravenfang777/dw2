@@ -17,10 +17,10 @@ aqua,117,ledge hang,0x0D,14,14,020,,base,"[55, 94]",True,120,linear,,hand_anchor
 aqua,117,ledge climb start,0x0E,15,15,021,,base,"[0, 4]",False,68,linear,,hand_anchor
 aqua,117,ledge climb finish,0x0F,16,16,021,,base,"[4, 13]",False,28,linear,,climb
 aqua,117,ledge landing recovery,0x10,17,not present,007,,base,full,False,40,linear,,native
-aqua,117,Fire cast release,0x36,54,17,316,,p02ex_151.arc,"[0, 20]",False,28,linear,,travel
+aqua,117,Fire cast release,0x36,54,17,391,,p02ex_153.arc,"[0, 31]",False,28,linear,,travel
 aqua,117,Thunder casting family,0x38,55,18,317,,p02ex_152.arc,full,False,86,linear,,travel
-aqua,117,Cure casting family,0x39,56,19,318,,p02ex_152.arc,full,False,68,linear,,travel
-aqua,117,Fire cast recovery,0x3D,57,20,316,,p02ex_151.arc,"[20, 30]",False,60,linear,,travel
+aqua,117,Cure casting family,0x39,56,19,427,,p02ex_154.arc,full,False,68,linear,,travel
+aqua,117,Fire cast recovery,0x3D,57,20,391,,p02ex_153.arc,"[31, 48]",False,60,linear,,travel
 aqua,117,ground item use,0x3E,58,21,395,007 / 395,p02ex_200.arc,full,False,82,linear,,travel
 aqua,117,air item use,0x3F,59,22,395,007 / 395,p02ex_200.arc,full,False,72,linear,,travel
 aqua,117,front high flinch,0x48,61,24,200,,base,full,False,70,linear,,native
@@ -37,16 +37,16 @@ aqua,117,Glide start and held flight,0x71,75,37,350,,p02ex_116.arc,"[0, 20]",Fal
 aqua,117,Glide start and held flight moving,0x72,76,38,350,,p02ex_116.arc,"[0, 20]",False,60,glide_start_hold,40,travel
 aqua,117,Glide start and held flight turn left,0x73,77,39,350,,p02ex_116.arc,"[0, 20]",False,60,glide_start_hold,40,travel
 aqua,117,Glide start and held flight turn right,0x74,78,40,350,,p02ex_116.arc,"[0, 20]",False,60,glide_start_hold,40,travel
-aqua,117,air Fire cast release,0x83,79,41,391,,p02ex_153.arc,"[0, 31]",False,28,linear,,travel
+aqua,117,air Fire cast release,0x83,79,41,316,,p02ex_151.arc,"[0, 20]",False,28,linear,,travel
 aqua,117,air Thunder casting family,0x85,80,42,390,,p02ex_154.arc,full,False,78,linear,,travel
-aqua,117,air Cure casting family,0x86,81,43,427,,p02ex_154.arc,full,False,68,linear,,travel
-aqua,117,air Fire cast recovery,0x8A,82,44,391,,p02ex_153.arc,"[31, 48]",False,52,linear,,travel
+aqua,117,air Cure casting family,0x86,81,43,318,,p02ex_152.arc,full,False,68,linear,,travel
+aqua,117,air Fire cast recovery,0x8A,82,44,316,,p02ex_151.arc,"[20, 30]",False,52,linear,,travel
 aqua,117,ground first,0xC8,98,60,300,,base,full,False,48,linear,,travel
-aqua,117,ground second,0xC9,99,61,218,,p02ex_009.arc,full,False,48,linear,,travel
-aqua,117,ground alternate,0xCA,100,62,218,,p02ex_009.arc,full,False,64,linear,,travel
+aqua,117,ground second,0xC9,99,61,365,,p02ex_123.arc,full,False,48,linear,,travel
+aqua,117,ground alternate,0xCA,100,62,365,,p02ex_123.arc,full,False,64,linear,,travel
 aqua,117,ground finisher,0xCB,101,63,366,,p02ex_128.arc,full,False,80,linear,,travel
 aqua,117,air first,0xCC,102,64,351,,p02ex_710.arc,full,False,40,linear,,travel
-aqua,117,air second,0xCD,103,65,353,,p02ex_352.arc,full,False,42,linear,,travel
+aqua,117,air second,0xCD,103,65,371,,p02ex_133.arc,full,False,42,linear,,travel
 aqua,117,air finisher,0xCE,104,66,393,,p02ex_155.arc,full,False,56,linear,,travel
 aqua,117,Guard / Barrier pose,0xD4,110,72,400,,base,full,False,54,linear,,travel
 aqua,117,Dodge Roll / Cartwheel pose,0xDC,117,79,009,,base,full,False,38,linear,,travel

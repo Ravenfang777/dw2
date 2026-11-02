@@ -58,8 +58,9 @@ for r in report['motions']:
     scalars=','.join(str(u32(before,p))+'u' for p in [4,8,16,24,32,44,52])
     descriptors.append('{'+f'{r["request"]},{r["normal_slot"]},{r["olympus_slot"]},{len(before)},'+'{'+scalars+'},'+'{'+','.join(parts)+'}}')
 lines+=['static const AquaMotion aqua_motions[AQUA_MOTION_COUNT]={',',\n'.join(descriptors),'};']
-# Only Thunder's request words are rerouted. Keep all native flags, all
-# other requests, and the original table size; installed MSETs stay original.
+# Main Aqua also routes Stop/Aero to the current Gravity family. Numbered
+# profiles retain the v13 Thunder-only routing. All native flags and the
+# original table size remain; installed MSETs stay original.
 request_rows=[]
 for name in ['he','normal']:
     suffix='_he' if name=='he' else ''
@@ -72,10 +73,18 @@ for name in ['he','normal']:
                             (0x85,43 if suffix else 81,42 if suffix else 80)]:
         word=u32(before,request*4);assert word==0x1000|old
         struct.pack_into('<I',after,request*4,(word&~0xfff)|new)
+    main=bytearray(after)
+    for request,new in [(0x3b,18 if suffix else 55),(0x3c,18 if suffix else 55),
+                        (0x88,42 if suffix else 80),(0x89,42 if suffix else 80)]:
+        word=u32(main,request*4)
+        old=(19 if suffix else 56) if request<0x80 else (43 if suffix else 81)
+        assert word==(0x1000|old)
+        struct.pack_into('<I',main,request*4,(word&~0xfff)|new)
     (ROOT/f'fixtures/requests_{name}_original.bin').write_bytes(before)
     (ROOT/f'fixtures/requests_{name}_aqua.bin').write_bytes(after)
-    request_rows.append('{'+f'{len(before)},{array(before)},{array(bytes(after))}'+'}')
-lines+=['typedef struct { unsigned int bytes; const unsigned char *before,*after; } AquaRequestTable;',
+    (ROOT/f'fixtures/requests_{name}_main.bin').write_bytes(main)
+    request_rows.append('{'+f'{len(before)},{array(before)},{array(bytes(after))},{array(bytes(main))}'+'}')
+lines+=['typedef struct { unsigned int bytes; const unsigned char *before,*after,*main_after; } AquaRequestTable;',
         'static const AquaRequestTable aqua_requests[2]={'+','.join(request_rows)+'};']
 (ROOT/'aqua_data.h').write_text('\n'.join(lines)+'\n')
 (ROOT/'data_validation.json').write_text(json.dumps({'passed':True,'motions':len(descriptors),'profiles':5,

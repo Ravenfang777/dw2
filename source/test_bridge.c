@@ -60,7 +60,12 @@ static void ABI native_control(uintptr_t actor,uintptr_t dir){
     unsigned fields[4]={1,2,4,5};for(unsigned i=0;i<4;i++)control_words[i]=pad[fields[i]];
     if(control_mode==1)pad[2]^=0x40000000u;
     if(control_mode!=3)bridge_commit(actor);
+    if(control_mode==4&&(pad[1]&6u)&&(*(uint32_t*)(actor+0x70)==1||*(uint32_t*)(actor+0x70)==2)){
+        *(uint32_t*)(actor+0x70)=21;*(uint32_t*)(actor+0x164)=0x71;*(uint32_t*)(actor+0x178)=0;
+    }
     if(control_mode==2)*(uint32_t*)(actor+0x164)=0xcc;
+    /* Native control0x2A630C clears its command record after dispatch. */
+    *(uint64_t*)(game_base+0x2d53a40)=0;*(uint32_t*)(game_base+0x2d53a48)=0;
 }
 uintptr_t bridge_symbol(const char*n){
     if(!strcmp(n,"GetModuleHandleA"))return (uintptr_t)get_module;

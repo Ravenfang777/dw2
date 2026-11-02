@@ -44,7 +44,8 @@
           "after": "0x1050"
         }
       ],
-      "all_other_words_and_flags_unchanged": true
+      "all_other_words_and_flags_unchanged": true,
+      "profiles": "numbered Aqua entries"
     },
     {
       "bank": "he",
@@ -61,6 +62,83 @@
           "after": "0x102a"
         }
       ],
+      "all_other_words_and_flags_unchanged": true,
+      "profiles": "numbered Aqua entries"
+    },
+    {
+      "bank": "normal",
+      "profiles": "main Aqua",
+      "bytes": 1408,
+      "changed_words": [
+        {
+          "request": "0x38",
+          "before": "0x1038",
+          "after": "0x1037"
+        },
+        {
+          "request": "0x3b",
+          "before": "0x1038",
+          "after": "0x1037"
+        },
+        {
+          "request": "0x3c",
+          "before": "0x1038",
+          "after": "0x1037"
+        },
+        {
+          "request": "0x85",
+          "before": "0x1051",
+          "after": "0x1050"
+        },
+        {
+          "request": "0x88",
+          "before": "0x1051",
+          "after": "0x1050"
+        },
+        {
+          "request": "0x89",
+          "before": "0x1051",
+          "after": "0x1050"
+        }
+      ],
+      "all_other_words_and_flags_unchanged": true
+    },
+    {
+      "bank": "he",
+      "profiles": "main Aqua",
+      "bytes": 1408,
+      "changed_words": [
+        {
+          "request": "0x38",
+          "before": "0x1013",
+          "after": "0x1012"
+        },
+        {
+          "request": "0x3b",
+          "before": "0x1013",
+          "after": "0x1012"
+        },
+        {
+          "request": "0x3c",
+          "before": "0x1013",
+          "after": "0x1012"
+        },
+        {
+          "request": "0x85",
+          "before": "0x102b",
+          "after": "0x102a"
+        },
+        {
+          "request": "0x88",
+          "before": "0x102b",
+          "after": "0x102a"
+        },
+        {
+          "request": "0x89",
+          "before": "0x102b",
+          "after": "0x102a"
+        }
+      ],
       "all_other_words_and_flags_unchanged": true
     }
   ],
@@ -71,12 +149,51 @@
     "previous_air": 68
   },
   "shared_poses": {
-    "Blizzard/Gravity": "317 ground; 390 air",
-    "Stop/Aero": "318 ground; 427 air"
+    "main": {
+      "Blizzard/Thunder/Gravity/Stop/Aero": "317 ground; 390 air",
+      "Cure": "427 ground; 318 air",
+      "Fire": "391 ground; 316 air"
+    },
+    "numbered_profiles": {
+      "Blizzard/Thunder/Gravity": "317 ground; 390 air",
+      "Stop/Aero/Cure": "318 ground; 427 air",
+      "Fire": "316 ground; 391 air"
+    }
   },
   "windows_or_game_executed": false,
   "native_command_kind_2_dispatch_verified": {
     "ground": "0x2A3E7C",
     "air": "0x2A419B"
+  },
+  "version": 14,
+  "main_profile_only_stop_aero_rerouting": true,
+  "main_stop_aero_ground_target": 55,
+  "main_stop_aero_air_target": 80,
+  "main_stop_aero_olympus_ground_target": 18,
+  "main_stop_aero_olympus_air_target": 42,
+  "main_additional_requests": [
+    "0x3B",
+    "0x3C",
+    "0x88",
+    "0x89"
+  ],
+  "numbered_profiles_retain_v13_casting": true,
+  "main_fire_ground_air": [
+    "391",
+    "316"
+  ],
+  "main_cure_ground_air": [
+    "427",
+    "318"
+  ],
+  "main_stop_aero_ground_air": [
+    "317",
+    "390"
+  ],
+  "main_stop_aero_native_frames": {
+    "ground": 86,
+    "air": 78,
+    "prior_ground": 68,
+    "prior_air": 68
   }
 }

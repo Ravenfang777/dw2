@@ -1,4 +1,4 @@
-"""Independent checks of serialized V13 base, Glide phases, aerial dodge and revised Test 4 profiles."""
+"""Independent checks of serialized V14 main casting and combo edits, retained Test4 profiles, Glide and dodge."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
@@ -105,14 +105,15 @@ class VisualTests(unittest.TestCase):
             pa[:,:3,3]-=helper_pose(a,float(a.frames-1))[-1,:3,3];pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0)
     def test_fire_casts_continue_across_release_and_recovery(self):
-        for release,recovery in [(54,57),(79,82)]:
-            a=converted[release];b=converted[recovery]
+        for profile in range(5):
+          for release,recovery in [(54,57),(79,82)]:
+            a=all_converted[(profile,release)];b=all_converted[(profile,recovery)]
             pa=pose(model,a,float(a.frames-1));pb=pose(model,b,0)
             pa[:,:3,3]-=helper_pose(a,float(a.frames-1))[-1,:3,3]
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
     def test_requested_action_clips_and_test_4_combos_match_serialized_reports(self):
-        actions={99:'218',100:'218',101:'366',102:'351',103:'353',104:'393',58:'395',59:'395',10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
+        actions={99:'365',100:'365',101:'366',102:'351',103:'371',104:'393',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
@@ -122,8 +123,20 @@ class VisualTests(unittest.TestCase):
                 (['510','511','512'],['504','514','399'])]
         for profile,(ground,air) in enumerate(wanted,1):
             rows=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())['motions']
-            actual={r['normal_slot']:r['donor'] for r in rows}
+            actual={r['normal_slot']:r['donor'] for r in rows if 98<=r['normal_slot']<=104}
             self.assertEqual(actual,dict(zip(range(98,105),[ground[0],ground[1],ground[1],ground[2],*air])))
+    def test_numbered_profiles_retain_v13_fire_and_cure_poses(self):
+        expected={54:('316',[0,20]),57:('316',[20,30]),56:('318',None),
+                  79:('391',[0,31]),82:('391',[31,48]),81:('427',None)}
+        for profile in range(1,5):
+            data=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())
+            rows={r['normal_slot']:r for r in data['motions']}
+            for slot,(clip,cut) in expected.items():
+                self.assertEqual((rows[slot]['donor'],rows[slot]['source_range']),(clip,cut))
+    def test_both_main_second_ground_variants_and_air_second_use_the_new_requested_clips(self):
+        for slot,clip in [(99,'365'),(100,'365'),(103,'371')]:
+            self.assertEqual(by_slot[slot]['donor'],clip);self.assertIsNone(by_slot[slot]['source_range'])
+        self.assertEqual(by_slot[99]['source_sha256'],by_slot[100]['source_sha256'])
     def test_item_007_395_uses_the_requested_shared_payload_in_both_native_item_actions(self):
         for slot in [58,59]:
             row=by_slot[slot]
