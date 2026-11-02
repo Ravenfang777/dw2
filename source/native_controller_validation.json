@@ -1,0 +1,32 @@
+{
+  "version": 19,
+  "passed": true,
+  "game_runtime_tested": false,
+  "executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
+  "verified_anchors": {
+    "0x2a6220": "48895c2418574883ec40488b0557e82a00",
+    "0x2b26c0": "40534883ec20488bd9e862060000",
+    "0x2af6a0": "48895c2410574883ec40f70100100000",
+    "0x2b1960": "48895c2410574883ec2048634170",
+    "0x297870": "f601047518f6818800000020750ff68144040000017506b801000000c333c0c3",
+    "0x29f980": "48895c2408574883ec20488bf9",
+    "0x2af356": "488d0543030000",
+    "0x2af4b8": "8d5102",
+    "0x2af4ca": "e891240000",
+    "0x2af3f0": "48895c2410574883ec50",
+    "0x2a3980": "48895c240848896c24104889742418",
+    "0x29f0a0": "405557488d6c24e84881ec18010000",
+    "0x2b4640": "4c8bdc49895b20574881eca0000000",
+    "0x2b4762": "f30f104b640f2fc87604",
+    "0x29f2a2": "f3440f598f84020000"
+  },
+  "guard_row": "0x2A3980; row0x3D witness; rejects absent/interrupted/stale actions",
+  "motion_clock": "0x29F0A0 takes actor and motion delta;0x29F2A2 multiplies delta by actor+284;0x29F366 advances actor+16C",
+  "normal_speed_guard_delta_factor": 0.33974358974358976,
+  "finisher_trim_delta_factor": 1.3428571428571427,
+  "guard_angle_predicate": "0x2B4640;0x2B4762 compares facing dot against native guard data+64",
+  "guard_angle_scope": "main Aqua; witnessed live Guard; own live native facing-restricted clash objects during Guard only; native clash pipeline remains",
+  "native_unguardable_attack_policy_retained": true,
+  "headers_and_allocation_sizes_unchanged": true,
+  "direct_animation_clock_actor_position_or_hp_writes": false
+}

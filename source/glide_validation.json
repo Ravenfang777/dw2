@@ -1,22 +1,15 @@
 {
-  "version": 18,
+  "version": 19,
   "passed": true,
   "game_runtime_tested": false,
-  "default_native_glide": true,
-  "normal_slots": [
+  "main": "Glide input and constructor replaced by tap504 burst",
+  "numbered_profiles": "original native Glide",
+  "normal_native_motion_slots": [
     75,
     76,
     77,
     78
   ],
-  "olympus_slots": [
-    37,
-    38,
-    39,
-    40
-  ],
-  "aqua_body_overrides": 0,
-  "clock_or_queue_frame_writes": 0,
-  "native_physics_unlock_input_and_steering": true,
-  "normal_fall_after_native_glide": "506"
+  "all_native_glide_motion_bytes_and_clocks_unmodified": true,
+  "new_native_glide_constructor_scope": "main Aqua only, air_dodge enabled"
 }

@@ -1,19 +1,12 @@
 {
-  "version": 18,
+  "version": 19,
   "passed": true,
   "game_runtime_tested": false,
-  "source": "504",
-  "temporary_normal_slot": 10,
-  "native_frames": 40,
-  "controls": "fresh airborne Circle after takeoff release; one dodge per airtime",
-  "steerable_through_animation": true,
-  "circle_release_cuts_lift": false,
-  "profile_scope": "all five Aqua abilities",
-  "normal_fall": "506",
-  "native_glide_outside_dodge": true,
-  "native_control_rva": "0x2A6220",
-  "native_displacement_rva": "0x2AF6A0",
-  "native_glide_guard_rva": "0x2B26C0",
-  "movement_tuning_report": "native_movement_validation.json",
-  "no_direct_position_writes": true
+  "main": "single-tap replacement for held Glide",
+  "direction_locked_for_full_animation": true,
+  "release_circle_or_stick_shortens_action": false,
+  "repeat_requires_new_press_after_completion": true,
+  "numbered_profiles": "retain v18 once-per-airtime steered dodge and native Glide",
+  "native_headers_unmodified": true,
+  "movement_tuning_report": "native_movement_validation.json"
 }

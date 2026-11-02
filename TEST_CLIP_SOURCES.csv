@@ -4,9 +4,9 @@ aqua,combat idle,1,002,,base,p02ex_001.pam,88,30,full,be856951d6d55e472131bb52c8
 aqua,walk,2,003,,base,p02ex_001.pam,32,30,full,829a540dce9f32886e517e98d27012d0eb8c4801e452b411c1713b08233f7f6b,60,linear
 aqua,walk,3,003,,base,p02ex_001.pam,32,30,full,829a540dce9f32886e517e98d27012d0eb8c4801e452b411c1713b08233f7f6b,60,linear
 aqua,combat walk,4,012,,base,p02ex_001.pam,32,30,full,d0ecb702d173da8d528e3557aaba7d300d755bb7b6bb959b93cffb1ef8cb56a1,48,linear
-aqua,run,5,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
-aqua,run,6,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
-aqua,combat run,7,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
+aqua,run,5,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
+aqua,run,6,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
+aqua,combat run,7,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
 aqua,jump takeoff,8,005,,base,p02ex_001.pam,13,30,"[0, 9]",dee3038ee9622033ab3d9b9f92286ebdfa91e8722933d1bf502026cca942b033,26,linear
 aqua,jump rise,9,005,,base,p02ex_001.pam,13,30,"[9, 12]",dee3038ee9622033ab3d9b9f92286ebdfa91e8722933d1bf502026cca942b033,14,linear
 aqua,fall,10,506,,p02ex_150.arc,p02ex_150.pam,12,30,full,04d025c27f0aefab5ef600c4c8bd54163ab3a279693e14f96cb657d067d731d8,40,linear
@@ -30,12 +30,16 @@ aqua,air Fire cast recovery,82,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]"
 aqua,ground first,98,300,,base,p02ex_001.pam,31,30,full,2ed6582d03611ef9cdbec2ae6dd4c8f519ac4da3b7df20fbd4c90e78ace6f649,48,linear
 aqua,ground second,99,301,,base,p02ex_001.pam,41,30,full,b3c79bf3aac23a92eb13738495b266d3ff9bd28be16d775126df9fa844161577,48,combo_finish_hold
 aqua,ground alternate,100,301,,base,p02ex_001.pam,41,30,full,b3c79bf3aac23a92eb13738495b266d3ff9bd28be16d775126df9fa844161577,64,combo_finish_hold
-aqua,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,full,0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea,80,linear
+aqua,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,"[12, 47]",0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea,80,linear
 aqua,air first,102,305,,base,p02ex_001.pam,23,30,full,3fb40ee6ec04015b89afe36372718f033d098b65bf33d327b35add75c656851a,40,linear
-aqua,air second,103,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9,42,linear
-aqua,air finisher,104,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,56,linear
+aqua,air second,103,353,,p02ex_352.arc,p02ex_352.pam,44,30,full,df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e,42,linear
+aqua,air finisher,104,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9,56,linear
 aqua,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,guard_forward_hold_reverse
 aqua,Dodge Roll / Cartwheel pose,117,009,,base,p02ex_001.pam,30,30,full,bad188200247fe756b9956a2299c6e4f225cd2e4019c0d0507ee1a4700e324fa,38,linear
+aqua 1,combat idle,1,002,,base,p02ex_001.pam,88,30,full,be856951d6d55e472131bb52c80f6d6baac581935c9639f6e8822c79d93fe81a,170,linear
+aqua 1,run,5,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 1,run,6,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 1,combat run,7,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
 aqua 1,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 1,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua 1,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,60,linear
@@ -49,6 +53,11 @@ aqua 1,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,full,0d3350fe5
 aqua 1,air first,102,218,,p02ex_009.arc,p02ex_009.pam,45,30,full,06d11db15d1cd704cfa4f3b60b7ac355b18517c73e444aefa8d35537cf64b801,40,linear
 aqua 1,air second,103,332,,p02ex_101.arc,p02ex_101.pam,39,30,full,bdbf35ac47fe94f269c170030a33d376f5e581129be8ee4b3fda33b916fc1f59,42,linear
 aqua 1,air finisher,104,393,,p02ex_155.arc,p02ex_155.pam,37,30,full,7e20e587e15a632a08a4b59b2cb5de26df120099245de9aeccdac0f1a70d75e8,56,linear
+aqua 1,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,guard_forward_hold_reverse
+aqua 2,combat idle,1,002,,base,p02ex_001.pam,88,30,full,be856951d6d55e472131bb52c80f6d6baac581935c9639f6e8822c79d93fe81a,170,linear
+aqua 2,run,5,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 2,run,6,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 2,combat run,7,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
 aqua 2,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 2,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua 2,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,60,linear
@@ -62,6 +71,11 @@ aqua 2,ground finisher,101,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e05214
 aqua 2,air first,102,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,40,linear
 aqua 2,air second,103,304,,base,p02ex_001.pam,43,30,full,440a8cfac80cbb64b5ea2865d3cafacd0fe635db4e1ba4ba2d074dbb0a9e4367,42,linear
 aqua 2,air finisher,104,303,,base,p02ex_001.pam,40,30,full,9ce7edcc8a8038f90163df0648b6c93506780337cfbafb47ba0cdaffa008d98a,56,linear
+aqua 2,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,guard_forward_hold_reverse
+aqua 3,combat idle,1,002,,base,p02ex_001.pam,88,30,full,be856951d6d55e472131bb52c80f6d6baac581935c9639f6e8822c79d93fe81a,170,linear
+aqua 3,run,5,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 3,run,6,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 3,combat run,7,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
 aqua 3,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 3,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua 3,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,60,linear
@@ -75,6 +89,11 @@ aqua 3,ground finisher,101,302,,base,p02ex_001.pam,32,30,full,b70ccd301fb9e40e8c
 aqua 3,air first,102,616,,p02ex_605.arc,p02ex_605.pam,44,30,full,76881ffae8086c51c118cf1e42ffa6b1c4be33f0c979b7206f2ff6c410b59984,40,linear
 aqua 3,air second,103,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9,42,linear
 aqua 3,air finisher,104,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,56,linear
+aqua 3,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,guard_forward_hold_reverse
+aqua 4,combat idle,1,002,,base,p02ex_001.pam,88,30,full,be856951d6d55e472131bb52c80f6d6baac581935c9639f6e8822c79d93fe81a,170,linear
+aqua 4,run,5,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 4,run,6,004,,base,p02ex_001.pam,16,30,full,c99172b5ada6ba65135a4b1b52bf9943a15510800c47ae53db3012b44ab0e7de,36,linear
+aqua 4,combat run,7,013,,base,p02ex_001.pam,20,30,full,77ecf75f5b4e76ae6a104c7c13448d3761133f16e59f522b8a7906717346074c,36,linear
 aqua 4,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 4,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua 4,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,60,linear
@@ -88,6 +107,7 @@ aqua 4,ground finisher,101,512,,p02ex_501.arc,p02ex_501.pam,33,30,full,964e5cd26
 aqua 4,air first,102,504,,p02ex_157.arc,p02ex_157.pam,23,30,full,6cec577faf4138c888437593305ff79a8e816d0aba215f71d888502522b26c1c,40,linear
 aqua 4,air second,103,514,,p02ex_157.arc,p02ex_157.pam,33,30,full,ad6f1c64cbaa3634cbf5dcee87ec80c069b4aa20801e33bbbb5d72632cd41315,42,linear
 aqua 4,air finisher,104,399,,p02ex_346.arc,p02ex_346.pam,120,30,full,42ca639a035a67a8a8883e18b3141876a9bf1931291036685a9d3c9774143286,56,linear
+aqua 4,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,guard_forward_hold_reverse
 all Aqua entries: dodge,airborne dodge overlay,10,504,,p02ex_157.arc,p02ex_157.pam,23,30,full,6cec577faf4138c888437593305ff79a8e816d0aba215f71d888502522b26c1c,40,linear
 main Aqua: Blizzard,"Blizzard Fire visual, native spell events",55,391,,p02ex_153.arc,p02ex_153.pam,49,30,full,8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,86,linear
 main Aqua: Blizzard,"Blizzard Fire visual, native spell events",80,316,,p02ex_151.arc,p02ex_151.pam,31,30,full,85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,78,linear

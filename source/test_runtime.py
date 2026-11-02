@@ -16,6 +16,10 @@ for name,args,ret in [('bridge_air_modes',[C.c_int,C.c_uint],None),('bridge_cont
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
 bridge.bridge_move.argtypes=[C.c_size_t,C.c_size_t,C.POINTER(C.c_float)];bridge.bridge_move.restype=C.c_float
 bridge.bridge_move_calls.argtypes=[];bridge.bridge_move_calls.restype=C.c_uint
+bridge.bridge_guard_row.argtypes=[C.c_size_t,C.c_size_t,C.c_uint];bridge.bridge_guard_row.restype=C.c_size_t
+bridge.bridge_motion_advance.argtypes=[C.c_size_t,C.c_size_t,C.c_float];bridge.bridge_motion_advance.restype=C.c_size_t
+bridge.bridge_guard_angle.argtypes=[C.c_size_t,C.c_size_t,C.c_size_t];bridge.bridge_guard_angle.restype=C.c_int
+bridge.bridge_motion_delta.argtypes=[];bridge.bridge_motion_delta.restype=C.c_float
 libc=C.CDLL(None);libc.mmap.argtypes=[C.c_void_p,C.c_size_t,C.c_int,C.c_int,C.c_int,C.c_long];libc.mmap.restype=C.c_void_p
 
 libc.munmap.argtypes=[C.c_void_p,C.c_size_t];libc.munmap.restype=C.c_int
@@ -36,7 +40,7 @@ class Host:
         for address in getattr(self,'buffers',[])+[getattr(self,'game',0),getattr(self,'image',0)]:
             size=allocation_sizes.pop(address,0)
             if size:libc.munmap(address,size)
-    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0):
+    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0,guard=False):
         self.game=allocate(0x3000000);bridge.bridge_reset(self.game);bridge.bridge_range(self.game,0x3000000,0x40);bridge.bridge_modes(remove,conflict)
         w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp);put(self.game+0x233fbdc,struct.pack('<f',1.))
         self.buffers=[]
@@ -73,6 +77,11 @@ class Host:
             self.state_prefix=bytes.fromhex('48895c2410574883ec2048634170')
             put(self.game+0x2b1960,self.state_prefix+call(b'NativeSetState')+bytes.fromhex('4883c4205f488b5c2410c3'))
             put(self.game+0x297870,bytes.fromhex('f601047518f6818800000020750ff68144040000017506b801000000c333c0c3'))
+        if guard:
+            call=lambda n:b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(n))+b'\xff\xd0'
+            put(self.game+0x2a3980,bytes.fromhex('48895c240848896c24104889742418')+bytes.fromhex('574883ec20')+call(b'NativeGuardRow')+bytes.fromhex('4883c4205f488b5c2408488b6c2410488b742418c3'))
+            put(self.game+0x29f0a0,bytes.fromhex('405557488d6c24e84881ec18010000')+call(b'NativeMotionAdvance')+bytes.fromhex('4881c4180100005f5dc3'))
+            put(self.game+0x2b4640,bytes.fromhex('4c8bdc49895b20574881eca0000000')+call(b'NativeGuardAngle')+bytes.fromhex('4881c4a00000005f488b5c2420c3'))
         self.load_pe()
     def activate_bank(self,olympus,encoded_fields=False):
         self.slot=60 if olympus else 98
@@ -229,10 +238,68 @@ class Host:
         self.control(state=2,request=6)
 
 class RuntimeTests(unittest.TestCase):
-    def test_default_glide_preserves_all_four_native_bodies_clocks_and_queues_in_every_profile(self):
+    def test_main_tap_replaces_glide_commits_direction_and_can_repeat_after_a_new_tap(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,air=True,control_mode=4);h.arm_air()
+            h.control(down=6,pressed=0);self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(h.body(10),h.expected(10,1))
+            h.control(down=0);h.control(down=6,pressed=6,x=-1,tilt=1)
+            self.assertEqual(h.move()[0],[-14.,-.75,0.,14.])
+            h.control(down=0,x=0,z=1,tilt=1)
+            self.assertEqual(h.move()[0],[-14.,-.75,0.,14.])
+            h.clock(39.);h.frame();calls=bridge.bridge_queue_calls()
+            for _ in range(3):h.control(down=6,pressed=0)
+            self.assertEqual(bridge.bridge_queue_calls(),calls);self.assertEqual(h.body(10),h.expected(10,1))
+            h.control();h.control(down=6,pressed=6,x=1,tilt=1)
+            self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(bridge.bridge_queue_calls(),calls+1)
+            h.native_glide();self.assertEqual(bridge.bridge_native_glide_calls(),0)
+    def test_main_neutral_tap_uses_existing_horizontal_momentum_then_character_facing(self):
+        for momentum,facing,wanted in [((-4.,0.),(0.,1.),(-14.,0.)),((0.,0.),(1.,0.),(14.,0.))]:
+            h=Host(air=True);h.arm_air()
+            put(h.actor+0x3c0,struct.pack('<f',momentum[0]));put(h.actor+0x3c8,struct.pack('<f',momentum[1]))
+            put(h.actor+0x30,struct.pack('<f',facing[0]));put(h.actor+0x38,struct.pack('<f',facing[1]))
+            h.control(down=6,pressed=6);out,_=h.move();self.assertEqual((out[0],out[2]),wanted);self.assertEqual(out[1],-.75)
+    def test_guard_hook_admission_and_protection_failures_leave_all_native_entries_original(self):
+        for mode in ['bad_anchor','protect']:
+            h=Host(guard=True,fail_protect=3 if mode=='protect' else 0)
+            if mode=='bad_anchor':C.c_ubyte.from_address(h.game+0x2b4640).value^=1
+            before={r:C.string_at(h.game+r,15) for r in [0x2a3980,0x29f0a0,0x2b4640]};h.frame()
+            for r,data in before.items():self.assertEqual(C.string_at(h.game+r,15),data)
+    def test_main_guard_runs_the_complete_forward_reverse_at_thirty_source_fps(self):
+        h=Host(guard=True,encoded_fields=True);h.frame();h.equip(True);h.frame()
+        self.assertEqual(bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d),0x1234)
+        self.assertEqual(bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.),0x5678)
+        self.assertAlmostEqual(bridge.bridge_motion_delta(),53./156.,places=6)
+        h.clock(40.);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+        self.assertAlmostEqual(bridge.bridge_motion_delta(),53./156.,places=6)
+        self.assertEqual(h.event(110,1,0.),1);self.assertEqual(h.event(110,1,53.9),1);self.assertEqual(h.event(110,1,54.),0)
+    def test_main_guard_accepts_front_side_and_rear_angles_only_with_its_own_live_guard_object(self):
+        for bank in [98,60]:
+            h=Host(guard=True,slot=bank);h.frame();h.equip(True);h.frame();bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d)
+            first=h.buffer(bytes(0xc0));second=h.buffer(bytes(0xc0));w32(first,0x80800);w32(first+0x34,bridge.bridge_encode(h.actor))
+            for native_class in [0x20000,0x40000,0x60000,0x80000]:
+                w32(first,native_class|0x800)
+                for direction in [1.,0.,-1.]:
+                    put(second+0x10,struct.pack('<f',direction));self.assertEqual(bridge.bridge_guard_angle(h.game+0x2b4640,first,second),1)
+            put(second+0x10,struct.pack('<f',-1.));w32(first,0xa0800)
+            self.assertEqual(bridge.bridge_guard_angle(h.game+0x2b4640,first,second),0)
+            w32(first,0x80800);w32(first+0x34,bridge.bridge_encode(h.buffer(bytes(0x800))))
+            self.assertEqual(bridge.bridge_guard_angle(h.game+0x2b4640,first,second),0)
+    def test_guard_rate_and_all_angle_behavior_end_after_interruption_and_do_not_leak_to_ars(self):
+        h=Host(guard=True);h.frame();h.equip(True);h.frame();bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d)
+        w32(h.actor+0x164,0x48);h.frame();w32(h.actor+0x164,0xd4);h.clock(0)
+        bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.);self.assertEqual(bridge.bridge_motion_delta(),1.)
+    def test_guard_and_finisher_motion_rates_are_main_only_and_do_not_write_native_headers(self):
+        for profile in range(5):
+            h=Host(guard=True);h.frame();h.equip(True,profile);h.frame();bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d)
+            bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+            self.assertAlmostEqual(bridge.bridge_motion_delta(),53./156. if profile==0 else 1.,places=6)
+            w32(h.actor+0x164,0xcb);h.clock(0.);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+            self.assertAlmostEqual(bridge.bridge_motion_delta(),47./35. if profile==0 else 1.,places=6)
+            for slot in [101,110]:self.assertEqual(h.body(slot)[:80],h.runtime_originals[slot][:80])
+    def test_default_glide_preserves_all_four_native_bodies_clocks_and_queues_in_numbered_profiles(self):
         for bank in [98,60]:
             h=Host(slot=bank,air=True,encoded_fields=True);h.frame()
-            for profile in range(5):
+            for profile in range(1,5):
                 w32(h.actor+0x164,0);w32(h.actor+0x178,0);h.equip(True,profile);h.frame()
                 for clock in [0.,12.,40.,55.,90.,119.]:
                     h.clock(clock);h.control(state=21,request=0x71,down=4)
@@ -265,7 +332,7 @@ class RuntimeTests(unittest.TestCase):
         import math
         for bank in [98,60]:
           for x,z in [(0,0),(1,0),(-1,0),(0,1),(0,-1),(.7,.7)]:
-            h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air()
+            h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air(1)
             h.control(down=6,pressed=6,x=x,z=z,tilt=1 if x or z else 0)
             before=C.string_at(h.actor+0x10,16);out,result=h.move()
             self.assertEqual(C.string_at(h.actor+0x10,16),before)
@@ -289,7 +356,7 @@ class RuntimeTests(unittest.TestCase):
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6);h.move()
         w32(h.game+0x298ca94,0);out,_=h.move();self.assertAlmostEqual(out[1],-.75,places=5)
     def test_live_stick_steering_reverses_direction_and_neutral_stops_only_horizontal_travel(self):
-        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        h=Host(air=True);h.arm_air(1);h.control(down=6,pressed=6,x=1,tilt=1)
         self.assertAlmostEqual(h.move()[0][0],14.,places=5)
         # Circle release must neither shorten the action nor freeze its direction.
         for x,z,tilt,want in [(0,1,1,(0,14)),(-1,0,1,(-14,0)),(1,0,.5,(7,0)),(0,0,0,(0,0))]:
@@ -362,7 +429,7 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(h.snapshot(),before)
         self.assertIn('AIR DODGE READY',bridge.bridge_log().decode())
     def test_neutral_air_circle_plays_504_masks_only_jump_and_initializes_a_lift(self):
-        h=Host(air=True,control_mode=1);h.arm_air()
+        h=Host(air=True,control_mode=1);h.arm_air(1)
         put(h.actor+0x3b0,struct.pack('<3f',-4,2,3));velocity=C.string_at(h.actor+0x3b0,12);flags=C.string_at(h.actor,4)
         put(h.actor+0x16c,struct.pack('<f',18));h.control(down=6|0x80,pressed=6|0x100)
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x16c),0)
@@ -373,7 +440,7 @@ class RuntimeTests(unittest.TestCase):
         before=C.string_at(h.actor+0x10,16);out,_=h.move();self.assertLess(out[1],0);self.assertEqual(out[0],0);self.assertEqual(out[2],0)
         self.assertEqual(C.string_at(h.actor+0x10,16),before)
         for slot in h.motions:
-            if slot!=10:self.assertEqual(h.body(slot),h.expected(slot,1))
+            if slot!=10:self.assertEqual(h.body(slot),h.expected(slot,2))
     def test_aerial_dodge_rising_start_enters_native_fall_callbacks_and_queues_504(self):
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,state=1,request=5)
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x164),6)
@@ -396,9 +463,9 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual([bridge.bridge_control_word(i)&6 for i in range(4)],[0]*4)
                 self.assertEqual(r32(h.game+0x298ca94)&6,6)
     def test_aerial_dodge_finishes_into_506_and_requires_a_landing_before_repeating(self):
-        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6)
-        put(h.actor+0x16c,struct.pack('<f',39));h.frame();h.assert_all(self,1)
-        h.control();h.control(down=6,pressed=6);h.assert_all(self,1)
+        h=Host(air=True);h.arm_air(1);h.control(down=6,pressed=6)
+        put(h.actor+0x16c,struct.pack('<f',39));h.frame();h.assert_all(self,2)
+        h.control();h.control(down=6,pressed=6);h.assert_all(self,2)
         h.control(state=0,request=0,height=0);h.control();h.control(down=6,pressed=6)
         self.assertEqual(h.body(10),h.dodge_body())
     def test_air_dodge_restores_on_clock_loop_interruption_and_ability_off_in_both_banks(self):
@@ -503,12 +570,12 @@ class RuntimeTests(unittest.TestCase):
             self.assertEqual(bridge.bridge_native_glide_calls(),0)
             h.clock(18);h.control(state=2,request=6,down=6)
             self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(h.body(10),h.dodge_body())
-            self.assertIn('deferred native Glide constructor suppressed',bridge.bridge_log().decode())
+            self.assertIn('AQUA MAIN GLIDE REPLACED',bridge.bridge_log().decode())
             h.clock(39);h.frame();h.native_glide()
-            self.assertEqual(bridge.bridge_native_glide_calls(),1);self.assertEqual(r32(h.actor+0x70),21)
+            self.assertEqual(bridge.bridge_native_glide_calls(),0);self.assertEqual(r32(h.actor+0x70),2)
     def test_native_glide_constructor_and_relocated_call_pass_through_when_dodge_is_off(self):
         for enabled in [False,True]:
-            h=Host(air=True,air_dodge=int(enabled));h.arm_air();h.native_glide()
+            h=Host(air=True,air_dodge=int(enabled));h.arm_air(1 if enabled else 0);h.native_glide()
             self.assertEqual(bridge.bridge_native_glide_calls(),1);self.assertEqual(r32(h.actor+0x164),0x71)
             self.assertEqual(r32(h.glide_work+0x104)&1,0)
     def test_native_keyblade_tip_point_and_effect_matrix_are_used_for_every_spell_and_profile(self):
@@ -768,6 +835,6 @@ class RuntimeTests(unittest.TestCase):
 
 
 if __name__=='__main__':
-    result=unittest.TextTestRunner(verbosity=1).run(unittest.defaultTestLoader.loadTestsFromTestCase(RuntimeTests))
+    result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(RuntimeTests))
     (ROOT/'runtime_validation.json').write_text(json.dumps({'passed':result.wasSuccessful(),'tests':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'executed_actual_pe_dll':True,'win64_abi_and_imports_mocked':True,'windows_or_game_executed':False},indent=2)+'\n')
     raise SystemExit(0 if result.wasSuccessful() else 1)

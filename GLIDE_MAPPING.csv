@@ -1,6 +1,6 @@
-﻿Ability,Visual,Normal slots,Olympus slots,Aqua overrides,Clock and queued frame changes,Opening flight ending,Normal fall after native exit
-aqua,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
-aqua 1,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
-aqua 2,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
-aqua 3,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
-aqua 4,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
+﻿Ability,Visual,Native motion slots,Native motion bytes changed,Held Glide activation,Native clocks unmodified,Fall after exit
+aqua,504 tap replacement,"75,76,77,78",False,suppressed,True,506
+aqua 1,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
+aqua 2,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
+aqua 3,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
+aqua 4,original Sora native Glide,"75,76,77,78",False,v18 native,True,506

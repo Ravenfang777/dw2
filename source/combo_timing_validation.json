@@ -1,24 +1,7 @@
 {
-  "version": 18,
+  "version": 19,
   "passed": true,
   "game_runtime_tested": false,
-  "normal_slots": [
-    98,
-    99,
-    100
-  ],
-  "olympus_slots": [
-    60,
-    61,
-    62
-  ],
-  "source_clips": [
-    "300",
-    "301",
-    "301"
-  ],
-  "native_event_sampler_rva": "0x394770",
-  "native_chain_flag_reader": "0x29EFB0 reads actor+1CC bit0x400000",
   "variants": {
     "98": {
       "contact_after": 12,
@@ -297,16 +280,145 @@
       "changed_bytes": 41,
       "counts_pointers_and_payloads_preserved": true,
       "sound_and_effect_tracks_unchanged": true
+    },
+    "101": {
+      "tracks": [
+        {
+          "track": 0,
+          "kind": 1,
+          "before_frames": [
+            26.0,
+            38.0
+          ],
+          "after_frames": [
+            7.8285714285714265,
+            23.942857142857143
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 7,
+          "before_frames": [
+            8.0,
+            38.0
+          ],
+          "after_frames": [
+            0.0,
+            23.942857142857143
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 4,
+          "before_frames": [
+            8.0,
+            28.0,
+            80.0
+          ],
+          "after_frames": [
+            0.0,
+            10.514285714285712,
+            80.0
+          ]
+        },
+        {
+          "track": 1,
+          "kind": 4,
+          "before_frames": [
+            8.0,
+            28.0,
+            80.0
+          ],
+          "after_frames": [
+            0.0,
+            10.514285714285712,
+            80.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 6,
+          "before_frames": [
+            0.0,
+            8.336000442504883,
+            28.027999877929688,
+            79.91799926757812
+          ],
+          "after_frames": [
+            0.0,
+            0.0,
+            10.551885550362721,
+            80.0
+          ]
+        }
+      ],
+      "counts_pointers_and_payloads_preserved": true,
+      "source_first_frame": 12,
+      "guard_window_frames": null
+    },
+    "110": {
+      "tracks": [
+        {
+          "track": 0,
+          "kind": 1,
+          "before_frames": [
+            10.0,
+            36.0
+          ],
+          "after_frames": [
+            0.0,
+            54.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 5,
+          "before_frames": [
+            22.0
+          ],
+          "after_frames": [
+            54.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 6,
+          "before_frames": [
+            0.0
+          ],
+          "after_frames": [
+            0.0
+          ]
+        }
+      ],
+      "counts_pointers_and_payloads_preserved": true,
+      "source_first_frame": 0,
+      "guard_window_frames": [
+        0,
+        54
+      ]
     }
   },
-  "second_source_finishes_at_native_frames": {
-    "99": 32,
-    "100": 44
-  },
-  "second_chain_window_widths_native_frames": {
-    "99": 16,
-    "100": 20
-  },
-  "sound_and_effect_keys_payloads_descriptors_and_counts_unchanged": true,
-  "numbered_profiles_keep_native_timing": true
+  "main_ground_combo": [
+    "300",
+    "301",
+    "366"
+  ],
+  "main_air_combo": [
+    "305",
+    "353",
+    "407"
+  ],
+  "main_finisher_source_range": [
+    12,
+    47
+  ],
+  "finisher_native_delta_factor": 1.3428571428571427,
+  "finisher_native_events_retimed_for_trim": true,
+  "native_event_payloads_counts_and_pointers_unchanged": true,
+  "second_source_finish_and_chain_open_frames": [
+    32,
+    44
+  ],
+  "numbered_profiles": "byte-identical v18 choices and timing"
 }

@@ -85,6 +85,22 @@ static void ABI native_control(uintptr_t actor,uintptr_t dir){
     *(uint64_t*)(game_base+0x2d53a40)=0;*(uint32_t*)(game_base+0x2d53a48)=0;
 }
 static unsigned move_calls;
+static float last_motion_delta;static unsigned motion_calls,guard_row_calls,angle_calls;
+static uintptr_t ABI native_guard_row(uintptr_t actor,uint32_t row){
+    guard_row_calls++;
+    if(row==0x3d){*(uint32_t*)(actor+0x164)=0xd4;*(float*)(actor+0x16c)=0;*(uint32_t*)(actor+0x70)=0;}
+    return 0x1234;
+}
+static uintptr_t ABI native_motion_advance(uintptr_t actor,float delta){
+    motion_calls++;last_motion_delta=delta;*(float*)(actor+0x16c)+=delta;return 0x5678;
+}
+static int ABI native_guard_angle(uintptr_t first,uintptr_t second){
+    (void)first;angle_calls++;return *(float*)(second+0x10)>=0.f;
+}
+uintptr_t bridge_guard_row(uintptr_t f,uintptr_t actor,uint32_t row){return ((uintptr_t(ABI*)(uintptr_t,uint32_t))f)(actor,row);}
+uintptr_t bridge_motion_advance(uintptr_t f,uintptr_t actor,float delta){return ((uintptr_t(ABI*)(uintptr_t,float))f)(actor,delta);}
+int bridge_guard_angle(uintptr_t f,uintptr_t first,uintptr_t second){return ((int(ABI*)(uintptr_t,uintptr_t))f)(first,second);}
+float bridge_motion_delta(void){return last_motion_delta;}
 static float ABI native_move(uintptr_t actor,float*out){
     move_calls++;out[0]=1;out[1]=2;out[2]=3;out[3]=4;
     return *(float*)(actor+0x124);
@@ -97,6 +113,9 @@ static uint32_t ABI native_set_state(uintptr_t actor,uint32_t state){
 float bridge_move(uintptr_t f,uintptr_t actor,float*out){return ((float(ABI*)(uintptr_t,float*))f)(actor,out);}
 unsigned bridge_move_calls(void){return move_calls;}
 uintptr_t bridge_symbol(const char*n){
+    if(!strcmp(n,"NativeGuardRow"))return (uintptr_t)native_guard_row;
+    if(!strcmp(n,"NativeMotionAdvance"))return (uintptr_t)native_motion_advance;
+    if(!strcmp(n,"NativeGuardAngle"))return (uintptr_t)native_guard_angle;
     if(!strcmp(n,"GetModuleHandleA"))return (uintptr_t)get_module;
     if(!strcmp(n,"GetModuleFileNameW"))return (uintptr_t)file_name;
     if(!strcmp(n,"VirtualQuery"))return (uintptr_t)query;

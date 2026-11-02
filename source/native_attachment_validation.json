@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "version": 18,
+  "version": 19,
   "mode": "native keyblade-tip",
   "native_attachment_code": "0x30",
   "attachment_function_hooks": 0,

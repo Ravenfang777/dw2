@@ -1,92 +1,79 @@
-KH1FM AQUA ANIMATION TEST v18
+KH1FM AQUA ANIMATION TEST v19
 Steam Global / OpenKH Panacea
 
-MAIN AQUA
-Ground: 300 -> 301 -> 366. Air: 305 -> 407 -> 351.
-301 is fitted into both native second-ground variants. Its full source plays
-before a 16/20-native-frame recovery window allows the finisher. Existing
-native hit payloads remain; contact timing follows 301's source-frame8 strike.
+CHANGES APPLY TO THE MAIN aqua ABILITY
+Ground: 300 -> 301 -> 366, with the first12 source frames removed from366.
+Air: 305 -> 353 -> 407.
+Combat idle: skinned skull turns20 degrees left.
+Aerial Fire AND Blizzard: skinned skull turns20 degrees right. Fire recovery
+uses the same adjustment so the head does not snap between cast portions.
+Normal run now uses013; combat run now uses004. Both remain proper loops.
 
-NEXT TEST ABILITIES
-Ability       Ground            Air
- aqua 1       371 365 366       218 332 393
- aqua 2       352 353 407       351 304 303
- aqua 3       300 301 302       616 407 351
- aqua 4       510 511 512       504 514 399
-Aqua3 air and Aqua4 were not specified for replacement and retain v17 mappings.
-The main entry and four tests use the same ability IDs117..121 and0AP.
-Select one while idle. Existing native ability entries are never evicted.
+GUARD
+Aqua400 plays fully forward once, then fully backward once, at its source30fps
+speed. Nominal total duration is2.6 seconds. The native guard window spans the
+whole sequence. Native Guard selection must succeed; Guard still needs to be
+equipped. The main ability does not grant Guard automatically.
 
-AERIAL DODGE504
-Release Circle after takeoff, then press Circle once while airborne. Land to
-rearm. Direction is read from the held left stick on every native control
-update, so turning the stick steers throughout the animation. Releasing Circle
-does not shorten the dodge. Neutral stick stops horizontal motion while the
-slight lift continues. Stick pressure scales horizontal speed, with a deadzone
-and normalized diagonals. This replaces v17's high Dual D ballistic arc.
+The controller observes native Guard action row0x3D, then changes only the
+native actor-motion delta for that action. It bypasses the facing-cone check
+for Sora's own live native Guard objects during that witnessed action.
+Native contact, priorities, projectile deflection, feedback and attacks that
+cannot normally be guarded still use the game's handling. This is all-angle
+Guard, not permanent invulnerability. Interruption, unload or ability changes
+end its extra controller behavior. Other actions do not gain all-angle defense.
 
-Tuning: full-stick speed14 units/native clock unit, upward speed0.75, duration39
-clock units over the existing40-frame fall record. An unobstructed complete
-path requests546 horizontal units and29.25 units of lift. These are requested
-movements before native collision, not a guaranteed in-game distance. Ceilings
-clip upward travel; landing, damage, scripted actions and other interruptions
-return to native handling. The mod never writes actor position directly and
-adds no invulnerability, hitbox or defense. Fall506 resumes after504.
+The animation headers,54-frame record, bone/helper counts, allocations and
+original MSET files remain unchanged. The native motion clock advances more
+slowly for Guard. The finisher's native motion clock advances faster after the
+source trim so removing its beginning actually shortens the action.
 
-GUARD400 FORWARD AND REVERSE
-The full source animation plays forward once during native frames0..10,
-holds its last pose during10..36, then plays once in reverse during36..52.
-Forward speed is3.9x and reverse speed2.4375x the source's30fps timing: both
-exceed the requested minimum1.25x. This fits the existing54-frame native record
-and aligns the reverse with native recovery. No hold-to-guard mechanic is added.
-Original Guard events and defensive timing remain. Native cancels, attacks,
-damage and scene changes can interrupt recovery. Guard must be equipped normally.
-The common Guard record is shared by all Aqua profiles.
+TAP DODGE REPLACES HELD GLIDE
+In the air, release Circle after takeoff and then tap Circle. Main aqua starts
+504 once and suppresses normal held-Glide activation. It captures the character
+movement direction at that tap, then travels for the full animation with small
+upward lift. Releasing Circle or the stick does not shorten it or stop travel.
+When the animation finishes,506 falling resumes. Release then tap again after
+completion to perform another burst. Holding Circle never repeats the burst
+and never returns to held Glide while main aqua remains active.
 
-IDLE FRONT HAIR
-Idle/combat-idle now retain native local bind rotations for the connected front
-hair root and chain151..154. Side/back hair155..193 remains at bind as before.
-The idle skull direction, joint lengths, scales and native travel are retained.
-The v17 run correction on skinned skull150 remains. A live visual check is
-still needed; the offline checks verify connected joint transforms and skin
-bases rather than claim an in-game mesh rendering.
+Direction uses the native movement vector. With neutral input it uses existing
+horizontal momentum, then character facing if stationary. Main travel uses a
+normalized direction at speed14 per native time unit, with lift0.75 over39 units
+(the existing40-frame visual). A full unobstructed burst requests546 horizontal
+units and29.25 lift. Native walls, ceilings, landing and interruptions still
+apply. Actor positions are never written directly. The air_dodge=0 diagnostic
+option restores native air input/Glide.
 
-DAMAGE / KNOCKBACK: KH2 SOURCE STILL NEEDED
-The requested default KH2 Sora replacement is NOT included yet. The provided
-KH2 combat DLL loads Sora data from the installed game and contains no source
-motions. P_EX100_BTLF is Valor and is not a default Sora substitute.
-All Aqua damage/knockback replacements have been removed. This build currently
-uses original KH1 Sora reactions for requests48..51 (normal61..70/Olympus24..33).
-Other native reaction/parry records also remain original. This fallback is KH1,
-not KH2. No recovery logic, damage calculation or defensive window is altered.
+NUMBERED TEST ABILITIES RETAIN v18
+ aqua1 ground371 365 366 / air218 332 393
+ aqua2 ground352 353 407 / air351 304 303
+ aqua3 ground300 301 302 / air616 407 351
+ aqua4 ground510 511 512 / air504 514 399
+Their combos, casts, idle, runs, Guard animation/timing, steered dodge and normal
+Glide retain v18 behavior. Main changes are isolated with explicit older common
+pose payloads. All five ability IDs117..121 and0AP are retained.
 
-To finish KH2 reactions, supply extracted obj/P_EX100.mdlx and obj/P_EX100.mset.
-COLLECT_KH2_SORA_SOURCE.cmd opens a folder selector, copies only those default
-Sora BAR files, and writes a separate KH2_Sora_Source_*.zip. Choose extracted
-KH2 data or its obj folder; the helper does not extract large PKG containers.
-Upload the resulting ZIP. The helper never changes the selected source files.
-
-RETAINED
-Original KH1 Glide, native Blizzard events with main Fire visuals, keyblade-tip
-magic, all numbered casting assignments and the remaining main Aqua actions.
-No additional ability IDs are added. Native motion headers, counts, lengths,
-293-bone skeleton, eleven helper slots and allocations remain unchanged. The
-installed normal/Olympus MSETs are original; the ability gate applies body curves
-and scoped event time edits only at runtime.
+OTHER RETAINED BEHAVIOR
+Main ground300/301, keyblade-tip magic, native Blizzard events with Fire poses,
+original KH1 Sora damage/knockback, idle hair bind correction and remaining
+Aqua animations. Default KH2 Sora reactions are still pending P_EX100 source
+assets; no KH2 reaction replacement is claimed here.
 
 INSTALL / TEST
-1. Close KH1. Disable older Aqua and KH2 Combat/NineStyles/Dual Wield builds.
-2. Install this ZIP in OpenKH Mods Manager, then Build and Run.
-3. Equip main aqua while idle. Check idle hair,300/301/366, air305/407/351,
-   Guard entry/recovery, then a Circle dodge with forward/side/back stick input.
-4. During dodge, turn the stick and return it to neutral; lift should remain
-   small throughout504 and normal falling should resume afterward.
-5. Test aqua1..3 combos and verify Blizzard, standard Glide and damage reactions.
-6. Repeat in normal and Olympus environments. Share kh1-aqua.log plus a short
-   video for trajectory, hair or Guard adjustments. The log banner must sayv18.
+1. Fully close KH1. Disable the previous Aqua test and any NineStyles/Dual Wield
+   or KH2 Combat build. Install this v19 ZIP in OpenKH, then Build and Run.
+2. Equip MAIN aqua while idle. The log banner must sayv19.
+3. Test Guard entry, reverse exit and attacks approaching from front/side/rear.
+4. Test ground300/301/trimmed366 and air305/353/407.
+5. Tap Circle airborne with a direction, release both inputs and watch the full
+   burst. Hold Circle afterward: it must not begin normal Glide. Test a new tap.
+6. Check combat idle, aerial Fire/Blizzard head direction and both run variants.
+7. Switch to a numbered test while idle to check its unchanged v18 behavior.
 
 VALIDATION
-Offline tests execute the built PE DLL with a controlled Win64 host and sample
-serialized geometry, original event data and native executable anchors. This
-is not a Windows/KH1 playtest. See validation.json for exact current results.
-The KH2 damage replacement remains explicitly pending source assets.
+Offline checks execute the actual PE DLL in a Win64 ABI mock and sample the
+serialized poses. New hook anchors and control paths are checked against the
+supplied Steam executable. No live Windows/KH1 game rendering or playtest is
+claimed. Please return kh1-aqua.log and a short video if timing, directional
+blocking, movement or head orientation needs adjustment.

@@ -47,7 +47,7 @@ static u32 previous_equipped_mask;
 static int slots_reported;
 static const char *profile_names[AQUA_ABILITIES]={"aqua","aqua 1","aqua 2","aqua 3","aqua 4"};
 static const char *profile_help[AQUA_ABILITIES]={
-    "Aqua Ground 300 301 366 Air 305 407 351",
+    "Aqua Ground 300 301 366 Air 305 353 407",
     "Next Test Ground 371 365 366 Air 218 332 393",
     "Next Test Ground 352 353 407 Air 351 304 303",
     "Next Test Ground 300 301 302 Air 616 407 351",
@@ -64,6 +64,7 @@ static int air_dodge_active;
 static u32 blizzard_active;
 static void blizzard_tick(uptr actor,int choice);
 static void air_dodge_clear(void);
+static void guard_clear(void);
 static int cache_choice=-1,pending_reported,last_choice=-1;
 static u32 last_action=0xffffffffu,action_logs;
 
@@ -105,7 +106,7 @@ static void encode(const char*text,u8*out,usize cap){
         else out[n]=1; /* The supplied helper maps a space to 01. */
     }out[n]=0;
 }
-static void clear_binding(void){air_dodge_clear();blizzard_active=0;cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
+static void clear_binding(void){air_dodge_clear();guard_clear();blizzard_active=0;cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
 static uptr decode(u32 h){
     if(!h)return 0;
     if(!(h&0x80000000u))return (uptr)h;
@@ -335,6 +336,7 @@ static void motion_gate(uptr actor,int choice){
 #include "aqua_magic.h"
 #include "aqua_air_dodge.h"
 #include "aqua_blizzard.h"
+#include "aqua_guard.h"
 
 EXPORT void ABI OnInit(const w16 *mod_path){
     (void)mod_path;
@@ -342,12 +344,12 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    magic_disabled=1; /* Native keyblade-tip casting is required for v18. */
+    magic_disabled=1; /* Native keyblade-tip casting is required for v19. */
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v18 loaded by Panacea; main ground300/301/366 air305/407/351; new tests1-3; guard400 forward/hold/reverse; idle front hair151..154 at bind; steered dodge504 speed14 lift0.75; Blizzard Fire visual; native tip magic and Glide; KH2 damage source pending, KH1 Sora reactions pass through");
+    log_text("KH1FM AQUA ANIMATION TEST v19 loaded; MAIN ONLY: guard400 source30fps forward/reverse and full all-angle native Guard; air305/353/407;366 starts12; tap504 replaces held Glide and keeps direction; combat idle head left20, aerial Fire/Blizzard head right20; runs swapped; numbered tests retained");
     if(magic_disabled)log_text("AQUA MAGIC: native keyblade-tip origins and effect matrices; palm redirection disabled by default");
-    log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
+    log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Main Guard uses its full animation defense window and all-angle native guard objects.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }
 EXPORT void ABI OnFrame(void){
@@ -365,7 +367,7 @@ EXPORT void ABI OnFrame(void){
         if(!conflict_reported){log_text("AQUA SUSPENDED: disable Nine Styles / Dual Wield for this standalone ability test");conflict_reported=1;}
         return;
     }
-    magic_conflict=0;magic_install();air_install();
+    magic_conflict=0;magic_install();air_install();guard_install();
     uptr actor=(uptr)r64(base+SORA_RVA);
     if(!memory(actor,0x378,0)||(r32(actor+0x374)&3u)!=1u){clear_binding();return;}
     uptr save=save_block();if(!save){clear_binding();return;}
@@ -374,6 +376,7 @@ EXPORT void ABI OnFrame(void){
     else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("AQUA WAITING: ability list full or not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"AQUA UNEQUIPPED");last_choice=choice;}
     air_requested_choice=choice;
+    guard_observe(actor);
     blizzard_tick(actor,choice);
     air_tick(actor,choice);
     motion_gate(actor,choice);

@@ -1,47 +1,18 @@
 {
-  "version": 18,
+  "version": 19,
   "passed": true,
   "game_runtime_tested": false,
-  "supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
-  "timestamp": 1721645006,
-  "verified_anchors": {
-    "0x2a6220": "48895c2418574883ec40488b0557e82a00",
-    "0x2b26c0": "40534883ec20488bd9e862060000",
-    "0x2af6a0": "48895c2410574883ec40f70100100000",
-    "0x2b1960": "48895c2410574883ec2048634170",
-    "0x297870": "f601047518f6818800000020750ff68144040000017506b801000000c333c0c3",
-    "0x29f980": "48895c2408574883ec20488bf9",
-    "0x2af356": "488d0543030000",
-    "0x2af4b8": "8d5102",
-    "0x2af4ca": "e891240000",
-    "0x2af3f0": "48895c2410574883ec50"
-  },
-  "native_fall_movement_callback": "0x2AF6A0 before native collision",
-  "native_state_setter": "0x2B1960 with native callbacks",
-  "native_timestep_global": "0x233FBDC; finite positive timestep <=4",
-  "movement": {
-    "policy": "resample held world stick each native control; normalized, analog pressure clamped0..1; neutral brakes horizontal travel",
-    "horizontal_speed": 14.0,
-    "upward_speed": 0.75,
-    "duration_native_units": 39.0,
-    "full_stick_horizontal_distance": 546.0,
-    "total_lift": 29.25,
-    "circle_release_shortens_action": false,
-    "duration_from_visual_clock_and_bounded_elapsed_time": true
-  },
-  "actor_position_written_by_mod": false,
-  "collision_and_landing_callbacks_native": true,
-  "extra_guard_invulnerability_or_attack_grant": false,
+  "scope": "main Glide replacement; numbered profiles retain v18",
   "source_animation": "504",
-  "normal_falling_animation": "506",
-  "supplied_v17_log": {
-    "filename": "kh1-aqua(7).log",
-    "sha256": "73485bab5d19e31783576940e1e57e768b91179beab24506cd4a3e90489bee5a",
-    "accepted_504_count": 9,
-    "observed_movement_callback_count": 9
-  },
-  "limitations": [
-    "Movement numbers describe requested displacement before native collision; live travel depends on obstacles and interruption",
-    "Windows/KH1 not executed"
-  ]
+  "duration_native_units": 39.0,
+  "horizontal_speed": 14.0,
+  "upward_speed": 0.75,
+  "horizontal_requested_distance": 546.0,
+  "requested_lift": 29.25,
+  "direction": "capture prepared movement direction on tap; fallback existing horizontal momentum, then facing",
+  "button": "fresh airborne Circle tap; release then tap again after animation to repeat",
+  "held_glide": "suppressed in main; native input restored outside main or when air_dodge=0",
+  "actor_position_written": false,
+  "native_collision_callbacks_retained": true,
+  "native_movement_rva": "0x2AF6A0"
 }

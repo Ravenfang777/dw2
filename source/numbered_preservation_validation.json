@@ -1,0 +1,27 @@
+{
+  "version": 19,
+  "passed": true,
+  "profiles": [
+    {
+      "profile": 1,
+      "all_active_motion_records": 37,
+      "all_v18_motion_bytes_identical": true
+    },
+    {
+      "profile": 2,
+      "all_active_motion_records": 37,
+      "all_v18_motion_bytes_identical": true
+    },
+    {
+      "profile": 3,
+      "all_active_motion_records": 37,
+      "all_v18_motion_bytes_identical": true
+    },
+    {
+      "profile": 4,
+      "all_active_motion_records": 37,
+      "all_v18_motion_bytes_identical": true
+    }
+  ],
+  "runtime_controls_main_only": true
+}

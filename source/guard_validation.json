@@ -1,27 +1,28 @@
 {
-  "version": 18,
+  "version": 19,
   "passed": true,
   "game_runtime_tested": false,
+  "scope": "main Aqua only",
   "source": "400",
   "source_frames": 40,
+  "source_fps": 30,
   "native_frames": 54,
-  "forward_frames": [
+  "forward_native_clock": [
     0,
-    10
+    26.5
   ],
-  "hold_frames": [
-    10,
-    36
+  "reverse_native_clock": [
+    26.5,
+    53
   ],
-  "reverse_frames": [
-    36,
-    52
+  "native_motion_delta_factor": 0.33974358974358976,
+  "nominal_source_seconds": 2.6,
+  "defense_window_native_clock": [
+    0,
+    54
   ],
-  "forward_source_rate": 3.9,
-  "reverse_source_rate": 2.4375,
-  "minimum_requested_rate": 1.25,
-  "entire_source_played_each_direction_once": true,
-  "native_guard_events_and_defense_unchanged": true,
-  "no_new_hold_to_guard_mechanic": true,
-  "native_hits_cancels_and_actions_can_interrupt_visual_recovery": true
+  "angle": "360 degrees; native guard objects only",
+  "guard_action_requires_native_Guard_selection": true,
+  "numbered_profiles": "v18 guard bytes and native timing retained",
+  "native_unblockable_attacks": "native policy"
 }

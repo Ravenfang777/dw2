@@ -1,26 +1,20 @@
 {
-  "version": 18,
+  "version": 19,
   "passed": true,
   "game_runtime_tested": false,
-  "model_sha256": "697fd74bf2dec0a5b0410436e88b1b3131cfa7c122f1f180fd5f05af161bf4cf",
-  "run_slots": [
-    5,
-    6,
-    7
+  "skinned_skull_joint": 150,
+  "main_combat_idle_slot": 1,
+  "main_combat_idle_yaw_left_degrees": 20.0,
+  "main_aerial_fire_slots": [
+    79,
+    82
   ],
-  "run_head_mapping_retained": "Aqua head5 on skinned skull150; hair151 local bind",
-  "idle_front_hair_slots": [
-    0,
-    1
-  ],
-  "idle_front_hair_local_bind_joints": [
-    151,
-    152,
-    153,
-    154
-  ],
-  "idle_skull150_direction_retained": true,
-  "joint_lengths_scale_and_native_travel_preserved": true,
-  "user_image": "image(1).png",
-  "game_rendered_verification_pending": true
+  "main_aerial_blizzard_variant_slot": 80,
+  "main_aerial_cast_yaw_right_degrees": 20.0,
+  "head_turns_on_numbered_profiles": false,
+  "main_normal_run_source": "013",
+  "main_combat_run_source": "004",
+  "both_run_loops_retained": true,
+  "bind_hair_corrections_retained": true,
+  "game_rendering_pending": true
 }

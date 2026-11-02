@@ -1,28 +1,27 @@
-AQUA v18 SOURCE
-Runtime: aqua.c plus aqua_data.h, aqua_air_dodge.h, aqua_blizzard.h,
-aqua_cast_requests.h and aqua_magic.h. Immutable before/after payloads fit the
-original KH1 record capacities. Native Guard events and all damage reactions
-pass through. Ground event changes are limited to existing time values.
-
-Rebuild: Python3.12, GCC and GNU binutils; no Windows SDK required.
+AQUA v19 SOURCE
+Build with Python3.12, GCC and GNU binutils:
   python3 generate_data.py
   python3 build.py
   python3 test_runtime.py
   python3 test_visuals.py
-These tests use a Linux Win64 ABI mock; they do not run KH1.
+No Windows SDK is needed. Tests use a Linux Win64 ABI mock, not KH1.
 
-Retarget source and supplied BBS/native KH1 fixtures are included under
-retargeting. To regenerate a profile (0main,1..4numbered,5dodge,7Blizzard):
-  python3 retargeting/tools/build_aqua_complete_v18.py --profile 0
-Use profiles0..5 or7. Selective --slots is supported.
-No sampling cache is required; source clipping/timing fingerprints prevent
-reuse across different guards or combo timelines. Guard uses a forward/hold/
-reverse source timeline without changing any native headers or action clocks.
+New main-only controller: aqua_guard.h. It observes native row0x3D at2A3980,
+scales the actor-motion delta at29F0A0 and scopes the facing-angle check at
+2B4640 to Sora's own live Guard objects. No HP/hurt interceptor or direct
+animation-clock/position writes. The three hooks admit all original prefixes
+and protect all destinations before publishing; failures restore permissions
+without a partial patch. Guard delta53/156 yields source30fps forward/reverse;
+finisher delta47/35 preserves the remaining source's prior speed after trim.
 
-The desired KH2 Sora reaction mapping is recorded in damage_reaction_validation.
-json, but no KH2 source game assets are bundled or replacement claimed.
-Collect_KH2_Sora_Source.ps1 is a Windows PowerShell5.1 helper for loose extracted
-P_EX100.mdlx and P_EX100.mset. It never substitutes Valor or other characters.
+Retarget tools are under retargeting/tools. Regenerate with:
+  python3 retargeting/tools/build_aqua_complete_v19.py --profile 0
+Profiles1..4 are numbered,5 is dodge,7 is main Blizzard. Selective --slots works.
+Native motion headers, sizes and pointer/descriptor counts remain unchanged.
+Event time edits use existing keys and preserve their payloads. Numbered poses
+that would otherwise inherit new main changes explicitly retain v18 payloads.
 
-For transparency, every runtime/visual/native validation marks game execution
-as false. In-game testing remains necessary for feel, collision and hair mesh.
+Main head turns use real SKIN skull150. The run swap preserves native travel,
+closed loops, authored source head mapping and original segment lengths.
+Tap dodge uses504 in the existing fall record and native collision callbacks.
+Numbered profiles retain v18 behavior. Default KH2 reactions remain pending.

@@ -1,6 +1,6 @@
 {
-  "version": 18,
-  "test_round": "next test; abilities1..3 updated",
+  "version": 19,
+  "test_round": "main Aqua controller and pose revisions",
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -24,8 +24,8 @@
   ],
   "main_air_combo": [
     "305",
-    "407",
-    "351"
+    "353",
+    "407"
   ],
   "main_blizzard_ground_air": [
     "391",
@@ -46,13 +46,13 @@
     16,
     20
   ],
-  "glide": "original native default; no Aqua overrides",
-  "air_dodge": "504 live stick speed14 with sustained lift0.75, duration39 native units",
+  "glide": "main replaced by tap504; numbered native Glide",
+  "air_dodge": "main504 captured movement direction, tap replaces held Glide; speed14 lift0.75 duration39",
   "run_head_skin_joint": 150,
   "run_head_direction": "authored source head5; hair helper151 at bind",
   "keyblade_tip_magic": true,
   "numbered_cast_poses_retained": true,
-  "numbered_combos_1_3_updated": true,
+  "numbered_profiles_preserved_from_v18": true,
   "aqua3_air_and_aqua4_retained": true,
   "test_sets": [
     [
@@ -117,17 +117,17 @@
     153,
     154
   ],
-  "guard_source": "400 forward/hold/reverse",
-  "serialized_profile_and_transient_assignments": 92,
-  "distinct_fitted_records": 71,
-  "runtime_pe_tests": 74,
-  "geometry_tests": 24,
-  "pose_samples": 15483,
+  "guard_source": "main400 normal source30fps forward/reverse, full guard window and all-angle native contacts",
+  "serialized_profile_and_transient_assignments": 112,
+  "distinct_fitted_records": 79,
+  "runtime_pe_tests": 81,
+  "geometry_tests": 26,
+  "pose_samples": 17499,
   "max_pose_position_fit_error": 4.98903332659248,
   "max_pose_basis_fit_error": 0.08268184394477858,
   "max_native_travel_error": 0.0,
   "max_scale_error": 0.0,
-  "dll_sha256": "bda6bb60aa89b99822ee449a056def3b1c9940cb011cf23dc463720b0019b90d",
+  "dll_sha256": "6536a2c390466ba295dad8df9f9d2137f8882fc86dcd2e9201e0a381d8c3be9a",
   "limitations": [
     "No Windows/KH1 or rendered-mesh test performed",
     "Default KH2 Sora reaction source missing; original KH1 Sora reactions used pending capture",

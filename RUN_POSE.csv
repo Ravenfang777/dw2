@@ -1,7 +1,7 @@
 ﻿Ability,Normal slot,Aqua clip,Corrected SKIN joint,Authored head source bone,Hair helper151 local,Torso and neck retained,Bind lengths and scale retained
-aqua,5,004,150,5,native bind,True,True
-aqua,6,004,150,5,native bind,True,True
-aqua,7,013,150,5,native bind,True,True
+aqua,5,013,150,5,native bind,True,True
+aqua,6,013,150,5,native bind,True,True
+aqua,7,004,150,5,native bind,True,True
 aqua 1,5,004,150,5,native bind,True,True
 aqua 1,6,004,150,5,native bind,True,True
 aqua 1,7,013,150,5,native bind,True,True

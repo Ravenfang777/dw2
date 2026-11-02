@@ -1,6 +1,6 @@
-﻿Ability,Aqua clip,Native normal slot,Olympus slot,Forward native frames,Hold native frames,Reverse native frames,Forward source speed,Reverse source speed,Native events and defense original
-aqua,400,110,72,0..10,10..36,36..52,3.9,2.4375,True
-aqua 1,400,110,72,0..10,10..36,36..52,3.9,2.4375,True
-aqua 2,400,110,72,0..10,10..36,36..52,3.9,2.4375,True
-aqua 3,400,110,72,0..10,10..36,36..52,3.9,2.4375,True
-aqua 4,400,110,72,0..10,10..36,36..52,3.9,2.4375,True
+﻿Ability,Aqua clip,Normal slot,Olympus slot,Forward timeline,Reverse timeline,Native motion delta factor,Defense window,Facing restriction
+aqua,400,110,72,0..26.5,26.5..53,0.33974358974358976,0..54,all angles for witnessed native Guard
+aqua 1,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
+aqua 2,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
+aqua 3,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
+aqua 4,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native

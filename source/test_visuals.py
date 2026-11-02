@@ -60,22 +60,37 @@ class VisualTests(unittest.TestCase):
         mobj=u(4);header=mobj+u(mobj+32);table=header+u(header+4)
         self.assertEqual((u(table+150*48+44)>>30)&3,1)
         self.assertEqual((u(table+151*48+44)>>30)&3,0)
-    def test_running_face_uses_the_authored_head_orientation_with_hair_root_in_bind(self):
+    def test_main_runs_swap_combat_and_normal_while_numbered_profiles_retain_v18(self):
         from aqua_retarget_math import rotation
-        for slot in [5,6,7]:
-            old=parse_motion((ROOT/f'fixtures/v15_run_s{slot:03}.bin').read_bytes())
+        for slot,oldslot in [(5,7),(6,7),(7,5)]:
+            old=parse_motion((ROOT/f'fixtures/v18_reference_s{oldslot:03}.bin').read_bytes())
             for f in np.linspace(0,converted[slot].frames-1,9):
                 a=pose(model,old,float(f));b=pose(model,converted[slot],float(f))
-                wanted=rotation(a[151])@rotation(model.bind[151]).T
-                actual=rotation(b[150])@rotation(model.bind[150]).T
-                np.testing.assert_allclose(actual,wanted,atol=.012,rtol=0)
-                # The face is lifted, with no added rotation on the hair helper.
-                self.assertGreater((actual@np.array([0.,0.,1.]))[1]-(rotation(a[150])@rotation(model.bind[150]).T@np.array([0.,0.,1.]))[1],.17)
-                local=model.local.copy()
-                for bone,kind,value in converted[slot].constants:local[bone,kind-1]=value
-                apply(converted[slot].channels,local,float(f))
-                np.testing.assert_allclose(Rotation.from_euler('xyz',local[151,3:6]).as_matrix(),Rotation.from_euler('xyz',model.local[151,3:6]).as_matrix(),atol=1e-6,rtol=0)
-                np.testing.assert_allclose(a[:150],b[:150],atol=.004,rtol=0)
+                np.testing.assert_allclose(rotation(a[150]),rotation(b[150]),atol=.025,rtol=0)
+            for profile in range(1,5):
+                self.assertEqual(all_converted[(profile,slot)].raw,(ROOT/f'fixtures/v18_reference_s{slot:03}.bin').read_bytes())
+        self.assertEqual([by_slot[s]['donor'] for s in [5,6,7]],['013','013','004'])
+    def test_twenty_degree_head_turns_affect_the_skinned_skull_and_keep_numbered_poses(self):
+        from aqua_retarget_math import rotation
+        variants=[(1,20.,converted[1],ROOT/'fixtures/v18_reference_s001.bin'),
+                  (79,-20.,converted[79],ROOT/'fixtures/v18_reference_s079.bin'),
+                  (82,-20.,converted[82],ROOT/'fixtures/v18_reference_s082.bin'),
+                  (80,-20.,all_converted[(7,80)],ROOT/'fixtures/v18_blizzard_s080.bin')]
+        for slot,degrees,m,path in variants:
+            old=parse_motion(path.read_bytes());yaw=Rotation.from_euler('y',degrees,degrees=True).as_matrix()
+            for f in np.linspace(0,m.frames-1,11):
+                a=pose(model,old,float(f));b=pose(model,m,float(f));root=rotation(a[0])
+                expected=root@yaw@root.T@rotation(a[150])
+                np.testing.assert_allclose(rotation(b[150]),expected,atol=.035,rtol=0)
+            if slot==1:
+                for profile in range(1,5):self.assertEqual(all_converted[(profile,slot)].raw,old.raw)
+    def test_main_finisher_starts_at_source_twelve_and_shortens_real_duration(self):
+        row=by_slot[101];self.assertEqual(row['source_range'],[12,47]);self.assertAlmostEqual(row['runtime_playback_rate'],47./35.)
+        old=parse_motion((ROOT/'fixtures/v18_reference_s101.bin').read_bytes());new=converted[101]
+        a=pose(model,old,79.*12./47.);b=pose(model,new,0.)
+        a[:,:3,3]-=a[0,:3,3];b[:,:3,3]-=b[0,:3,3]
+        for joint in [100,205,150,19,45]:self.assertLess(float(np.linalg.norm(a[joint,:3,3]-b[joint,:3,3])),4.)
+        self.assertLess(row['duration_seconds'],(old.frames-1)/old.fps)
     def test_301_strike_phase_and_completed_second_swing_agree_between_both_native_variants(self):
         for phase in [0.,.2,.5,1.]:
             a=pose(model,converted[99],phase*32.);b=pose(model,converted[100],phase*44.)
@@ -89,23 +104,21 @@ class VisualTests(unittest.TestCase):
                 for b,k,v in m.constants:local[b,k-1]=v
                 apply(m.channels,local,float(f))
                 np.testing.assert_allclose(Rotation.from_euler('xyz',local[151:155,3:6]).as_matrix(),Rotation.from_euler('xyz',model.local[151:155,3:6]).as_matrix(),atol=1e-6,rtol=0)
-    def test_guard_plays_once_forward_holds_then_reverses_once_during_native_recovery(self):
-        m=converted[110]
+    def test_guard_complete_forward_and_reverse_have_normal_source_speed_and_full_defense(self):
+        m=converted[110];r=by_slot[110]
         for phase in np.linspace(0,1,17):
-            a=pose(model,m,phase*10.);b=pose(model,m,52.-phase*16.)
+            a=pose(model,m,phase*26.5);b=pose(model,m,53.-phase*26.5)
             a[:,:3,3]-=a[0,:3,3];b[:,:3,3]-=b[0,:3,3]
             np.testing.assert_allclose(a,b,atol=2.2,rtol=0)
-        peak=pose(model,m,10.)
-        for frame in [15.,25.,35.,36.]:
-            a=pose(model,m,frame);a[:,:3,3]-=a[0,:3,3]
-            b=peak.copy();b[:,:3,3]-=b[0,:3,3]
-            np.testing.assert_allclose(a,b,atol=.01,rtol=0)
-        r=by_slot[110];self.assertEqual(r['source_timing'],'guard_forward_hold_reverse')
-        self.assertGreaterEqual(39./r['guard_forward_end'],1.25)
-        self.assertGreaterEqual(39./(r['guard_reverse_end']-r['guard_reverse_start']),1.25)
+        actual_rate=39./26.5*m.fps*r['runtime_playback_rate']
+        self.assertAlmostEqual(actual_rate,30.,places=5);self.assertAlmostEqual(r['duration_seconds'],2.6,places=5)
+        for profile in range(1,5):self.assertEqual(all_converted[(profile,110)].raw,(ROOT/'fixtures/v18_reference_s110.bin').read_bytes())
+        from aqua_event_timing_v19 import tracks
         import struct
-        at=struct.unpack_from('<I',original[110].raw,60)[0]
-        self.assertEqual(m.raw[at:],original[110].raw[at:])
+        for _,kind,count,keys in tracks(m.raw):
+            times=[struct.unpack_from('<f',m.raw,keys+i*16)[0] for i in range(count)]
+            if kind==1:self.assertEqual(times,[0.,54.])
+            if kind==5:self.assertEqual(times,[54.])
     def test_blizzard_variants_preserve_every_native_spell_event_and_allocation(self):
         for row in blizzard_report['motions']:
             slot=row['normal_slot'];m=all_converted[(7,slot)];native=original[slot]
@@ -120,7 +133,7 @@ class VisualTests(unittest.TestCase):
         # newly assigned casts, fall, finisher and air combo have different poses.
         # Guard400 now has a different forward/hold/reverse timeline; its own
         # test compares matching pose phases rather than old linear clocks.
-        same_source=~np.isin(slots,[10,54,55,56,57,58,59,79,80,81,82,99,100,101,102,103,104,110])
+        same_source=~np.isin(slots,[10,54,55,56,57,58,59,79,80,81,82,99,100,101,102,103,104,110,5,6,7])
         before=before[same_source];after=after[same_source]
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[4,7],:]-before[:,:,[4,7],:],axis=3))),23.)
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[8,9],:]-before[:,:,[8,9],:],axis=3))),2.)
@@ -184,7 +197,7 @@ class VisualTests(unittest.TestCase):
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
     def test_requested_action_clips_and_test_4_combos_match_serialized_reports(self):
-        actions={99:'301',100:'301',101:'366',102:'305',103:'407',104:'351',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
+        actions={99:'301',100:'301',101:'366',102:'305',103:'353',104:'407',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
@@ -223,8 +236,8 @@ class VisualTests(unittest.TestCase):
             rows={r['normal_slot']:r for r in data['motions']}
             for slot,(clip,cut) in expected.items():
                 self.assertEqual((rows[slot]['donor'],rows[slot]['source_range']),(clip,cut))
-    def test_main301_ground_second_and305_407_351_air_clips_are_serialized(self):
-        for slot,clip in [(99,'301'),(100,'301'),(102,'305'),(103,'407'),(104,'351')]:
+    def test_main301_ground_second_and305_353_407_air_clips_are_serialized(self):
+        for slot,clip in [(99,'301'),(100,'301'),(102,'305'),(103,'353'),(104,'407')]:
             self.assertEqual(by_slot[slot]['donor'],clip);self.assertIsNone(by_slot[slot]['source_range'])
         self.assertEqual(by_slot[99]['source_bank'],'base');self.assertEqual(by_slot[100]['source_bank'],'base')
     def test_item_007_395_uses_the_requested_shared_payload_in_both_native_item_actions(self):
