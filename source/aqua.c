@@ -47,10 +47,10 @@ static u32 previous_equipped_mask;
 static int slots_reported;
 static const char *profile_names[AQUA_ABILITIES]={"aqua","aqua 1","aqua 2","aqua 3","aqua 4"};
 static const char *profile_help[AQUA_ABILITIES]={
-    "Aqua movement attacks guard dodge magic and reactions",
-    "Test 4 Ground 316 317 318 Air 391 390 427",
-    "Test 4 Ground 315 371 366 Air 365 218 332",
-    "Test 4 Ground 393 411 352 Air 616 407 351",
+    "Aqua Ground 300 301 366 Air 305 407 351",
+    "Next Test Ground 371 365 366 Air 218 332 393",
+    "Next Test Ground 352 353 407 Air 351 304 303",
+    "Next Test Ground 300 301 302 Air 616 407 351",
     "Test 4 Ground 510 511 512 Air 504 514 399"};
 static int table_reported;
 static w16 log_path[1024],ini_path[1024];
@@ -342,10 +342,10 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    magic_disabled=1; /* Native keyblade-tip casting is required for v17. */
+    magic_disabled=1; /* Native keyblade-tip casting is required for v18. */
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v17 loaded by Panacea; main ground300/300/366 air305/407/351; Blizzard uses Fire poses; native keyblade-tip magic; default native Glide; completed300 second swing; Dual D baseline145/18 with2x dodge504 travel; authored Aqua head on skinned skull150; hair151 bind rotation");
+    log_text("KH1FM AQUA ANIMATION TEST v18 loaded by Panacea; main ground300/301/366 air305/407/351; new tests1-3; guard400 forward/hold/reverse; idle front hair151..154 at bind; steered dodge504 speed14 lift0.75; Blizzard Fire visual; native tip magic and Glide; KH2 damage source pending, KH1 Sora reactions pass through");
     if(magic_disabled)log_text("AQUA MAGIC: native keyblade-tip origins and effect matrices; palm redirection disabled by default");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");

@@ -23,28 +23,18 @@ aqua,Cure casting family,56,427,,p02ex_154.arc,p02ex_154.pam,44,30,full,b3574569
 aqua,Fire cast recovery,57,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[31, 48]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,60,linear
 aqua,ground item use,58,395,007 / 395,p02ex_200.arc,p02ex_200.pam,29,30,full,bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96,82,linear
 aqua,air item use,59,395,007 / 395,p02ex_200.arc,p02ex_200.pam,29,30,full,bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96,72,linear
-aqua,front high flinch,61,200,,base,p02ex_001.pam,35,30,full,6638be867d9677a60dae5ec0a2c0295b32ec56455ee97762e1b8552f32e2ac0e,70,linear
-aqua,front low flinch,62,200,,base,p02ex_001.pam,35,30,full,6638be867d9677a60dae5ec0a2c0295b32ec56455ee97762e1b8552f32e2ac0e,70,linear
-aqua,back high flinch,63,202,,base,p02ex_001.pam,35,30,full,b2ecb437a1a3b6d67ac6472cf6f7342d4696178e4bc342fe1b16ae93d8e3f398,70,linear
-aqua,back low flinch,64,202,,base,p02ex_001.pam,35,30,full,b2ecb437a1a3b6d67ac6472cf6f7342d4696178e4bc342fe1b16ae93d8e3f398,70,linear
-aqua,heavy front reaction,65,204,,base,p02ex_001.pam,16,30,full,0b311562a74914319b2d2409c8b5dca6861504d8be3d26287ff38c9e36538e1f,72,linear
-aqua,heavy back reaction,66,206,,base,p02ex_001.pam,16,30,full,1db1a9428f84279bdf67bb61b90ae0f9332f8fd164d5df8779a32b7b5e8d4e59,72,linear
-aqua,air front reaction,67,214,,base,p02ex_001.pam,19,30,full,d68ead78dd24812ed6a20bf818618f4b697b02049b9f93818572eef14124eefb,30,linear
-aqua,air back reaction,68,215,,base,p02ex_001.pam,19,30,full,7a663088986afc939e3d63f6ebbadcc5da647434e68a6990c0d1b0e37f2284cf,30,linear
-aqua,air front recovery,69,214,,base,p02ex_001.pam,19,30,full,d68ead78dd24812ed6a20bf818618f4b697b02049b9f93818572eef14124eefb,38,linear
-aqua,air back recovery,70,215,,base,p02ex_001.pam,19,30,full,7a663088986afc939e3d63f6ebbadcc5da647434e68a6990c0d1b0e37f2284cf,38,linear
 aqua,air Fire cast release,79,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua,air Thunder casting family,80,390,,p02ex_154.arc,p02ex_154.pam,49,30,full,b6b282c69bfb64931d3aad0984cc60eb1aa307edc72e1422e897543129934b1b,78,linear
 aqua,air Cure casting family,81,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua,air Fire cast recovery,82,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,52,linear
 aqua,ground first,98,300,,base,p02ex_001.pam,31,30,full,2ed6582d03611ef9cdbec2ae6dd4c8f519ac4da3b7df20fbd4c90e78ace6f649,48,linear
-aqua,ground second,99,300,,base,p02ex_001.pam,31,30,full,2ed6582d03611ef9cdbec2ae6dd4c8f519ac4da3b7df20fbd4c90e78ace6f649,48,combo_finish_hold
-aqua,ground alternate,100,300,,base,p02ex_001.pam,31,30,full,2ed6582d03611ef9cdbec2ae6dd4c8f519ac4da3b7df20fbd4c90e78ace6f649,64,combo_finish_hold
+aqua,ground second,99,301,,base,p02ex_001.pam,41,30,full,b3c79bf3aac23a92eb13738495b266d3ff9bd28be16d775126df9fa844161577,48,combo_finish_hold
+aqua,ground alternate,100,301,,base,p02ex_001.pam,41,30,full,b3c79bf3aac23a92eb13738495b266d3ff9bd28be16d775126df9fa844161577,64,combo_finish_hold
 aqua,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,full,0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea,80,linear
 aqua,air first,102,305,,base,p02ex_001.pam,23,30,full,3fb40ee6ec04015b89afe36372718f033d098b65bf33d327b35add75c656851a,40,linear
 aqua,air second,103,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9,42,linear
 aqua,air finisher,104,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,56,linear
-aqua,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,linear
+aqua,Guard / Barrier pose,110,400,,base,p02ex_001.pam,40,30,full,b447900485d354fe117f6b1c6bdeaf40478bcdef501026d6bd368c63da6a5fbf,54,guard_forward_hold_reverse
 aqua,Dodge Roll / Cartwheel pose,117,009,,base,p02ex_001.pam,30,30,full,bad188200247fe756b9956a2299c6e4f225cd2e4019c0d0507ee1a4700e324fa,38,linear
 aqua 1,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 1,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
@@ -52,36 +42,36 @@ aqua 1,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",8
 aqua 1,air Fire cast release,79,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[0, 31]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,28,linear
 aqua 1,air Cure casting family,81,427,,p02ex_154.arc,p02ex_154.pam,44,30,full,b357456912b69e437689e137bf5a5eef8d1c2b628fb8704e71e164e18f30f852,68,linear
 aqua 1,air Fire cast recovery,82,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[31, 48]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,52,linear
-aqua 1,ground first,98,316,,p02ex_151.arc,p02ex_151.pam,31,30,full,85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,48,linear
-aqua 1,ground second,99,317,,p02ex_152.arc,p02ex_152.pam,36,30,full,463c25ed58de2bb259a3774107d247cdf5206c77f9f25c6050a9e7406280a087,48,linear
-aqua 1,ground alternate,100,317,,p02ex_152.arc,p02ex_152.pam,36,30,full,463c25ed58de2bb259a3774107d247cdf5206c77f9f25c6050a9e7406280a087,64,linear
-aqua 1,ground finisher,101,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,80,linear
-aqua 1,air first,102,391,,p02ex_153.arc,p02ex_153.pam,49,30,full,8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,40,linear
-aqua 1,air second,103,390,,p02ex_154.arc,p02ex_154.pam,49,30,full,b6b282c69bfb64931d3aad0984cc60eb1aa307edc72e1422e897543129934b1b,42,linear
-aqua 1,air finisher,104,427,,p02ex_154.arc,p02ex_154.pam,44,30,full,b357456912b69e437689e137bf5a5eef8d1c2b628fb8704e71e164e18f30f852,56,linear
+aqua 1,ground first,98,371,,p02ex_133.arc,p02ex_133.pam,64,30,full,bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42,48,linear
+aqua 1,ground second,99,365,,p02ex_123.arc,p02ex_123.pam,48,30,full,45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda,48,linear
+aqua 1,ground alternate,100,365,,p02ex_123.arc,p02ex_123.pam,48,30,full,45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda,64,linear
+aqua 1,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,full,0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea,80,linear
+aqua 1,air first,102,218,,p02ex_009.arc,p02ex_009.pam,45,30,full,06d11db15d1cd704cfa4f3b60b7ac355b18517c73e444aefa8d35537cf64b801,40,linear
+aqua 1,air second,103,332,,p02ex_101.arc,p02ex_101.pam,39,30,full,bdbf35ac47fe94f269c170030a33d376f5e581129be8ee4b3fda33b916fc1f59,42,linear
+aqua 1,air finisher,104,393,,p02ex_155.arc,p02ex_155.pam,37,30,full,7e20e587e15a632a08a4b59b2cb5de26df120099245de9aeccdac0f1a70d75e8,56,linear
 aqua 2,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 2,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua 2,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,60,linear
 aqua 2,air Fire cast release,79,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[0, 31]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,28,linear
 aqua 2,air Cure casting family,81,427,,p02ex_154.arc,p02ex_154.pam,44,30,full,b357456912b69e437689e137bf5a5eef8d1c2b628fb8704e71e164e18f30f852,68,linear
 aqua 2,air Fire cast recovery,82,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[31, 48]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,52,linear
-aqua 2,ground first,98,315,,p02ex_151.arc,p02ex_151.pam,38,30,full,26f92f4650be9e939d40bb267c48619b90e4dcd4795b84ce4a631b1ac3211f88,48,linear
-aqua 2,ground second,99,371,,p02ex_133.arc,p02ex_133.pam,64,30,full,bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42,48,linear
-aqua 2,ground alternate,100,371,,p02ex_133.arc,p02ex_133.pam,64,30,full,bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42,64,linear
-aqua 2,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,full,0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea,80,linear
-aqua 2,air first,102,365,,p02ex_123.arc,p02ex_123.pam,48,30,full,45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda,40,linear
-aqua 2,air second,103,218,,p02ex_009.arc,p02ex_009.pam,45,30,full,06d11db15d1cd704cfa4f3b60b7ac355b18517c73e444aefa8d35537cf64b801,42,linear
-aqua 2,air finisher,104,332,,p02ex_101.arc,p02ex_101.pam,39,30,full,bdbf35ac47fe94f269c170030a33d376f5e581129be8ee4b3fda33b916fc1f59,56,linear
+aqua 2,ground first,98,352,,p02ex_352.arc,p02ex_352.pam,36,30,full,43d1c61af26e5eef072d6d0c7445314f27c7dd114c5877a8e5eb731d1a0db2d2,48,linear
+aqua 2,ground second,99,353,,p02ex_352.arc,p02ex_352.pam,44,30,full,df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e,48,linear
+aqua 2,ground alternate,100,353,,p02ex_352.arc,p02ex_352.pam,44,30,full,df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e,64,linear
+aqua 2,ground finisher,101,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9,80,linear
+aqua 2,air first,102,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,40,linear
+aqua 2,air second,103,304,,base,p02ex_001.pam,43,30,full,440a8cfac80cbb64b5ea2865d3cafacd0fe635db4e1ba4ba2d074dbb0a9e4367,42,linear
+aqua 2,air finisher,104,303,,base,p02ex_001.pam,40,30,full,9ce7edcc8a8038f90163df0648b6c93506780337cfbafb47ba0cdaffa008d98a,56,linear
 aqua 3,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,linear
 aqua 3,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,linear
 aqua 3,Fire cast recovery,57,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[20, 30]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,60,linear
 aqua 3,air Fire cast release,79,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[0, 31]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,28,linear
 aqua 3,air Cure casting family,81,427,,p02ex_154.arc,p02ex_154.pam,44,30,full,b357456912b69e437689e137bf5a5eef8d1c2b628fb8704e71e164e18f30f852,68,linear
 aqua 3,air Fire cast recovery,82,391,,p02ex_153.arc,p02ex_153.pam,49,30,"[31, 48]",8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f,52,linear
-aqua 3,ground first,98,393,,p02ex_155.arc,p02ex_155.pam,37,30,full,7e20e587e15a632a08a4b59b2cb5de26df120099245de9aeccdac0f1a70d75e8,48,linear
-aqua 3,ground second,99,411,,p02ex_313.arc,p02ex_313.pam,36,30,full,32491a788f10ef45b15a59d5881d525e3a32fecd8d6aa54654d9616749f9ce4c,48,linear
-aqua 3,ground alternate,100,411,,p02ex_313.arc,p02ex_313.pam,36,30,full,32491a788f10ef45b15a59d5881d525e3a32fecd8d6aa54654d9616749f9ce4c,64,linear
-aqua 3,ground finisher,101,352,,p02ex_352.arc,p02ex_352.pam,36,30,full,43d1c61af26e5eef072d6d0c7445314f27c7dd114c5877a8e5eb731d1a0db2d2,80,linear
+aqua 3,ground first,98,300,,base,p02ex_001.pam,31,30,full,2ed6582d03611ef9cdbec2ae6dd4c8f519ac4da3b7df20fbd4c90e78ace6f649,48,linear
+aqua 3,ground second,99,301,,base,p02ex_001.pam,41,30,full,b3c79bf3aac23a92eb13738495b266d3ff9bd28be16d775126df9fa844161577,48,linear
+aqua 3,ground alternate,100,301,,base,p02ex_001.pam,41,30,full,b3c79bf3aac23a92eb13738495b266d3ff9bd28be16d775126df9fa844161577,64,linear
+aqua 3,ground finisher,101,302,,base,p02ex_001.pam,32,30,full,b70ccd301fb9e40e8c51bc6b8c6c95a2b2d8949d1f770abf35c560c552e9bbf9,80,linear
 aqua 3,air first,102,616,,p02ex_605.arc,p02ex_605.pam,44,30,full,76881ffae8086c51c118cf1e42ffa6b1c4be33f0c979b7206f2ff6c410b59984,40,linear
 aqua 3,air second,103,407,,p02ex_624.arc,p02ex_624.pam,34,30,full,662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9,42,linear
 aqua 3,air finisher,104,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,56,linear

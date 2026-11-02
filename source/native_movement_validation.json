@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "passed": true,
   "game_runtime_tested": false,
   "supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
@@ -16,60 +16,32 @@
     "0x2af4ca": "e891240000",
     "0x2af3f0": "48895c2410574883ec50"
   },
-  "native_fall_movement_callback": "0x2AF6A0; original state2 displacement before collision",
-  "native_state_registration_evidence": "0x2AF356 loads0x2AF6A0;0x2AF365 selects state2;0x2AF36D registers via0x2B1B80",
-  "native_collision_evidence": "0x2AF3F0 compares requested and realized movement; state2 ceiling resets arc and queues native air recovery/fall",
-  "native_state_setter": "0x2B1960; registers native callbacks, sets state-change flag, preserves native action systems",
-  "native_timestep_global": "0x233FBDC; positive finite timestep <=4 accepted",
-  "master_reference": {
-    "source": "user-supplied NineStyles_v52.patch",
-    "sha256": "2a646627db6ea7384108c16534ed9af688d0b208245635c0b9e30aab51ad80a3",
-    "lines": "31040..31094 begin_aerial_dodge / start_host_aerial_dodge",
-    "borrowed_structure": [
-      "free-air admission",
-      "fresh airborne input",
-      "once per airtime",
-      "neutral vertical held arc",
-      "tilted stick directional speed",
-      "finite action returns native fall"
-    ],
-    "recorded_dual_d_baseline": {
-      "height": 145.0,
-      "speed": 18.0,
-      "source": "prior v52 kh1-dual-wield.log recovered from earlier project context"
-    },
-    "reference_two_times_distance_multiplier_used": true,
-    "exact_kh2_gravity_and_release_coefficients_extracted": false
-  },
+  "native_fall_movement_callback": "0x2AF6A0 before native collision",
+  "native_state_setter": "0x2B1960 with native callbacks",
+  "native_timestep_global": "0x233FBDC; finite positive timestep <=4",
   "movement": {
-    "base_height": 145.0,
-    "base_horizontal_speed": 18.0,
-    "distance_multiplier": 2.0,
-    "effective_held_height": 290.0,
-    "effective_horizontal_speed": 36.0,
-    "adapter_base_gravity": 0.75,
-    "adapter_base_release_up_cap": 4.0,
-    "adapter_base_fall_cap": 20.0,
-    "native_visual_frames": 40,
-    "animation_or_arc_time_multiplier": 1.0
+    "policy": "resample held world stick each native control; normalized, analog pressure clamped0..1; neutral brakes horizontal travel",
+    "horizontal_speed": 14.0,
+    "upward_speed": 0.75,
+    "duration_native_units": 39.0,
+    "full_stick_horizontal_distance": 546.0,
+    "total_lift": 29.25,
+    "circle_release_shortens_action": false,
+    "duration_from_visual_clock_and_bounded_elapsed_time": true
   },
   "actor_position_written_by_mod": false,
   "collision_and_landing_callbacks_native": true,
   "extra_guard_invulnerability_or_attack_grant": false,
   "source_animation": "504",
   "normal_falling_animation": "506",
-  "run_head_skin_joint": 150,
-  "run_head_source_bone": 5,
-  "hair_helper_bind_rotation": 151,
-  "supplied_v16_log": {
-    "filename": "kh1-aqua(6).log",
-    "sha256": "8590f3b943ac7bff253085bdff21d5e15585b209bcb00164426e1c586544b8f4",
-    "accepted_dodge_count": 14,
-    "movement_callback_observed_count": 14,
-    "both_ground_chain_variants_and_finisher_observed": true
+  "supplied_v17_log": {
+    "filename": "kh1-aqua(7).log",
+    "sha256": "73485bab5d19e31783576940e1e57e768b91179beab24506cd4a3e90489bee5a",
+    "accepted_504_count": 9,
+    "observed_movement_callback_count": 9
   },
   "limitations": [
-    "Recorded Dual D145/18 and2x displacement policy reproduced; KH1 gravity/release adapter retained rather than claiming a full KH2 controller port",
-    "Windows/KH1 not executed; collision behavior needs live verification"
+    "Movement numbers describe requested displacement before native collision; live travel depends on obstacles and interruption",
+    "Windows/KH1 not executed"
   ]
 }

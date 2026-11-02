@@ -1,7 +1,7 @@
-aqua / id117 /0AP / ground 300 300 366 / air305 407 351
-aqua 1 / id118 /0AP / ground 316 317 318 / air391 390 427
-aqua 2 / id119 /0AP / ground 315 371 366 / air365 218 332
-aqua 3 / id120 /0AP / ground 393 411 352 / air616 407 351
+aqua / id117 /0AP / ground 300 301 366 / air305 407 351
+aqua 1 / id118 /0AP / ground 371 365 366 / air218 332 393
+aqua 2 / id119 /0AP / ground 352 353 407 / air351 304 303
+aqua 3 / id120 /0AP / ground 300 301 302 / air616 407 351
 aqua 4 / id121 /0AP / ground 510 511 512 / air504 514 399
 
-v17: select one while idle. See README_FIRST.txt for current changes and test order.
+v18: select one while idle. See README_FIRST.txt for current changes and test order.

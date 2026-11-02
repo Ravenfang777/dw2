@@ -1,6 +1,6 @@
 {
-  "version": 17,
-  "test_round": "revised Test4",
+  "version": 18,
+  "test_round": "next test; abilities1..3 updated",
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -19,7 +19,7 @@
   ],
   "main_ground_combo": [
     "300",
-    "300",
+    "301",
     "366"
   ],
   "main_air_combo": [
@@ -35,8 +35,8 @@
   "blizzard_added_queue_entries": 0,
   "ground_contact_frames": [
     12,
-    8.170212765957446,
-    11.23404255319149
+    6.4,
+    8.8
   ],
   "second_source_finish_and_chain_open_frames": [
     32,
@@ -47,41 +47,43 @@
     20
   ],
   "glide": "original native default; no Aqua overrides",
-  "air_dodge": "504 Dual D145/18 baseline at2x displacement, unchanged duration",
+  "air_dodge": "504 live stick speed14 with sustained lift0.75, duration39 native units",
   "run_head_skin_joint": 150,
   "run_head_direction": "authored source head5; hair helper151 at bind",
   "keyblade_tip_magic": true,
-  "numbered_combo_and_cast_poses_retained": true,
+  "numbered_cast_poses_retained": true,
+  "numbered_combos_1_3_updated": true,
+  "aqua3_air_and_aqua4_retained": true,
   "test_sets": [
     [
       [
-        "316",
-        "317",
-        "318"
-      ],
-      [
-        "391",
-        "390",
-        "427"
-      ]
-    ],
-    [
-      [
-        "315",
         "371",
+        "365",
         "366"
       ],
       [
-        "365",
         "218",
-        "332"
+        "332",
+        "393"
       ]
     ],
     [
       [
-        "393",
-        "411",
-        "352"
+        "352",
+        "353",
+        "407"
+      ],
+      [
+        "351",
+        "304",
+        "303"
+      ]
+    ],
+    [
+      [
+        "300",
+        "301",
+        "302"
       ],
       [
         "616",
@@ -103,23 +105,32 @@
     ]
   ],
   "native_motion_headers_counts_and_sizes_preserved": true,
-  "normal_motion_records": 47,
-  "olympus_motion_records": 46,
+  "normal_motion_records": 37,
+  "olympus_motion_records": 36,
   "helper_slots": 11,
   "original_installed_msets": true,
-  "serialized_profile_and_transient_assignments": 102,
-  "distinct_fitted_records": 81,
-  "runtime_pe_tests": 71,
-  "geometry_tests": 22,
-  "pose_samples": 17693,
+  "kh2_damage_replacement_completed": false,
+  "damage_reactions_current": "native KH1 Sora; KH2 source pending",
+  "idle_front_hair_joints_at_bind": [
+    151,
+    152,
+    153,
+    154
+  ],
+  "guard_source": "400 forward/hold/reverse",
+  "serialized_profile_and_transient_assignments": 92,
+  "distinct_fitted_records": 71,
+  "runtime_pe_tests": 74,
+  "geometry_tests": 24,
+  "pose_samples": 15483,
   "max_pose_position_fit_error": 4.98903332659248,
   "max_pose_basis_fit_error": 0.08268184394477858,
   "max_native_travel_error": 0.0,
   "max_scale_error": 0.0,
-  "dll_sha256": "486d991c2b76e2deab8b661a191e29f11aafe32fd12567cd6bed0f0835a0eb91",
+  "dll_sha256": "bda6bb60aa89b99822ee449a056def3b1c9940cb011cf23dc463720b0019b90d",
   "limitations": [
     "No Windows/KH1 or rendered-mesh test performed",
-    "Dual D growth145/18 and2x policy matched; existing KH1 gravity/release adapter retained",
+    "Default KH2 Sora reaction source missing; original KH1 Sora reactions used pending capture",
     "Spell release, collision, contact feel, Glide transitions and run appearance require in-game testing"
   ]
 }

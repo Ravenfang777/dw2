@@ -1,8 +1,8 @@
-title: KH1FM Aqua Animation Test v17
+title: KH1FM Aqua Animation Test v18
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Aqua v17: ground300/300/366 and air305/407/351, retained native Blizzard events with Fire visuals and full second-swing recovery, native default Glide, Dual D145/18 baseline at2x504 travel and corrected skinned-head running direction. Five0-AP abilities; original MSETs. Steam Global/Panacea.
+  Aqua v18: ground300/301/366, next tests1-3, front hair bind repair, steerable504 dodge with slight sustained lift and forward/reverse400 Guard. Default Glide and original KH1 Sora reactions; KH2 reaction source pending. Five0-AP abilities; original MSETs. Steam Global/Panacea.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy

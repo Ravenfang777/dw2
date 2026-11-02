@@ -1,31 +1,26 @@
 {
-  "version": 17,
+  "version": 18,
   "passed": true,
-  "game_rendered": false,
+  "game_runtime_tested": false,
   "model_sha256": "697fd74bf2dec0a5b0410436e88b1b3131cfa7c122f1f180fd5f05af161bf4cf",
   "run_slots": [
     5,
     6,
     7
   ],
-  "previous_target": {
-    "joint": 151,
-    "links_word": "0x98ffc96",
-    "is_skin_joint": false
-  },
-  "corrected_skull": {
-    "joint": 150,
-    "links_word": "0x497ffc95",
-    "is_skin_joint": true,
-    "orientation_source": "Aqua authored head5, previously evaluated on helper151"
-  },
-  "hair_helper151_local_rotation": "native bind",
-  "separate_hair_lift_removed": true,
-  "torso_neck_joint_lengths_and_skin_scale_preserved": true,
-  "applies_to": "running only; all five profiles inherit the common run records",
-  "user_video": {
-    "filename": "20261102-1401-33.5670391.mp4",
-    "reviewed_run_frame_seconds": 24
-  },
-  "game_verification_pending": true
+  "run_head_mapping_retained": "Aqua head5 on skinned skull150; hair151 local bind",
+  "idle_front_hair_slots": [
+    0,
+    1
+  ],
+  "idle_front_hair_local_bind_joints": [
+    151,
+    152,
+    153,
+    154
+  ],
+  "idle_skull150_direction_retained": true,
+  "joint_lengths_scale_and_native_travel_preserved": true,
+  "user_image": "image(1).png",
+  "game_rendered_verification_pending": true
 }

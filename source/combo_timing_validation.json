@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "passed": true,
   "game_runtime_tested": false,
   "normal_slots": [
@@ -14,12 +14,11 @@
   ],
   "source_clips": [
     "300",
-    "300",
-    "300"
+    "301",
+    "301"
   ],
   "native_event_sampler_rva": "0x394770",
   "native_chain_flag_reader": "0x29EFB0 reads actor+1CC bit0x400000",
-  "native_event_evidence": "0x39229F samples kind5;0x3922AF sets model+14 bit0x400000;0x29F515 copies model flags to actor+1CC",
   "variants": {
     "98": {
       "contact_after": 12,
@@ -108,8 +107,10 @@
       "sound_and_effect_tracks_unchanged": true
     },
     "99": {
-      "contact_after": 8.170212765957446,
-      "chain_opens": 32,
+      "contact_after": 6.4,
+      "source_contact_frame": 8.0,
+      "source_frame_count": 41,
+      "chain_opens": 32.0,
       "chain_closes": 48,
       "tracks": [
         {
@@ -120,7 +121,7 @@
             32.0
           ],
           "after_frames": [
-            8.170212765957446,
+            5.4,
             32.0
           ]
         },
@@ -158,9 +159,9 @@
             48.0
           ],
           "after_frames": [
-            6.0,
-            8.0,
-            8.170212765957446,
+            5.4,
+            5.9,
+            6.4,
             48.0
           ]
         },
@@ -174,8 +175,8 @@
             48.0
           ],
           "after_frames": [
-            6.0,
-            8.170212765957446,
+            5.4,
+            6.4,
             24.0,
             48.0
           ]
@@ -195,13 +196,15 @@
           ]
         }
       ],
-      "changed_bytes": 12,
+      "changed_bytes": 25,
       "counts_pointers_and_payloads_preserved": true,
       "sound_and_effect_tracks_unchanged": true
     },
     "100": {
-      "contact_after": 11.23404255319149,
-      "chain_opens": 44,
+      "contact_after": 8.8,
+      "source_contact_frame": 8.0,
+      "source_frame_count": 41,
+      "chain_opens": 44.0,
       "chain_closes": 64,
       "tracks": [
         {
@@ -212,7 +215,7 @@
             30.0
           ],
           "after_frames": [
-            11.23404255319149,
+            7.800000000000001,
             44.0
           ]
         },
@@ -251,11 +254,11 @@
             30.0
           ],
           "after_frames": [
-            10.23404255319149,
-            11.23404255319149,
-            11.73404255319149,
-            12.23404255319149,
-            12.73404255319149
+            7.800000000000001,
+            8.8,
+            9.3,
+            9.8,
+            10.3
           ]
         },
         {
@@ -269,11 +272,11 @@
             30.0
           ],
           "after_frames": [
-            10.23404255319149,
-            10.73404255319149,
-            11.23404255319149,
-            11.73404255319149,
-            12.23404255319149
+            7.800000000000001,
+            8.05,
+            8.3,
+            8.55,
+            8.8
           ]
         },
         {
@@ -291,7 +294,7 @@
           ]
         }
       ],
-      "changed_bytes": 38,
+      "changed_bytes": 41,
       "counts_pointers_and_payloads_preserved": true,
       "sound_and_effect_tracks_unchanged": true
     }

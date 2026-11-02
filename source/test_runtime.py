@@ -115,6 +115,18 @@ class Host:
             w32(self.array+(slot-38 if olympus else slot)*4,bridge.bridge_encode(motion))
         w32(self.array+(67 if olympus else 105)*4,bridge.bridge_encode(self.unmapped))
         self.motion=self.motions[98];self.original_motion=raw[98]
+        self.native_reactions={}
+        for row in json.loads((ROOT/'fixtures/native_reactions.json').read_text()):
+            key=row['normal_slot'];data=(ROOT/f'fixtures/native_reaction_s{key:03}.bin').read_bytes();motion=self.buffer(data)
+            if encoded_fields:
+                for off in [20,28,36,40,48,56,60,68,76]:
+                    value=r32(motion+off)
+                    if value and value<len(data):w32(motion+off,bridge.bridge_encode(motion+value))
+                at=struct.unpack_from('<I',data,60)[0]
+                while struct.unpack_from('<I',data,at)[0]!=0xffffffff:
+                    value=struct.unpack_from('<I',data,at+8)[0];w32(motion+at+8,bridge.bridge_encode(motion+value));at+=12
+            self.native_reactions[key]=(motion,C.string_at(motion,len(data)))
+            w32(self.array+(row['olympus_slot'] if olympus else key)*4,bridge.bridge_encode(motion))
         self.key_offset=struct.unpack_from('<I',raw[98],40)[0];self.runtime_original=self.runtime_originals[98]
         w32(self.actor+0x1d4,bridge.bridge_encode(self.array))
         self.request_original=(ROOT/f"fixtures/requests_{'he' if olympus else 'normal'}_original.bin").read_bytes()
@@ -237,20 +249,19 @@ class RuntimeTests(unittest.TestCase):
         h.clock(70);h.control(state=21,request=0x71,down=4)
         self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,70.)
         self.assertEqual(C.string_at(p,len(before)),before)
-    def test_dual_d_two_times_policy_doubles_both_lift_and_direction_without_stretching_504(self):
-        import math
+    def test_dodge_sustains_horizontal_travel_and_small_lift_for_full_504(self):
         for dt in [.5,1.,2.]:
             h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
             elapsed=0.;y=0.;x=0.
             while elapsed<38.:
                 move,_=h.move(dt);elapsed+=dt;y-=move[1];x+=move[0]
-                expected=2.*(math.sqrt(2.*145.*.75)*elapsed-.5*.75*elapsed*elapsed)
+                expected=.75*elapsed
                 self.assertAlmostEqual(y,expected,delta=.005)
-                self.assertAlmostEqual(x,2.*18.*elapsed,delta=.005)
+                self.assertAlmostEqual(x,14.*elapsed,delta=.005)
                 put(h.actor+0x14,struct.pack('<f',-y))
             self.assertEqual(h.body(10),h.dodge_body())
             h.clock(39);h.frame();self.assertEqual(h.body(10),h.expected(10,1))
-    def test_master_style_dodge_lifts_neutrally_and_moves_in_each_stick_direction(self):
+    def test_dodge_moves_in_each_stick_direction_without_diagonal_speed_boost(self):
         import math
         for bank in [98,60]:
           for x,z in [(0,0),(1,0),(-1,0),(0,1),(0,-1),(.7,.7)]:
@@ -258,25 +269,50 @@ class RuntimeTests(unittest.TestCase):
             h.control(down=6,pressed=6,x=x,z=z,tilt=1 if x or z else 0)
             before=C.string_at(h.actor+0x10,16);out,result=h.move()
             self.assertEqual(C.string_at(h.actor+0x10,16),before)
-            self.assertLess(out[1],0);self.assertLessEqual(abs(out[1]),30)
-            distance=math.hypot(out[0],out[2]);self.assertAlmostEqual(distance,36 if x or z else 0,places=4)
+            self.assertAlmostEqual(out[1],-.75,places=5)
+            distance=math.hypot(out[0],out[2]);self.assertAlmostEqual(distance,14 if x or z else 0,places=4)
             if x:self.assertGreater(out[0]*x,0)
             if z:self.assertGreater(out[2]*z,0)
             self.assertEqual(r32(h.actor+0x70),2)
-    def test_dodge_arc_has_bounded_height_release_and_native_fall_handoff_without_teleporting(self):
+    def test_dodge_small_lift_and_native_fall_handoff_without_teleporting(self):
         for step in [.5,1.,2.]:
             h=Host(air=True);h.arm_air();h.control(down=6,pressed=6)
             y=0.;peak=0.;total=0.
             while total<38.:
                 out,_=h.move(step);y+=out[1];peak=max(peak,-y);total+=step
                 put(h.actor+0x14,struct.pack('<f',y))
-            self.assertAlmostEqual(peak,290.,delta=.5)
+            self.assertAlmostEqual(peak,.75*total,places=4)
             h.clock(39);h.frame();self.assertEqual(h.body(10),h.expected(10,1))
             self.assertAlmostEqual(C.c_float.from_address(h.actor+0x3b4).value,y,places=4)
             self.assertEqual(C.c_float.from_address(h.actor+0x3b8).value,0.)
             out,_=h.move();self.assertEqual(out,[1,2,3,4])
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6);h.move()
-        w32(h.game+0x298ca94,0);out,_=h.move();self.assertGreaterEqual(out[1],-8.)
+        w32(h.game+0x298ca94,0);out,_=h.move();self.assertAlmostEqual(out[1],-.75,places=5)
+    def test_live_stick_steering_reverses_direction_and_neutral_stops_only_horizontal_travel(self):
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        self.assertAlmostEqual(h.move()[0][0],14.,places=5)
+        # Circle release must neither shorten the action nor freeze its direction.
+        for x,z,tilt,want in [(0,1,1,(0,14)),(-1,0,1,(-14,0)),(1,0,.5,(7,0)),(0,0,0,(0,0))]:
+            h.control(down=0,pressed=0,x=x,z=z,tilt=tilt)
+            out,_=h.move();self.assertAlmostEqual(out[0],want[0],places=5);self.assertAlmostEqual(out[2],want[1],places=5)
+            self.assertAlmostEqual(out[1],-.75,places=5);self.assertEqual(h.body(10),h.dodge_body())
+    def test_last_dodge_step_cannot_exceed_the_animation_duration(self):
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        for _ in range(19):h.move(2.)
+        out,_=h.move(2.);self.assertEqual(out,[14.,-.75,0.,14.])
+        self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(h.move()[0],[1.,2.,3.,4.])
+    def test_native_damage_and_knockback_records_pass_through_all_profiles_and_banks(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,air=True,encoded_fields=True);h.frame()
+            for profile in range(5):
+                w32(h.actor+0x164,0);h.equip(True,profile);h.frame()
+                for row in json.loads((ROOT/'fixtures/native_reactions.json').read_text()):
+                    motion,data=h.native_reactions[row['normal_slot']];h.control(state=0,request=row['request'],height=0)
+                    self.assertEqual(C.string_at(motion,len(data)),data)
+                    handle=r32(h.actor+0x1d8)
+                    address=r64(h.game+0x2ee3980+((handle&0x7fffffff)>>25)*8)+(handle&0x1ffffff)
+                    table=C.string_at(address,1408)
+                    self.assertEqual(table[row['request']*4:row['request']*4+4],h.request_original[row['request']*4:row['request']*4+4])
     def test_dodge_ceiling_contact_stops_lift_and_busy_action_returns_native_displacement(self):
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
         w32(h.actor+0x2d0,8);out,_=h.move();self.assertGreaterEqual(out[1],0)
@@ -492,7 +528,7 @@ class RuntimeTests(unittest.TestCase):
     def test_ground_hits_and_usable_chain_windows_use_the_actual_native_event_sampler(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
-            for slot,contact,start,end in [(98,12.,22.,40.),(99,384./47.,32.,48.),(100,528./47.,44.,64.)]:
+            for slot,contact,start,end in [(98,12.,22.,40.),(99,6.4,32.,48.),(100,8.8,44.,64.)]:
                 self.assertNotEqual((h.event(slot,4,contact-.5) or 0)&0xffff0000,0x160000)
                 self.assertEqual(h.event(slot,4,contact)&0xffff0000,0x160000)
                 self.assertNotEqual(h.event(slot,5,start-.5),1)
@@ -653,12 +689,12 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(h.abilities()[:7],b'\x81\x82\xf5\xf6\xf7\xf8\xf9');self.assertEqual(h.abilities()[7:],before[7:])
         row=table+116*12;self.assertEqual(C.c_ubyte.from_address(row).value,0)
         self.assertEqual(C.string_at(h.decode(r32(row+4)),5),b'\x45\x55\x59\x45\x00');h.assert_all(self,False)
-    def test_normal_all_47_exact_on_and_off_including_idle_and_normal_only_ledge_recovery(self):
-        h=Host();self.assertEqual(len(h.records),47);h.frame();h.equip(True);h.frame();h.assert_all(self,True)
+    def test_normal_all_37_exact_on_and_off_including_idle_and_normal_only_ledge_recovery(self):
+        h=Host();self.assertEqual(len(h.records),37);h.frame();h.equip(True);h.frame();h.assert_all(self,True)
         self.assertIn('AQUA BANK: normal Sora',bridge.bridge_log().decode())
         h.equip(False);h.frame();h.assert_all(self,False)
-    def test_olympus_46_exact_on_and_off_with_encoded_pointers_and_common_idle_prefix(self):
-        h=Host(slot=60,encoded_fields=True);self.assertEqual(len(h.records),46);h.frame();h.equip(True);h.frame();h.assert_all(self,True)
+    def test_olympus_36_exact_on_and_off_with_encoded_pointers_and_common_idle_prefix(self):
+        h=Host(slot=60,encoded_fields=True);self.assertEqual(len(h.records),36);h.frame();h.equip(True);h.frame();h.assert_all(self,True)
         self.assertIn('AQUA BANK: Olympus',bridge.bridge_log().decode())
         h.equip(False);h.frame();h.assert_all(self,False)
     def test_frame_checks_share_memory_ranges_instead_of_querying_every_table(self):

@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "passed": true,
   "game_runtime_tested": false,
   "default_native_glide": true,
@@ -16,9 +16,7 @@
     40
   ],
   "aqua_body_overrides": 0,
-  "opening_held_and_closing_overlays": 0,
   "clock_or_queue_frame_writes": 0,
   "native_physics_unlock_input_and_steering": true,
-  "regular_glide_guard_scope": "only during committed504; otherwise original constructor",
-  "normal_fall_after_native_glide": "existing main/profile falling506; no350 closing restart"
+  "normal_fall_after_native_glide": "506"
 }

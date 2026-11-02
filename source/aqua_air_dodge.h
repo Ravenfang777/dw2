@@ -1,5 +1,5 @@
 /* Checked native control for Aqua's airborne Circle. Glide remains native.
- * Master-style lift and directional travel enter the native fall displacement
+ * Sustained slight lift and live stick travel enter the native fall displacement
  * callback BEFORE KH1 collision. No actor-position writes or defense grants.
  */
 typedef void (ABI *AirControlFn)(uptr,uptr);
@@ -8,17 +8,13 @@ static AirControlFn air_original;
 static int air_attempted,air_ready,air_disabled,air_armed,air_used,air_pending,air_requested_choice;
 static int air_control_seen;
 static uptr air_actor,air_array;
-/* The recorded Dual D snapshot supplies height145/speed18. Its2x policy
- * scales each displacement (including lift), never animation/arc time. The
- * existing KH1 gravity/release adaptation remains an explicit host parameter. */
-#define AIR_BASE_HEIGHT 145.f
-#define AIR_BASE_SPEED 18.f
-#define AIR_DISTANCE 2.f
-#define AIR_GRAVITY .75f
-#define AIR_RELEASE_UP 4.f
-#define AIR_MAX_FALL 20.f
+/* Native clock units, not rendered frames. Full-stick path is 546 horizontal
+ * units with 29.25 units of lift over 39 units. The latest request supersedes
+ * the old Dual D ballistic arc. Direction is resampled before each control. */
+#define AIR_BASE_SPEED 14.f
+#define AIR_LIFT_SPEED .75f
+#define AIR_DURATION 39.f
 static float air_last_clock,air_elapsed,air_vx,air_vz,air_vy;
-static int air_released;
 static u32 air_move_notes;
 typedef float (ABI *AirMoveFn)(uptr,uptr);
 static AirMoveFn air_move_original;
@@ -33,7 +29,7 @@ static int air_finite(float x){u32 b;copy(&b,&x,4);return (b&0x7f800000u)!=0x7f8
 static void air_write_float(uptr p,float x){copy((void*)p,&x,4);}
 static void air_dodge_clear(void){
     air_dodge_active=air_armed=air_used=air_pending=0;
-    air_actor=air_array=0;air_wait=0;air_last_clock=air_elapsed=air_vx=air_vz=air_vy=0;air_released=0;
+    air_actor=air_array=0;air_wait=0;air_last_clock=air_elapsed=air_vx=air_vz=air_vy=0;
 }
 static int movement_scope(uptr actor){
     return air_ready&&!magic_conflict&&!remove_mode&&air_requested_choice>0&&cache_choice>0&&actor==cache_actor
@@ -69,15 +65,19 @@ static void air_arc_reset(uptr actor){
     *(volatile u32*)(actor+0x3d0)=0;
 }
 static float air_sqrt(float x){float r;__asm__("sqrtss %1,%0":"=x"(r):"x"(x));return r;}
-static void air_motion_start(uptr actor,float x,float z,float tilt){
-    float magnitude=air_sqrt(x*x+z*z);
+static void air_steer(float x,float z,float tilt){
     air_vx=air_vz=0.f;
-    if(tilt>.15f&&magnitude>.15f){air_vx=x/magnitude*AIR_BASE_SPEED;air_vz=z/magnitude*AIR_BASE_SPEED;}
-    air_vy=air_sqrt(2.f*AIR_BASE_HEIGHT*AIR_GRAVITY);air_elapsed=0.f;air_released=0;
+    if(!air_finite(x)||!air_finite(z)||!air_finite(tilt)||tilt<0.f||x*x+z*z>4.f)return;
+    float magnitude=air_sqrt(x*x+z*z);
+    float pressure=tilt>1.f?1.f:tilt;
+    if(pressure>.15f&&magnitude>.15f){air_vx=x/magnitude*AIR_BASE_SPEED*pressure;air_vz=z/magnitude*AIR_BASE_SPEED*pressure;}
+}
+static void air_motion_start(uptr actor,float x,float z,float tilt){
+    air_steer(x,z,tilt);air_vy=AIR_LIFT_SPEED;air_elapsed=0.f;
     typedef u32 (ABI *StateFn)(uptr,u32);
     ((StateFn)(base+0x2b1960u))(actor,2u);
     air_arc_reset(actor);
-    if(air_notes<32u)log_text("AQUA DUAL D2X MOVEMENT: baseline height145 speed18; all lift/directional displacement2x;504 timing unchanged; native collision");
+    if(air_notes<32u)log_text("AQUA STEERED DODGE: speed14 lift0.75 per native tick; follows held stick throughout504; Circle release does not shorten it; native collision");
 }
 static void air_end(void){
     if(!air_dodge_active)return;
@@ -126,7 +126,7 @@ static void ABI air_control(uptr actor,uptr dir){
     uptr pad=base+0x298ca90u;
     int local=actor==r64(base+SORA_RVA)&&memory(actor,0x448,0)&&memory(pad,0x18,1);
     if(local&&!air_control_seen){
-        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v17");
+        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v18");
         log_number("AQUA CONTROL actor=",actor);
     }
     if(movement_scope(actor)&&memory(pad,0x18,1)&&memory(dir,16,0)){
@@ -136,6 +136,7 @@ static void ABI air_control(uptr actor,uptr dir){
         if(state==0u&&air_finite(height)&&height<=1.f){air_end();air_used=0;air_armed=!down;}
         else if(!down)air_armed=1;
         air_tick(actor,cache_choice);
+        if(air_dodge_active)air_steer(air_float(dir),air_float(dir+8),air_float(dir+12));
         if(press&&!air_disabled){
             float x=air_float(dir),z=air_float(dir+8),tilt=air_float(dir+12);
             u32 request=r32(actor+0x164)&0xffffu,count=r32(actor+0x178),reasons=0;
@@ -185,19 +186,18 @@ static float ABI air_move(uptr actor,uptr out){
     if(air_elapsed==0.f&&air_move_notes++<24u)log_text("AQUA DODGE MOVEMENT ACTIVE: native state2 displacement supplied before collision");
     float dt=air_float(base+0x233fbdcu);
     if(!air_finite(dt)||dt<=0.f||dt>4.f){air_end();return air_move_original(actor,out);}
-    if(!(r32(base+0x298ca94u)&6u)&&!air_released){
-        air_released=1;if(air_vy>AIR_RELEASE_UP)air_vy=AIR_RELEASE_UP;
-    }
+    float remaining=AIR_DURATION-air_elapsed;
+    if(dt>remaining)dt=remaining;
+    if(dt<=0.f){air_end();return air_move_original(actor,out);}
     /* The native ceiling contact bit clips a rising request. KH1 retains all
      * wall/floor tests and can interrupt this action through its own queue. */
-    if((r32(actor+0x2d0)&8u)&&air_vy>0.f)air_vy=0.f;
-    float dy=-(air_vy*dt-.5f*AIR_GRAVITY*dt*dt)*AIR_DISTANCE;
-    air_vy-=AIR_GRAVITY*dt;if(air_vy< -AIR_MAX_FALL)air_vy= -AIR_MAX_FALL;
-    float move[4]={air_vx*dt*AIR_DISTANCE,dy,air_vz*dt*AIR_DISTANCE,air_sqrt(air_vx*air_vx+air_vz*air_vz)*dt*AIR_DISTANCE};
+    float lift=(r32(actor+0x2d0)&8u)?0.f:air_vy;
+    float dy=-lift*dt;
+    float move[4]={air_vx*dt,dy,air_vz*dt,air_sqrt(air_vx*air_vx+air_vz*air_vz)*dt};
     copy((void*)out,move,16);
-    float velocity[4]={air_vx*AIR_DISTANCE,dy/dt,air_vz*AIR_DISTANCE,move[3]/dt};copy((void*)(actor+0x3c0),velocity,16);
+    float velocity[4]={air_vx,dy/dt,air_vz,move[3]/dt};copy((void*)(actor+0x3c0),velocity,16);
     air_arc_reset(actor);air_elapsed+=dt;
-    if(air_elapsed>=39.f)air_end();
+    if(air_elapsed>=AIR_DURATION)air_end();
     return air_float(actor+0x124);
 }
 typedef void (ABI *GlideFn)(uptr);
@@ -255,5 +255,5 @@ static void air_install(void){
     air_original=(AirControlFn)(uptr)page;u8 patch[17];for(unsigned i=0;i<17;i++)patch[i]=0x90;
     magic_jump(patch,(uptr)air_control);copy((void*)a,patch,17);
     kFlushInstructionCache((uptr)-1,(void*)a,17);kVirtualProtect((void*)a,17,old_code,&unused);
-    air_ready=1;log_text("AQUA AIR DODGE READY: v17 Dual D baseline145/18 at2x travel with unchanged504 timing; default native Glide outside dodge");
+    air_ready=1;log_text("AQUA AIR DODGE READY: v18 live stick travel14 plus sustained lift0.75 for full504; native Glide outside dodge");
 }

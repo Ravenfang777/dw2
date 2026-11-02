@@ -1,0 +1,27 @@
+{
+  "version": 18,
+  "passed": true,
+  "game_runtime_tested": false,
+  "source": "400",
+  "source_frames": 40,
+  "native_frames": 54,
+  "forward_frames": [
+    0,
+    10
+  ],
+  "hold_frames": [
+    10,
+    36
+  ],
+  "reverse_frames": [
+    36,
+    52
+  ],
+  "forward_source_rate": 3.9,
+  "reverse_source_rate": 2.4375,
+  "minimum_requested_rate": 1.25,
+  "entire_source_played_each_direction_once": true,
+  "native_guard_events_and_defense_unchanged": true,
+  "no_new_hold_to_guard_mechanic": true,
+  "native_hits_cancels_and_actions_can_interrupt_visual_recovery": true
+}

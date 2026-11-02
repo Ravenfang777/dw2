@@ -1,0 +1,27 @@
+{
+  "version": 18,
+  "passed": true,
+  "exported_source_rebuild_matches_dll": true,
+  "exported_retarget_reproductions": [
+    {
+      "normal_slot": 0,
+      "sha256": "ce0e254a4dbd86776de007c7c81f0f6f8cb78c6d081109cb8445f8d1269294ee",
+      "bytes": 13936
+    },
+    {
+      "normal_slot": 99,
+      "sha256": "171eb1f8ebc47f4eebf50fdc05ec1f7b5a00328e81c61217fca734285935e3d6",
+      "bytes": 27088
+    },
+    {
+      "normal_slot": 110,
+      "sha256": "ded67fab5d53e32719c837ba26fd900738fb6a05e964e3bc683d554eb24dd722",
+      "bytes": 22688
+    }
+  ],
+  "dll_sha256": "bda6bb60aa89b99822ee449a056def3b1c9940cb011cf23dc463720b0019b90d",
+  "offline_runtime_tests": 74,
+  "offline_geometry_tests": 24,
+  "game_runtime_tested": false,
+  "requested_kh2_reactions_complete": false
+}
