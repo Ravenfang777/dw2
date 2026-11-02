@@ -1,5 +1,5 @@
 {
-  "version": 19,
+  "version": 20,
   "passed": true,
   "game_runtime_tested": false,
   "variants": {
@@ -90,11 +90,6 @@
       "sound_and_effect_tracks_unchanged": true
     },
     "99": {
-      "contact_after": 6.4,
-      "source_contact_frame": 8.0,
-      "source_frame_count": 41,
-      "chain_opens": 32.0,
-      "chain_closes": 48,
       "tracks": [
         {
           "track": 0,
@@ -104,8 +99,8 @@
             32.0
           ],
           "after_frames": [
-            5.4,
-            32.0
+            5.486486486486487,
+            30.0
           ]
         },
         {
@@ -116,7 +111,7 @@
             42.0
           ],
           "after_frames": [
-            32.0,
+            30.0,
             48.0
           ]
         },
@@ -142,9 +137,9 @@
             48.0
           ],
           "after_frames": [
-            5.4,
-            5.9,
-            6.4,
+            5.486486486486487,
+            5.986486486486487,
+            6.486486486486487,
             48.0
           ]
         },
@@ -158,8 +153,8 @@
             48.0
           ],
           "after_frames": [
-            5.4,
-            6.4,
+            5.486486486486487,
+            6.486486486486487,
             24.0,
             48.0
           ]
@@ -179,16 +174,15 @@
           ]
         }
       ],
-      "changed_bytes": 25,
       "counts_pointers_and_payloads_preserved": true,
-      "sound_and_effect_tracks_unchanged": true
+      "source_range": [
+        0,
+        37
+      ],
+      "chain_opens": 30.0,
+      "chain_closes": 48
     },
     "100": {
-      "contact_after": 8.8,
-      "source_contact_frame": 8.0,
-      "source_frame_count": 41,
-      "chain_opens": 44.0,
-      "chain_closes": 64,
       "tracks": [
         {
           "track": 0,
@@ -198,8 +192,8 @@
             30.0
           ],
           "after_frames": [
-            7.800000000000001,
-            44.0
+            8.08108108108108,
+            42.0
           ]
         },
         {
@@ -210,7 +204,7 @@
             54.0
           ],
           "after_frames": [
-            44.0,
+            42.0,
             64.0
           ]
         },
@@ -237,11 +231,11 @@
             30.0
           ],
           "after_frames": [
-            7.800000000000001,
-            8.8,
-            9.3,
-            9.8,
-            10.3
+            8.08108108108108,
+            9.08108108108108,
+            9.58108108108108,
+            10.08108108108108,
+            10.58108108108108
           ]
         },
         {
@@ -255,11 +249,11 @@
             30.0
           ],
           "after_frames": [
-            7.800000000000001,
-            8.05,
-            8.3,
-            8.55,
-            8.8
+            8.08108108108108,
+            8.33108108108108,
+            8.58108108108108,
+            8.83108108108108,
+            9.08108108108108
           ]
         },
         {
@@ -277,9 +271,13 @@
           ]
         }
       ],
-      "changed_bytes": 41,
       "counts_pointers_and_payloads_preserved": true,
-      "sound_and_effect_tracks_unchanged": true
+      "source_range": [
+        0,
+        37
+      ],
+      "chain_opens": 42.0,
+      "chain_closes": 64
     },
     "101": {
       "tracks": [
@@ -356,6 +354,114 @@
       "source_first_frame": 12,
       "guard_window_frames": null
     },
+    "102": {
+      "tracks": [
+        {
+          "track": 0,
+          "kind": 1,
+          "before_frames": [
+            6.0,
+            20.0
+          ],
+          "after_frames": [
+            6.0,
+            20.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 5,
+          "before_frames": [
+            18.0,
+            34.0
+          ],
+          "after_frames": [
+            18.0,
+            40.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 7,
+          "before_frames": [
+            2.0,
+            20.0
+          ],
+          "after_frames": [
+            2.0,
+            20.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 6,
+          "before_frames": [
+            0.0
+          ],
+          "after_frames": [
+            0.0
+          ]
+        }
+      ],
+      "counts_pointers_and_payloads_preserved": true,
+      "source_range": null,
+      "chain_opens": 18.0,
+      "chain_closes": 40
+    },
+    "103": {
+      "tracks": [
+        {
+          "track": 0,
+          "kind": 1,
+          "before_frames": [
+            10.0,
+            20.0
+          ],
+          "after_frames": [
+            12.0,
+            25.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 5,
+          "before_frames": [
+            18.0,
+            32.0
+          ],
+          "after_frames": [
+            24.0,
+            42.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 7,
+          "before_frames": [
+            4.0,
+            20.0
+          ],
+          "after_frames": [
+            4.0,
+            20.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 6,
+          "before_frames": [
+            0.0
+          ],
+          "after_frames": [
+            0.0
+          ]
+        }
+      ],
+      "counts_pointers_and_payloads_preserved": true,
+      "source_range": null,
+      "chain_opens": 24.0,
+      "chain_closes": 42
+    },
     "110": {
       "tracks": [
         {
@@ -409,16 +515,43 @@
     "353",
     "407"
   ],
+  "main_second_source_range": [
+    0,
+    37
+  ],
+  "main_second_discarded_source_frames": [
+    38,
+    39,
+    40
+  ],
+  "main_second_native_chain_open": [
+    30,
+    42
+  ],
+  "main_second_native_delta_factors": [
+    1.0,
+    1.4
+  ],
+  "main_second_real_chain_open_ticks": [
+    30,
+    30
+  ],
+  "first_contact_and_chain_timing_unchanged": true,
   "main_finisher_source_range": [
     12,
     47
   ],
   "finisher_native_delta_factor": 1.3428571428571427,
-  "finisher_native_events_retimed_for_trim": true,
-  "native_event_payloads_counts_and_pointers_unchanged": true,
-  "second_source_finish_and_chain_open_frames": [
-    32,
-    44
-  ],
-  "numbered_profiles": "byte-identical v18 choices and timing"
+  "main_air_chain_windows": {
+    "102": [
+      18,
+      40
+    ],
+    "103": [
+      24,
+      42
+    ]
+  },
+  "event_counts_payloads_pointers_and_native_headers_preserved": true,
+  "numbered_profiles": "v19/v18 bytes preserved"
 }

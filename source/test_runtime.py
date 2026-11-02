@@ -19,6 +19,7 @@ bridge.bridge_move_calls.argtypes=[];bridge.bridge_move_calls.restype=C.c_uint
 bridge.bridge_guard_row.argtypes=[C.c_size_t,C.c_size_t,C.c_uint];bridge.bridge_guard_row.restype=C.c_size_t
 bridge.bridge_motion_advance.argtypes=[C.c_size_t,C.c_size_t,C.c_float];bridge.bridge_motion_advance.restype=C.c_size_t
 bridge.bridge_guard_angle.argtypes=[C.c_size_t,C.c_size_t,C.c_size_t];bridge.bridge_guard_angle.restype=C.c_int
+bridge.bridge_guard_pool.argtypes=[C.c_size_t];bridge.bridge_guard_pool.restype=C.c_int
 bridge.bridge_motion_delta.argtypes=[];bridge.bridge_motion_delta.restype=C.c_float
 libc=C.CDLL(None);libc.mmap.argtypes=[C.c_void_p,C.c_size_t,C.c_int,C.c_int,C.c_int,C.c_long];libc.mmap.restype=C.c_void_p
 
@@ -70,7 +71,11 @@ class Host:
             put(self.game+0x2a6220,self.control_prefix+call(b'NativeControl')+bytes.fromhex('4883c4405f488b5c2418c3'))
             put(self.game+0x29f980,self.queue_prefix+call(b'NativeQueue')+bytes.fromhex('4883c4205f488b5c2408c3'))
             put(self.game+0x2b26c0,(ROOT/'fixtures/native_glide_constructor.bin').read_bytes())
-            put(self.game+0x2b2d30,b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeGlideCommon'))+b'\xff\xe0')
+            self.glide_common_prefix=bytes.fromhex('40534883ec20488bd98b8948010000')
+            put(self.game+0x2b2d30,self.glide_common_prefix+bytes.fromhex('4889d9')+call(b'NativeGlideCommon')+bytes.fromhex('4883c4205bc3'))
+            super_constructor=bytearray((ROOT/'fixtures/native_glide_constructor.bin').read_bytes())
+            struct.pack_into('<i',super_constructor,10,0x2b2d30-(0x2b2750+14));struct.pack_into('<i',super_constructor,25,0x38adc0-(0x2b2750+29));super_constructor[0x1d:0x24]=bytes.fromhex('83880401000001')
+            put(self.game+0x2b2750,bytes(super_constructor))
             put(self.game+0x29fa30,self.queue_prefix+call(b'NativeAppend')+bytes.fromhex('4883c4205f488b5c2408c3'))
             self.move_prefix=bytes.fromhex('48895c2410574883ec40f70100100000')
             put(self.game+0x2af6a0,self.move_prefix+call(b'NativeMove')+bytes.fromhex('4883c4405f488b5c2410c3'))
@@ -82,6 +87,11 @@ class Host:
             put(self.game+0x2a3980,bytes.fromhex('48895c240848896c24104889742418')+bytes.fromhex('574883ec20')+call(b'NativeGuardRow')+bytes.fromhex('4883c4205f488b5c2408488b6c2410488b742418c3'))
             put(self.game+0x29f0a0,bytes.fromhex('405557488d6c24e84881ec18010000')+call(b'NativeMotionAdvance')+bytes.fromhex('4881c4180100005f5dc3'))
             put(self.game+0x2b4640,bytes.fromhex('4c8bdc49895b20574881eca0000000')+call(b'NativeGuardAngle')+bytes.fromhex('4881c4a00000005f488b5c2420c3'))
+            put(self.game+0x2b47a0,bytes.fromhex('48896c241048897424185741564157')+bytes.fromhex('4883ec20')+call(b'NativeGuardPool')+bytes.fromhex('4883c420415f415e5f488b6c2410488b742418c3'))
+            put(self.game+0x2b3270,bytes.fromhex('48895c2408574883ec20488bf9')+call(b'NativeGuardCreate')+bytes.fromhex('4883c4205f488b5c2408c3'))
+            put(self.game+0x2b3560,bytes.fromhex('4883ec2883b9b400000000')+call(b'NativeGuardFree')+bytes.fromhex('4883c428c3'))
+            # Preserve native RIP-relative anchor; the following ABI mock returns the mask.
+            put(self.game+0x2b3760,bytes.fromhex('8b15aa3fb00233c9')+b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeGuardMask'))+b'\xff\xe0')
         self.load_pe()
     def activate_bank(self,olympus,encoded_fields=False):
         self.slot=60 if olympus else 98
@@ -145,7 +155,9 @@ class Host:
     def buffer(self,data):
         p=allocate((len(data)+4095)&~4095);put(p,data);bridge.bridge_range(p,len(data),4);self.buffers.append(p);return p
     def load_pe(self):
-        data=(ROOT/'kh1-aqua.dll').read_bytes();pe=struct.unpack_from('<I',data,60)[0];n=struct.unpack_from('<H',data,pe+6)[0];op=pe+24
+        dll=ROOT/'kh1-aqua.dll'
+        if not dll.exists():dll=ROOT.parent/'dll/kh1-aqua.dll'
+        data=dll.read_bytes();pe=struct.unpack_from('<I',data,60)[0];n=struct.unpack_from('<H',data,pe+6)[0];op=pe+24
         preferred=struct.unpack_from('<Q',data,op+24)[0];size=struct.unpack_from('<I',data,op+56)[0];headers=struct.unpack_from('<I',data,op+60)[0]
         p=allocate(size);self.image=p;bridge.bridge_range(p,size,0x40);put(p,data[:headers])
         sh=op+struct.unpack_from('<H',data,pe+20)[0]
@@ -275,7 +287,7 @@ class RuntimeTests(unittest.TestCase):
     def test_main_guard_accepts_front_side_and_rear_angles_only_with_its_own_live_guard_object(self):
         for bank in [98,60]:
             h=Host(guard=True,slot=bank);h.frame();h.equip(True);h.frame();bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d)
-            first=h.buffer(bytes(0xc0));second=h.buffer(bytes(0xc0));w32(first,0x80800);w32(first+0x34,bridge.bridge_encode(h.actor))
+            first=h.game+0x2db4710;second=h.buffer(bytes(0xc0));w32(first,0x80800);w32(first+0x34,bridge.bridge_encode(h.actor))
             for native_class in [0x20000,0x40000,0x60000,0x80000]:
                 w32(first,native_class|0x800)
                 for direction in [1.,0.,-1.]:
@@ -525,7 +537,7 @@ class RuntimeTests(unittest.TestCase):
         for reason in ['control','glide','move','state','can','queue','alloc','protect','remove']:
             h=Host(air=True,fail_alloc=reason=='alloc',fail_protect=reason=='protect',air_dodge=reason!='disabled',remove=reason=='remove')
             if reason in ['control','glide','move','state','can','queue']:
-                address=h.game+{'control':0x2a6220,'glide':0x2b26c0,'move':0x2af6a0,'state':0x2b1960,'can':0x297870,'queue':0x29f980}[reason]
+                address=h.game+{'control':0x2a6220,'glide':0x2b2d30,'move':0x2af6a0,'state':0x2b1960,'can':0x297870,'queue':0x29f980}[reason]
                 C.c_ubyte.from_address(address).value^=1
             before=C.string_at(h.game+0x2a6220,17);h.frame()
             self.assertEqual(C.string_at(h.game+0x2a6220,17),before,reason)
@@ -595,7 +607,7 @@ class RuntimeTests(unittest.TestCase):
     def test_ground_hits_and_usable_chain_windows_use_the_actual_native_event_sampler(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
-            for slot,contact,start,end in [(98,12.,22.,40.),(99,6.4,32.,48.),(100,8.8,44.,64.)]:
+            for slot,contact,start,end in [(98,12.,22.,40.),(99,30.*8/37.,30.,48.),(100,42.*8/37.,42.,64.)]:
                 self.assertNotEqual((h.event(slot,4,contact-.5) or 0)&0xffff0000,0x160000)
                 self.assertEqual(h.event(slot,4,contact)&0xffff0000,0x160000)
                 self.assertNotEqual(h.event(slot,5,start-.5),1)
@@ -708,13 +720,13 @@ class RuntimeTests(unittest.TestCase):
         foreign=h.buffer(bytes(1408));pointer=bridge.bridge_encode(foreign)
         w32(h.actor+0x1d8,pointer);h.equip(False);before=h.snapshot();h.frame()
         self.assertEqual(h.snapshot(),before);self.assertEqual(r32(h.actor+0x1d8),pointer)
-        w32(h.actor+0x1d8,h.original_request_handle);h.frame();h.assert_all(self,False)
+        w32(h.actor+0x1d8,h.original_request_handle);[h.frame() for _ in range(8)];h.assert_all(self,False)
     def test_request_restore_waits_for_cast_completion_and_rejects_changed_original(self):
         h=Host();h.frame();h.equip(True);h.frame();pointer=r32(h.actor+0x1d8)
         w32(h.actor+0x164,0x38);h.equip(False);h.frame();self.assertEqual(r32(h.actor+0x1d8),pointer)
         w32(h.actor+0x164,0);w32(h.requests+0x39*4,0x1002);before=h.snapshot();h.frame()
         self.assertEqual(h.snapshot(),before);self.assertEqual(r32(h.actor+0x1d8),pointer)
-        put(h.requests,h.request_original);h.frame();h.assert_all(self,False)
+        put(h.requests,h.request_original);[h.frame() for _ in range(8)];h.assert_all(self,False)
     def test_all_five_lowercase_names_are_registered_with_zero_ap(self):
         h=Host();h.frame();table=r64(h.game+0x2d36d48)
         expected=[b'\x45\x55\x59\x45\0']+[b'\x45\x55\x59\x45\x01'+bytes([0x21+i])+b'\0' for i in range(1,5)]
@@ -832,6 +844,148 @@ class RuntimeTests(unittest.TestCase):
     def test_foreign_nonsentinel_key_change_is_rejected_when_restoring(self):
         h=Host();h.frame();h.equip(True);h.frame();p=h.motions[104];offset=struct.unpack_from('<I',h.runtime_originals[104],40)[0]
         w32(p+offset+80,0x7f123456);h.equip(False);before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
+
+    def guard_setup(self,bank=98):
+        h=Host(slot=bank,guard=True);h.frame();h.equip(True);h.frame()
+        bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d)
+        native=h.game+0x2db4710;data=h.buffer(bytes(0x70))
+        w32(native,0x80800);w32(native+0x34,bridge.bridge_encode(h.actor));w32(native+0x5c,bridge.bridge_encode(data))
+        w32(native+0x54,1);w32(h.game+0x2db7710,1)
+        put(h.actor+0x10,struct.pack('<3f',100.,200.,300.))
+        self.assertEqual(bridge.bridge_guard_pool(h.game+0x2b47a0),19)
+        return h,native,native+0xc0,data
+    def test_other_native_row_callbacks_do_not_forget_the_witnessed_guard(self):
+        h,native,p,data=self.guard_setup();bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x12)
+        w32(h.actor+0x164,0x6e);h.clock(0.);bridge.bridge_guard_pool(h.game+0x2b47a0)
+        self.assertTrue(r32(p)&0x800)
+        h.queue(0xc8);bridge.bridge_guard_pool(h.game+0x2b47a0);self.assertFalse(r32(p)&0x800)
+    def test_numbered_dodge_keeps_v19_superglide_passthrough(self):
+        h=Host(air=True);h.arm_air(1);h.control(down=6,pressed=6,x=1,tilt=1)
+        bridge.bridge_glide(h.game+0x2b2750,h.actor);self.assertEqual(bridge.bridge_native_glide_calls(),1)
+    def test_wider_guard_creates_one_native_body_capsule_covering_front_sides_and_rear(self):
+        for bank in [98,60]:
+            h,native,p,data=self.guard_setup(bank)
+            self.assertEqual(r32(p)&0xe0000,0x80000);self.assertEqual(r32(p+0x2c),0)
+            self.assertEqual(r32(p+0x68),100);self.assertEqual(h.decode(r32(p+0x34)),h.actor)
+            self.assertNotEqual(h.decode(r32(p+0x5c)),data)
+            self.assertEqual(struct.unpack('<f',C.string_at(data+0x64,4))[0],0.)
+            self.assertLess(struct.unpack('<f',C.string_at(h.decode(r32(p+0x5c))+0x64,4))[0],-1.)
+            a=list(struct.unpack('<4f',C.string_at(p+0x10,16)));b=list(struct.unpack('<4f',C.string_at(p+0x40,16)))
+            self.assertEqual(a,[100.,165.,300.,1.]);self.assertEqual(b,[100.,115.,300.,1.])
+            self.assertEqual(struct.unpack('<f',C.string_at(p+0xc,4))[0],50.)
+            # Capsule geometry reaches equally to the front, rear and either side.
+            for dx,dz in [(0,45),(0,-45),(45,0),(-45,0)]:self.assertLessEqual(dx*dx+dz*dz,50.*50.)
+            for _ in range(20):bridge.bridge_guard_pool(h.game+0x2b47a0)
+            self.assertEqual(sum(bool(r32(native+i*0xc0)&0x800) for i in range(64)),2)
+    def test_guard_shield_follows_body_and_rearms_without_new_allocations(self):
+        h,native,p,data=self.guard_setup();put(h.actor+0x10,struct.pack('<3f',-50.,100.,-80.))
+        w32(p,r32(p)&~0x200);bridge.bridge_guard_pool(h.game+0x2b47a0)
+        self.assertEqual(struct.unpack('<4f',C.string_at(p+0x10,16)),(-50.,65.,-80.,1.))
+        self.assertEqual(C.string_at(p+0x10,16),C.string_at(p+0x70,16));self.assertTrue(r32(p)&0x200)
+    def test_native_parry_6e_and_6f_keep_only_twelve_ticks_of_extra_guard(self):
+        for request in [0x6e,0x6f]:
+            h,native,p,data=self.guard_setup();w32(h.actor+0x164,request);h.clock(0.)
+            for _ in range(11):
+                bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+                bridge.bridge_guard_pool(h.game+0x2b47a0);self.assertTrue(r32(p)&0x800)
+            bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.);bridge.bridge_guard_pool(h.game+0x2b47a0)
+            self.assertFalse(r32(p)&0x800);self.assertTrue(r32(native)&0x800)
+    def test_guard_release_grace_is_small_and_cannot_survive_new_actions(self):
+        for request in [0,1,2,0x48,0x4c,0xc8,0xcc,0x36]:
+            h,native,p,data=self.guard_setup()
+            for _ in range(155):bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+            h.frame();w32(h.actor+0x164,request);h.clock(0.)
+            bridge.bridge_guard_pool(h.game+0x2b47a0)
+            if request==0:
+                self.assertTrue(r32(p)&0x800)
+                for _ in range(13):bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+                bridge.bridge_guard_pool(h.game+0x2b47a0)
+            self.assertFalse(r32(p)&0x800);self.assertTrue(r32(native)&0x800)
+    def test_guard_retirement_cannot_free_a_recycled_or_foreign_pool_object(self):
+        for changed in ['owner','data','mask']:
+            h,native,p,data=self.guard_setup();field={'owner':0x34,'data':0x5c,'mask':0x54}[changed]
+            w32(p+field,0x12345678);before=C.string_at(p,0xc0)
+            w32(h.actor+0x164,0x48);h.frame();self.assertEqual(C.string_at(p,0xc0),before)
+    def test_guard_does_not_allocate_without_a_witness_template_or_free_native_slot(self):
+        for reason in ['witness','template','full','mask']:
+            h,native,p,data=self.guard_setup();w32(h.actor+0x164,0x48);h.frame()
+            if reason!='witness':bridge.bridge_guard_row(h.game+0x2a3980,h.actor,0x3d)
+            if reason=='template':w32(native+0x34,bridge.bridge_encode(h.buffer(bytes(0x800))))
+            if reason=='full':
+                for i in range(1,64):w32(native+i*0xc0,0x800)
+            if reason=='mask':w32(h.game+0x2db7710,0x7fffffff)
+            before=C.string_at(native,0x3000);bridge.bridge_guard_pool(h.game+0x2b47a0)
+            self.assertEqual(C.string_at(native,0x3000),before)
+    def test_unrelated_collision_pairs_do_not_query_or_validate_soras_guard(self):
+        h,native,p,data=self.guard_setup();other=h.game+0x2db4710+10*0xc0
+        w32(other,0x80800);w32(other+0x34,bridge.bridge_encode(h.buffer(bytes(0x800))))
+        enemy=h.buffer(bytes(0xc0));q=bridge.bridge_queries()
+        for _ in range(1000):bridge.bridge_guard_angle(h.game+0x2b4640,other,enemy)
+        self.assertEqual(bridge.bridge_queries()-q,0)
+    def test_all_guard_hooks_fail_atomically_when_pool_or_allocator_anchor_is_changed(self):
+        for anchor in [0x2b47a0,0x2b3270,0x2b3560,0x2b3760]:
+            h=Host(guard=True);C.c_ubyte.from_address(h.game+anchor).value^=1
+            before={r:C.string_at(h.game+r,15) for r in [0x2a3980,0x29f0a0,0x2b4640,0x2b47a0]}
+            h.frame()
+            for r,b in before.items():self.assertEqual(C.string_at(h.game+r,15),b)
+        h=Host(guard=True,fail_protect=5);before={r:C.string_at(h.game+r,15) for r in [0x2a3980,0x29f0a0,0x2b4640,0x2b47a0]};h.frame()
+        for r,b in before.items():self.assertEqual(C.string_at(h.game+r,15),b)
+    def test_moving_main_binding_recovers_after_temporary_residency_or_save_loss(self):
+        for bank in [98,60]:
+            for reason in ['resident','save']:
+                h=Host(slot=bank,air=True);h.arm_air();w32(h.actor+0x164,2);w32(h.actor+0x70,0)
+                if reason=='resident':w32(h.actor+0x374,0)
+                else:put(h.save+4,b'\0')
+                before=h.snapshot();h.frame()
+                if reason=='resident':w32(h.actor+0x374,1)
+                else:put(h.save+4,b'\x64')
+                h.frame();self.assertEqual(h.snapshot(),before)
+                self.assertIn('BINDING RECOVERED',bridge.bridge_log().decode());self.assertNotIn('SWITCH PENDING',bridge.bridge_log().decode())
+                h.control(state=2,request=6);h.control(down=6,pressed=6,state=2,request=6,tilt=1,x=-1)
+                self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(h.move()[0][0],-14.)
+    def test_in_progress_504_keeps_locked_motion_through_read_only_binding_recovery(self):
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1);h.clock(10.);h.move()
+        w32(h.actor+0x374,0);h.frame();w32(h.actor+0x374,1);h.frame()
+        self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(h.move()[0][:3],[14.,-.75,0.])
+        h.clock(39.);h.frame();self.assertEqual(h.body(10),h.expected(10,1))
+    def test_main_shared_constructor_blocks_both_glides_even_when_binding_is_unavailable(self):
+        for reason in ['normal','resident','corrupt']:
+            h=Host(air=True);h.arm_air()
+            if reason=='resident':w32(h.actor+0x374,0);h.frame();w32(h.actor+0x374,1)
+            elif reason=='corrupt':w32(h.motions[104]+24,999);h.frame()
+            for entry in [0x2b26c0,0x2b2750]:bridge.bridge_glide(h.game+entry,h.actor)
+            self.assertEqual(bridge.bridge_native_glide_calls(),0)
+    def test_numbered_off_and_disabled_shared_glide_paths_pass_both_native_constructors(self):
+        for profile,enabled in [(0,0),(1,1),(2,1),(3,1),(4,1)]:
+            h=Host(air=True,air_dodge=enabled);h.arm_air(profile)
+            for entry in [0x2b26c0,0x2b2750]:bridge.bridge_glide(h.game+entry,h.actor)
+            self.assertEqual(bridge.bridge_native_glide_calls(),2)
+        h=Host(air=True);h.frame()
+        for entry in [0x2b26c0,0x2b2750]:bridge.bridge_glide(h.game+entry,h.actor)
+        self.assertEqual(bridge.bridge_native_glide_calls(),2)
+    def test_invalid_bank_admission_is_bounded_and_main_does_not_fall_back_to_glide(self):
+        h=Host(air=True);h.arm_air();w32(h.motions[104]+24,999);w32(h.actor+0x164,2)
+        before=h.snapshot();q=bridge.bridge_queries()
+        for _ in range(120):h.frame()
+        self.assertEqual(h.snapshot(),before);self.assertLess(bridge.bridge_queries()-q,12000)
+        self.assertLess(bridge.bridge_log().decode().count('AQUA WAITING:'),3)
+        for entry in [0x2b26c0,0x2b2750]:bridge.bridge_glide(h.game+entry,h.actor)
+        self.assertEqual(bridge.bridge_native_glide_calls(),0)
+    def test_air_combo_keeps_a_usable_followup_window_to_end_of_each_nonfinisher(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
+            for slot,start,end in [(102,18.,40.),(103,24.,42.)]:
+                self.assertEqual(h.event(slot,5,start),1);self.assertEqual(h.event(slot,5,end-.1),1)
+                self.assertEqual(h.event(slot,5,end),0)
+                for dt in [.5,1.,2.,4.]:self.assertGreaterEqual(sum(h.event(slot,5,f)==1 for f in __import__('numpy').arange(start+.1,end,dt)),4)
+            self.assertEqual([h.record_by_slot[x]['donor'] for x in [102,103,104]],['305','353','407'])
+    def test_both_second_ground_variants_have_identical_real_contact_and_chain_timing(self):
+        h=Host(guard=True,encoded_fields=True);h.frame();h.equip(True);h.frame()
+        hits=[];chains=[]
+        for request,slot,finish in [(0xc9,99,30.),(0xca,100,42.)]:
+            w32(h.actor+0x164,request);h.clock(0.);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+            rate=bridge.bridge_motion_delta();hits.append((finish*8./37.)/rate);chains.append(finish/rate)
+        self.assertAlmostEqual(hits[0],hits[1],places=5);self.assertAlmostEqual(chains[0],chains[1],places=5)
 
 
 if __name__=='__main__':

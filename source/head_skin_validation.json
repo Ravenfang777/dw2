@@ -1,17 +1,18 @@
 {
-  "version": 19,
+  "version": 20,
   "passed": true,
   "game_runtime_tested": false,
   "skinned_skull_joint": 150,
   "main_combat_idle_slot": 1,
-  "main_combat_idle_yaw_left_degrees": 20.0,
+  "main_combat_idle_roll_right_degrees": 20.0,
+  "previous_main_idle_yaw_left_removed": true,
   "main_aerial_fire_slots": [
     79,
     82
   ],
   "main_aerial_blizzard_variant_slot": 80,
   "main_aerial_cast_yaw_right_degrees": 20.0,
-  "head_turns_on_numbered_profiles": false,
+  "numbered_head_poses_unchanged": true,
   "main_normal_run_source": "013",
   "main_combat_run_source": "004",
   "both_run_loops_retained": true,

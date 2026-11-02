@@ -1,18 +1,16 @@
 {
-  "version": 19,
+  "version": 20,
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "main Glide replacement; numbered profiles retain v18",
+  "scope": "main tap504 replaces both native Glide constructors",
   "source_animation": "504",
   "duration_native_units": 39.0,
   "horizontal_speed": 14.0,
   "upward_speed": 0.75,
   "horizontal_requested_distance": 546.0,
   "requested_lift": 29.25,
-  "direction": "capture prepared movement direction on tap; fallback existing horizontal momentum, then facing",
-  "button": "fresh airborne Circle tap; release then tap again after animation to repeat",
-  "held_glide": "suppressed in main; native input restored outside main or when air_dodge=0",
+  "direction": "locked tap direction, momentum/facing fallback",
+  "binding_recovery": "Glide blocking uses selected main intent; action execution requires full admitted binding",
   "actor_position_written": false,
-  "native_collision_callbacks_retained": true,
-  "native_movement_rva": "0x2AF6A0"
+  "native_collision_callbacks_retained": true
 }

@@ -1,272 +1,1443 @@
 {
-  "350": {
-    "clip": "350",
-    "requested_inventory_label": "350",
-    "source_bank": "p02ex_116.arc",
-    "pam_member": "p02ex_116.pam",
-    "source_frames": 41,
-    "source_fps": 30,
-    "animation_sha256": "42d386309f137dbd10c82e53948c1986ba80d76fb15f63da6df89df1290efdd8",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_116.arc"
-  },
-  "218": {
-    "clip": "218",
-    "requested_inventory_label": "218",
-    "source_bank": "p02ex_009.arc",
-    "pam_member": "p02ex_009.pam",
-    "source_frames": 45,
-    "source_fps": 30,
-    "animation_sha256": "06d11db15d1cd704cfa4f3b60b7ac355b18517c73e444aefa8d35537cf64b801",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_009.arc"
-  },
-  "366": {
-    "clip": "366",
-    "requested_inventory_label": "366",
-    "source_bank": "p02ex_128.arc",
-    "pam_member": "p02ex_128.pam",
-    "source_frames": 48,
-    "source_fps": 30,
-    "animation_sha256": "0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_128.arc"
-  },
-  "351": {
-    "clip": "351",
-    "requested_inventory_label": "351",
-    "source_bank": "p02ex_710.arc",
-    "pam_member": "p02ex_710.pam",
-    "source_frames": 34,
-    "source_fps": 30,
-    "animation_sha256": "2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_710.arc"
-  },
-  "353": {
-    "clip": "353",
-    "requested_inventory_label": "353",
-    "source_bank": "p02ex_352.arc",
-    "pam_member": "p02ex_352.pam",
-    "source_frames": 44,
-    "source_fps": 30,
-    "animation_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_352.arc"
-  },
-  "393": {
-    "clip": "393",
-    "requested_inventory_label": "393",
-    "source_bank": "p02ex_155.arc",
-    "pam_member": "p02ex_155.pam",
-    "source_frames": 37,
-    "source_fps": 30,
-    "animation_sha256": "7e20e587e15a632a08a4b59b2cb5de26df120099245de9aeccdac0f1a70d75e8",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_155.arc"
-  },
-  "395": {
-    "clip": "395",
-    "requested_inventory_label": "007 / 395",
-    "source_bank": "p02ex_200.arc",
-    "pam_member": "p02ex_200.pam",
-    "source_frames": 29,
-    "source_fps": 30,
-    "animation_sha256": "bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_200.arc"
-  },
-  "316": {
-    "clip": "316",
-    "requested_inventory_label": "316",
-    "source_bank": "p02ex_151.arc",
-    "pam_member": "p02ex_151.pam",
-    "source_frames": 31,
-    "source_fps": 30,
-    "animation_sha256": "85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_151.arc"
-  },
-  "317": {
-    "clip": "317",
-    "requested_inventory_label": "317",
-    "source_bank": "p02ex_152.arc",
-    "pam_member": "p02ex_152.pam",
-    "source_frames": 36,
-    "source_fps": 30,
-    "animation_sha256": "463c25ed58de2bb259a3774107d247cdf5206c77f9f25c6050a9e7406280a087",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_152.arc"
-  },
-  "318": {
-    "clip": "318",
-    "requested_inventory_label": "318",
-    "source_bank": "p02ex_152.arc",
-    "pam_member": "p02ex_152.pam",
-    "source_frames": 29,
-    "source_fps": 30,
-    "animation_sha256": "3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_152.arc"
-  },
-  "391": {
-    "clip": "391",
-    "requested_inventory_label": "391",
-    "source_bank": "p02ex_153.arc",
-    "pam_member": "p02ex_153.pam",
-    "source_frames": 49,
-    "source_fps": 30,
-    "animation_sha256": "8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_153.arc"
-  },
-  "390": {
-    "clip": "390",
-    "requested_inventory_label": "390",
-    "source_bank": "p02ex_154.arc",
-    "pam_member": "p02ex_154.pam",
-    "source_frames": 49,
-    "source_fps": 30,
-    "animation_sha256": "b6b282c69bfb64931d3aad0984cc60eb1aa307edc72e1422e897543129934b1b",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_154.arc"
-  },
-  "427": {
-    "clip": "427",
-    "requested_inventory_label": "427",
-    "source_bank": "p02ex_154.arc",
-    "pam_member": "p02ex_154.pam",
-    "source_frames": 44,
-    "source_fps": 30,
-    "animation_sha256": "b357456912b69e437689e137bf5a5eef8d1c2b628fb8704e71e164e18f30f852",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_154.arc"
-  },
-  "315": {
-    "clip": "315",
-    "requested_inventory_label": "315",
-    "source_bank": "p02ex_151.arc",
-    "pam_member": "p02ex_151.pam",
-    "source_frames": 38,
-    "source_fps": 30,
-    "animation_sha256": "26f92f4650be9e939d40bb267c48619b90e4dcd4795b84ce4a631b1ac3211f88",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_151.arc"
-  },
-  "371": {
-    "clip": "371",
-    "requested_inventory_label": "371",
-    "source_bank": "p02ex_133.arc",
-    "pam_member": "p02ex_133.pam",
-    "source_frames": 64,
-    "source_fps": 30,
-    "animation_sha256": "bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_133.arc"
-  },
-  "365": {
-    "clip": "365",
-    "requested_inventory_label": "365",
-    "source_bank": "p02ex_123.arc",
-    "pam_member": "p02ex_123.pam",
-    "source_frames": 48,
-    "source_fps": 30,
-    "animation_sha256": "45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_123.arc"
-  },
-  "332": {
-    "clip": "332",
-    "requested_inventory_label": "332",
-    "source_bank": "p02ex_101.arc",
-    "pam_member": "p02ex_101.pam",
-    "source_frames": 39,
-    "source_fps": 30,
-    "animation_sha256": "bdbf35ac47fe94f269c170030a33d376f5e581129be8ee4b3fda33b916fc1f59",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_101.arc"
-  },
-  "411": {
-    "clip": "411",
-    "requested_inventory_label": "411",
-    "source_bank": "p02ex_313.arc",
-    "pam_member": "p02ex_313.pam",
-    "source_frames": 36,
-    "source_fps": 30,
-    "animation_sha256": "32491a788f10ef45b15a59d5881d525e3a32fecd8d6aa54654d9616749f9ce4c",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_313.arc"
-  },
-  "352": {
-    "clip": "352",
-    "requested_inventory_label": "352",
-    "source_bank": "p02ex_352.arc",
-    "pam_member": "p02ex_352.pam",
-    "source_frames": 36,
-    "source_fps": 30,
-    "animation_sha256": "43d1c61af26e5eef072d6d0c7445314f27c7dd114c5877a8e5eb731d1a0db2d2",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_352.arc"
-  },
-  "616": {
-    "clip": "616",
-    "requested_inventory_label": "616",
-    "source_bank": "p02ex_605.arc",
-    "pam_member": "p02ex_605.pam",
-    "source_frames": 44,
-    "source_fps": 30,
-    "animation_sha256": "76881ffae8086c51c118cf1e42ffa6b1c4be33f0c979b7206f2ff6c410b59984",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_605.arc"
-  },
-  "407": {
-    "clip": "407",
-    "requested_inventory_label": "407",
-    "source_bank": "p02ex_624.arc",
-    "pam_member": "p02ex_624.pam",
-    "source_frames": 34,
-    "source_fps": 30,
-    "animation_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_624.arc"
-  },
-  "510": {
-    "clip": "510",
-    "requested_inventory_label": "510",
-    "source_bank": "p02ex_501.arc",
-    "pam_member": "p02ex_501.pam",
-    "source_frames": 38,
-    "source_fps": 30,
-    "animation_sha256": "b5db23ac3cbc0c721668d565125bcbb9e34c03a91e96aa3bc8a4b459cd2ac698",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_501.arc"
-  },
-  "511": {
-    "clip": "511",
-    "requested_inventory_label": "511",
-    "source_bank": "p02ex_501.arc",
-    "pam_member": "p02ex_501.pam",
-    "source_frames": 31,
-    "source_fps": 30,
-    "animation_sha256": "96c771ffd8a3fbca70df6c332a01192e790162bf7e0730643134f9499d692c11",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_501.arc"
-  },
-  "512": {
-    "clip": "512",
-    "requested_inventory_label": "512",
-    "source_bank": "p02ex_501.arc",
-    "pam_member": "p02ex_501.pam",
-    "source_frames": 33,
-    "source_fps": 30,
-    "animation_sha256": "964e5cd26c5532566433b6011dff022eabe0e6c19858d16c5d726bd69cc467a7",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_501.arc"
-  },
-  "504": {
-    "clip": "504",
-    "requested_inventory_label": "504",
-    "source_bank": "p02ex_157.arc",
-    "pam_member": "p02ex_157.pam",
-    "source_frames": 23,
-    "source_fps": 30,
-    "animation_sha256": "6cec577faf4138c888437593305ff79a8e816d0aba215f71d888502522b26c1c",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_157.arc"
-  },
-  "514": {
-    "clip": "514",
-    "requested_inventory_label": "514",
-    "source_bank": "p02ex_157.arc",
-    "pam_member": "p02ex_157.pam",
-    "source_frames": 33,
-    "source_fps": 30,
-    "animation_sha256": "ad6f1c64cbaa3634cbf5dcee87ec80c069b4aa20801e33bbbb5d72632cd41315",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_157.arc"
-  },
-  "399": {
-    "clip": "399",
-    "requested_inventory_label": "399",
-    "source_bank": "p02ex_346.arc",
-    "pam_member": "p02ex_346.pam",
-    "source_frames": 120,
-    "source_fps": 30,
-    "animation_sha256": "42ca639a035a67a8a8883e18b3141876a9bf1931291036685a9d3c9774143286",
-    "original_source": "capture_20261101/Sources/data/bbs/arc/pc/p02ex_346.arc"
+  "version": 20,
+  "profiles": {
+    "0": [
+      {
+        "normal_slot": 0,
+        "request": 0,
+        "action": "idle",
+        "donor": "001",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "idle_front_hair": "bind151_154"
+      },
+      {
+        "normal_slot": 1,
+        "request": 0,
+        "action": "combat idle",
+        "donor": "002",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "idle_front_hair": "bind151_154",
+        "head_roll_character_degrees": 20.0
+      },
+      {
+        "normal_slot": 2,
+        "request": 1,
+        "action": "walk",
+        "donor": "003",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 3,
+        "request": 1,
+        "action": "walk",
+        "donor": "003",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 4,
+        "request": 1,
+        "action": "combat walk",
+        "donor": "012",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 5,
+        "request": 2,
+        "action": "run",
+        "donor": "013",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 6,
+        "request": 2,
+        "action": "run",
+        "donor": "013",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 7,
+        "request": 2,
+        "action": "combat run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 8,
+        "request": 4,
+        "action": "jump takeoff",
+        "donor": "005",
+        "source_range": [
+          0,
+          9
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 9,
+        "request": 5,
+        "action": "jump rise",
+        "donor": "005",
+        "source_range": [
+          9,
+          12
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 10,
+        "request": 6,
+        "action": "fall",
+        "donor": "506",
+        "source_range": null,
+        "loop": true,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_150.arc"
+      },
+      {
+        "normal_slot": 11,
+        "request": 7,
+        "action": "landing",
+        "donor": "007",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 12,
+        "request": 9,
+        "action": "high jump takeoff",
+        "donor": "014",
+        "source_range": [
+          0,
+          16
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 13,
+        "request": 10,
+        "action": "high jump rise",
+        "donor": "014",
+        "source_range": [
+          16,
+          31
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 14,
+        "request": 13,
+        "action": "ledge hang",
+        "donor": "020",
+        "source_range": [
+          55,
+          94
+        ],
+        "loop": true,
+        "grounded": false,
+        "root": "hand_anchor",
+        "source_bank": "base",
+        "anchor_hand": 206
+      },
+      {
+        "normal_slot": 15,
+        "request": 14,
+        "action": "ledge climb start",
+        "donor": "021",
+        "source_range": [
+          0,
+          4
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "hand_anchor",
+        "source_bank": "base",
+        "anchor_hand": 206
+      },
+      {
+        "normal_slot": 16,
+        "request": 15,
+        "action": "ledge climb finish",
+        "donor": "021",
+        "source_range": [
+          4,
+          13
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "climb",
+        "source_bank": "base",
+        "anchor_hand": 206
+      },
+      {
+        "normal_slot": 17,
+        "request": 16,
+        "action": "ledge landing recovery",
+        "donor": "007",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "native",
+        "source_bank": "base",
+        "normal_only": true
+      },
+      {
+        "normal_slot": 54,
+        "request": 54,
+        "action": "Fire cast release",
+        "donor": "391",
+        "source_range": [
+          0,
+          31
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc",
+        "source_sha256": "8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f"
+      },
+      {
+        "normal_slot": 55,
+        "request": 56,
+        "action": "Thunder casting family",
+        "donor": "317",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_152.arc"
+      },
+      {
+        "normal_slot": 56,
+        "request": 57,
+        "action": "Cure casting family",
+        "donor": "427",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_154.arc",
+        "source_sha256": "b357456912b69e437689e137bf5a5eef8d1c2b628fb8704e71e164e18f30f852"
+      },
+      {
+        "normal_slot": 57,
+        "request": 61,
+        "action": "Fire cast recovery",
+        "donor": "391",
+        "source_range": [
+          31,
+          48
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc",
+        "source_sha256": "8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f"
+      },
+      {
+        "normal_slot": 58,
+        "request": 62,
+        "action": "ground item use",
+        "donor": "395",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_200.arc",
+        "source_sha256": "bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96",
+        "source_aliases": "007 / 395"
+      },
+      {
+        "normal_slot": 59,
+        "request": 63,
+        "action": "air item use",
+        "donor": "395",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_200.arc",
+        "source_sha256": "bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96",
+        "source_aliases": "007 / 395"
+      },
+      {
+        "normal_slot": 79,
+        "request": 131,
+        "action": "air Fire cast release",
+        "donor": "316",
+        "source_range": [
+          0,
+          20
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc",
+        "source_sha256": "85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4",
+        "head_yaw_character_degrees": -20.0
+      },
+      {
+        "normal_slot": 80,
+        "request": 133,
+        "action": "air Thunder casting family",
+        "donor": "390",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_154.arc"
+      },
+      {
+        "normal_slot": 81,
+        "request": 134,
+        "action": "air Cure casting family",
+        "donor": "318",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_152.arc",
+        "source_sha256": "3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d"
+      },
+      {
+        "normal_slot": 82,
+        "request": 138,
+        "action": "air Fire cast recovery",
+        "donor": "316",
+        "source_range": [
+          20,
+          30
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc",
+        "source_sha256": "85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4",
+        "head_yaw_character_degrees": -20.0
+      },
+      {
+        "normal_slot": 98,
+        "request": 200,
+        "action": "ground first",
+        "donor": "300",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "event_timing": "first_contact"
+      },
+      {
+        "normal_slot": 99,
+        "request": 201,
+        "action": "ground second",
+        "donor": "301",
+        "source_range": [
+          0,
+          37
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "event_timing": "trim_second_recovery",
+        "source_timing": "combo_finish_hold",
+        "native_hold_frame": 30.0,
+        "runtime_playback_rate": 1.0
+      },
+      {
+        "normal_slot": 100,
+        "request": 202,
+        "action": "ground alternate",
+        "donor": "301",
+        "source_range": [
+          0,
+          37
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "event_timing": "trim_second_recovery",
+        "source_timing": "combo_finish_hold",
+        "native_hold_frame": 42.0,
+        "runtime_playback_rate": 1.4
+      },
+      {
+        "normal_slot": 101,
+        "request": 203,
+        "action": "ground finisher",
+        "donor": "366",
+        "source_range": [
+          12,
+          47
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_128.arc",
+        "source_sha256": "0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea",
+        "runtime_playback_rate": 1.3428571428571427,
+        "event_timing": "trim_finisher_source12"
+      },
+      {
+        "normal_slot": 102,
+        "request": 204,
+        "action": "air first",
+        "donor": "305",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base",
+        "event_timing": "air_followup_window"
+      },
+      {
+        "normal_slot": 103,
+        "request": 205,
+        "action": "air second",
+        "donor": "353",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_352.arc",
+        "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e",
+        "event_timing": "air_followup_window"
+      },
+      {
+        "normal_slot": 104,
+        "request": 206,
+        "action": "air finisher",
+        "donor": "407",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_624.arc",
+        "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9"
+      },
+      {
+        "normal_slot": 110,
+        "request": 212,
+        "action": "Guard / Barrier pose",
+        "donor": "400",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "source_timing": "guard_forward_hold_reverse",
+        "guard_forward_end": 26.5,
+        "guard_reverse_start": 26.5,
+        "guard_reverse_end": 53.0,
+        "runtime_playback_rate": 0.33974358974358976,
+        "event_timing": "full_animation_guard"
+      },
+      {
+        "normal_slot": 117,
+        "request": 220,
+        "action": "Dodge Roll / Cartwheel pose",
+        "donor": "009",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      }
+    ],
+    "1": [
+      {
+        "normal_slot": 1,
+        "request": 0,
+        "action": "combat idle",
+        "donor": "002",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "idle_front_hair": "bind151_154"
+      },
+      {
+        "normal_slot": 5,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 6,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 7,
+        "request": 2,
+        "action": "combat run",
+        "donor": "013",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 54,
+        "request": 54,
+        "action": "Fire cast release",
+        "donor": "316",
+        "source_range": [
+          0,
+          20
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 56,
+        "request": 57,
+        "action": "Cure casting family",
+        "donor": "318",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_152.arc"
+      },
+      {
+        "normal_slot": 57,
+        "request": 61,
+        "action": "Fire cast recovery",
+        "donor": "316",
+        "source_range": [
+          20,
+          30
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 79,
+        "request": 131,
+        "action": "air Fire cast release",
+        "donor": "391",
+        "source_range": [
+          0,
+          31
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 81,
+        "request": 134,
+        "action": "air Cure casting family",
+        "donor": "427",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_154.arc"
+      },
+      {
+        "normal_slot": 82,
+        "request": 138,
+        "action": "air Fire cast recovery",
+        "donor": "391",
+        "source_range": [
+          31,
+          48
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 98,
+        "request": 200,
+        "action": "ground first",
+        "donor": "371",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_133.arc",
+        "source_sha256": "bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42"
+      },
+      {
+        "normal_slot": 99,
+        "request": 201,
+        "action": "ground second",
+        "donor": "365",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_123.arc",
+        "source_sha256": "45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda"
+      },
+      {
+        "normal_slot": 100,
+        "request": 202,
+        "action": "ground alternate",
+        "donor": "365",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_123.arc",
+        "source_sha256": "45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda"
+      },
+      {
+        "normal_slot": 101,
+        "request": 203,
+        "action": "ground finisher",
+        "donor": "366",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_128.arc",
+        "source_sha256": "0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea"
+      },
+      {
+        "normal_slot": 102,
+        "request": 204,
+        "action": "air first",
+        "donor": "218",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_009.arc",
+        "source_sha256": "06d11db15d1cd704cfa4f3b60b7ac355b18517c73e444aefa8d35537cf64b801"
+      },
+      {
+        "normal_slot": 103,
+        "request": 205,
+        "action": "air second",
+        "donor": "332",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_101.arc",
+        "source_sha256": "bdbf35ac47fe94f269c170030a33d376f5e581129be8ee4b3fda33b916fc1f59"
+      },
+      {
+        "normal_slot": 104,
+        "request": 206,
+        "action": "air finisher",
+        "donor": "393",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_155.arc",
+        "source_sha256": "7e20e587e15a632a08a4b59b2cb5de26df120099245de9aeccdac0f1a70d75e8"
+      },
+      {
+        "normal_slot": 110,
+        "request": 212,
+        "action": "Guard / Barrier pose",
+        "donor": "400",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "source_timing": "guard_forward_hold_reverse",
+        "guard_forward_end": 10.0,
+        "guard_reverse_start": 36.0,
+        "guard_reverse_end": 52.0
+      }
+    ],
+    "2": [
+      {
+        "normal_slot": 1,
+        "request": 0,
+        "action": "combat idle",
+        "donor": "002",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "idle_front_hair": "bind151_154"
+      },
+      {
+        "normal_slot": 5,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 6,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 7,
+        "request": 2,
+        "action": "combat run",
+        "donor": "013",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 54,
+        "request": 54,
+        "action": "Fire cast release",
+        "donor": "316",
+        "source_range": [
+          0,
+          20
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 56,
+        "request": 57,
+        "action": "Cure casting family",
+        "donor": "318",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_152.arc"
+      },
+      {
+        "normal_slot": 57,
+        "request": 61,
+        "action": "Fire cast recovery",
+        "donor": "316",
+        "source_range": [
+          20,
+          30
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 79,
+        "request": 131,
+        "action": "air Fire cast release",
+        "donor": "391",
+        "source_range": [
+          0,
+          31
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 81,
+        "request": 134,
+        "action": "air Cure casting family",
+        "donor": "427",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_154.arc"
+      },
+      {
+        "normal_slot": 82,
+        "request": 138,
+        "action": "air Fire cast recovery",
+        "donor": "391",
+        "source_range": [
+          31,
+          48
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 98,
+        "request": 200,
+        "action": "ground first",
+        "donor": "352",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_352.arc",
+        "source_sha256": "43d1c61af26e5eef072d6d0c7445314f27c7dd114c5877a8e5eb731d1a0db2d2"
+      },
+      {
+        "normal_slot": 99,
+        "request": 201,
+        "action": "ground second",
+        "donor": "353",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_352.arc",
+        "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e"
+      },
+      {
+        "normal_slot": 100,
+        "request": 202,
+        "action": "ground alternate",
+        "donor": "353",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_352.arc",
+        "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e"
+      },
+      {
+        "normal_slot": 101,
+        "request": 203,
+        "action": "ground finisher",
+        "donor": "407",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_624.arc",
+        "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9"
+      },
+      {
+        "normal_slot": 102,
+        "request": 204,
+        "action": "air first",
+        "donor": "351",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_710.arc",
+        "source_sha256": "2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff"
+      },
+      {
+        "normal_slot": 103,
+        "request": 205,
+        "action": "air second",
+        "donor": "304",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 104,
+        "request": 206,
+        "action": "air finisher",
+        "donor": "303",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 110,
+        "request": 212,
+        "action": "Guard / Barrier pose",
+        "donor": "400",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "source_timing": "guard_forward_hold_reverse",
+        "guard_forward_end": 10.0,
+        "guard_reverse_start": 36.0,
+        "guard_reverse_end": 52.0
+      }
+    ],
+    "3": [
+      {
+        "normal_slot": 1,
+        "request": 0,
+        "action": "combat idle",
+        "donor": "002",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "idle_front_hair": "bind151_154"
+      },
+      {
+        "normal_slot": 5,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 6,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 7,
+        "request": 2,
+        "action": "combat run",
+        "donor": "013",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 54,
+        "request": 54,
+        "action": "Fire cast release",
+        "donor": "316",
+        "source_range": [
+          0,
+          20
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 56,
+        "request": 57,
+        "action": "Cure casting family",
+        "donor": "318",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_152.arc"
+      },
+      {
+        "normal_slot": 57,
+        "request": 61,
+        "action": "Fire cast recovery",
+        "donor": "316",
+        "source_range": [
+          20,
+          30
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 79,
+        "request": 131,
+        "action": "air Fire cast release",
+        "donor": "391",
+        "source_range": [
+          0,
+          31
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 81,
+        "request": 134,
+        "action": "air Cure casting family",
+        "donor": "427",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_154.arc"
+      },
+      {
+        "normal_slot": 82,
+        "request": 138,
+        "action": "air Fire cast recovery",
+        "donor": "391",
+        "source_range": [
+          31,
+          48
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 98,
+        "request": 200,
+        "action": "ground first",
+        "donor": "300",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 99,
+        "request": 201,
+        "action": "ground second",
+        "donor": "301",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 100,
+        "request": 202,
+        "action": "ground alternate",
+        "donor": "301",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 101,
+        "request": 203,
+        "action": "ground finisher",
+        "donor": "302",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base"
+      },
+      {
+        "normal_slot": 102,
+        "request": 204,
+        "action": "air first",
+        "donor": "616",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_605.arc",
+        "source_sha256": "76881ffae8086c51c118cf1e42ffa6b1c4be33f0c979b7206f2ff6c410b59984"
+      },
+      {
+        "normal_slot": 103,
+        "request": 205,
+        "action": "air second",
+        "donor": "407",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_624.arc",
+        "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9"
+      },
+      {
+        "normal_slot": 104,
+        "request": 206,
+        "action": "air finisher",
+        "donor": "351",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_710.arc",
+        "source_sha256": "2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff"
+      },
+      {
+        "normal_slot": 110,
+        "request": 212,
+        "action": "Guard / Barrier pose",
+        "donor": "400",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "source_timing": "guard_forward_hold_reverse",
+        "guard_forward_end": 10.0,
+        "guard_reverse_start": 36.0,
+        "guard_reverse_end": 52.0
+      }
+    ],
+    "4": [
+      {
+        "normal_slot": 1,
+        "request": 0,
+        "action": "combat idle",
+        "donor": "002",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "idle_front_hair": "bind151_154"
+      },
+      {
+        "normal_slot": 5,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 6,
+        "request": 2,
+        "action": "run",
+        "donor": "004",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 7,
+        "request": 2,
+        "action": "combat run",
+        "donor": "013",
+        "source_range": null,
+        "loop": true,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "run_head_mapping": "source_head5_to_skin150"
+      },
+      {
+        "normal_slot": 54,
+        "request": 54,
+        "action": "Fire cast release",
+        "donor": "316",
+        "source_range": [
+          0,
+          20
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 56,
+        "request": 57,
+        "action": "Cure casting family",
+        "donor": "318",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_152.arc"
+      },
+      {
+        "normal_slot": 57,
+        "request": 61,
+        "action": "Fire cast recovery",
+        "donor": "316",
+        "source_range": [
+          20,
+          30
+        ],
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc"
+      },
+      {
+        "normal_slot": 79,
+        "request": 131,
+        "action": "air Fire cast release",
+        "donor": "391",
+        "source_range": [
+          0,
+          31
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 81,
+        "request": 134,
+        "action": "air Cure casting family",
+        "donor": "427",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_154.arc"
+      },
+      {
+        "normal_slot": 82,
+        "request": 138,
+        "action": "air Fire cast recovery",
+        "donor": "391",
+        "source_range": [
+          31,
+          48
+        ],
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc"
+      },
+      {
+        "normal_slot": 98,
+        "request": 200,
+        "action": "ground first",
+        "donor": "510",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_501.arc",
+        "source_sha256": "b5db23ac3cbc0c721668d565125bcbb9e34c03a91e96aa3bc8a4b459cd2ac698"
+      },
+      {
+        "normal_slot": 99,
+        "request": 201,
+        "action": "ground second",
+        "donor": "511",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_501.arc",
+        "source_sha256": "96c771ffd8a3fbca70df6c332a01192e790162bf7e0730643134f9499d692c11"
+      },
+      {
+        "normal_slot": 100,
+        "request": 202,
+        "action": "ground alternate",
+        "donor": "511",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_501.arc",
+        "source_sha256": "96c771ffd8a3fbca70df6c332a01192e790162bf7e0730643134f9499d692c11"
+      },
+      {
+        "normal_slot": 101,
+        "request": 203,
+        "action": "ground finisher",
+        "donor": "512",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_501.arc",
+        "source_sha256": "964e5cd26c5532566433b6011dff022eabe0e6c19858d16c5d726bd69cc467a7"
+      },
+      {
+        "normal_slot": 102,
+        "request": 204,
+        "action": "air first",
+        "donor": "504",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_157.arc",
+        "source_sha256": "6cec577faf4138c888437593305ff79a8e816d0aba215f71d888502522b26c1c"
+      },
+      {
+        "normal_slot": 103,
+        "request": 205,
+        "action": "air second",
+        "donor": "514",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_157.arc",
+        "source_sha256": "ad6f1c64cbaa3634cbf5dcee87ec80c069b4aa20801e33bbbb5d72632cd41315"
+      },
+      {
+        "normal_slot": 104,
+        "request": 206,
+        "action": "air finisher",
+        "donor": "399",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_346.arc",
+        "source_sha256": "42ca639a035a67a8a8883e18b3141876a9bf1931291036685a9d3c9774143286"
+      },
+      {
+        "normal_slot": 110,
+        "request": 212,
+        "action": "Guard / Barrier pose",
+        "donor": "400",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "base",
+        "source_timing": "guard_forward_hold_reverse",
+        "guard_forward_end": 10.0,
+        "guard_reverse_start": 36.0,
+        "guard_reverse_end": 52.0
+      }
+    ],
+    "5": [
+      {
+        "normal_slot": 10,
+        "request": 6,
+        "action": "airborne dodge overlay",
+        "donor": "504",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_157.arc",
+        "source_sha256": "6cec577faf4138c888437593305ff79a8e816d0aba215f71d888502522b26c1c"
+      }
+    ],
+    "7": [
+      {
+        "normal_slot": 55,
+        "request": 56,
+        "action": "Blizzard Fire visual, native spell events",
+        "donor": "391",
+        "source_range": null,
+        "loop": false,
+        "grounded": true,
+        "root": "travel",
+        "source_bank": "p02ex_153.arc",
+        "source_sha256": "8147ff67863339174fb80b09d0415fb432f0085901b7c57a0c7054f9f3aaf82f"
+      },
+      {
+        "normal_slot": 80,
+        "request": 133,
+        "action": "Blizzard Fire visual, native spell events",
+        "donor": "316",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_151.arc",
+        "source_sha256": "85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4",
+        "head_yaw_character_degrees": -20.0
+      }
+    ]
   }
 }

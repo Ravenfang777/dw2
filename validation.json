@@ -1,6 +1,5 @@
 {
-  "version": 19,
-  "test_round": "main Aqua controller and pose revisions",
+  "version": 20,
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -27,110 +26,44 @@
     "353",
     "407"
   ],
-  "main_blizzard_ground_air": [
-    "391",
-    "316"
+  "main_idle_skull_roll_right_degrees": 20.0,
+  "main_second_source_range": [
+    0,
+    37
   ],
-  "blizzard_native_lookup_and_events_restored": true,
-  "blizzard_added_queue_entries": 0,
-  "ground_contact_frames": [
+  "main_finisher_source_range": [
     12,
-    6.4,
-    8.8
+    47
   ],
-  "second_source_finish_and_chain_open_frames": [
-    32,
-    44
-  ],
-  "second_chain_window_widths": [
-    16,
-    20
-  ],
-  "glide": "main replaced by tap504; numbered native Glide",
-  "air_dodge": "main504 captured movement direction, tap replaces held Glide; speed14 lift0.75 duration39",
-  "run_head_skin_joint": 150,
-  "run_head_direction": "authored source head5; hair helper151 at bind",
-  "keyblade_tip_magic": true,
-  "numbered_cast_poses_retained": true,
-  "numbered_profiles_preserved_from_v18": true,
-  "aqua3_air_and_aqua4_retained": true,
-  "test_sets": [
-    [
-      [
-        "371",
-        "365",
-        "366"
-      ],
-      [
-        "218",
-        "332",
-        "393"
-      ]
+  "main_second_real_contact_ticks": 6.486486486486487,
+  "main_second_real_chain_open_ticks": 30.0,
+  "main_air_chain_windows": {
+    "102": [
+      18,
+      40
     ],
-    [
-      [
-        "352",
-        "353",
-        "407"
-      ],
-      [
-        "351",
-        "304",
-        "303"
-      ]
-    ],
-    [
-      [
-        "300",
-        "301",
-        "302"
-      ],
-      [
-        "616",
-        "407",
-        "351"
-      ]
-    ],
-    [
-      [
-        "510",
-        "511",
-        "512"
-      ],
-      [
-        "504",
-        "514",
-        "399"
-      ]
+    "103": [
+      24,
+      42
     ]
-  ],
-  "native_motion_headers_counts_and_sizes_preserved": true,
+  },
+  "guard": "400 forward/reverse source30fps; wider body-centered native capsule radius50;12-tick parry/release grace",
+  "glide": "normal and Superglide replaced by finite504; selection-based suppression survives binding recovery",
+  "binding": "already-applied bank readmits without body writes while moving; failed admission retried every8 frames",
+  "numbered_profiles_preserved_from_v19": true,
+  "numbered_active_records_compared": 148,
+  "native_installed_msets_unchanged": true,
+  "native_headers_counts_sizes_and_travel_preserved": true,
   "normal_motion_records": 37,
   "olympus_motion_records": 36,
-  "helper_slots": 11,
-  "original_installed_msets": true,
-  "kh2_damage_replacement_completed": false,
-  "damage_reactions_current": "native KH1 Sora; KH2 source pending",
-  "idle_front_hair_joints_at_bind": [
-    151,
-    152,
-    153,
-    154
-  ],
-  "guard_source": "main400 normal source30fps forward/reverse, full guard window and all-angle native contacts",
-  "serialized_profile_and_transient_assignments": 112,
-  "distinct_fitted_records": 79,
-  "runtime_pe_tests": 81,
-  "geometry_tests": 26,
-  "pose_samples": 17499,
-  "max_pose_position_fit_error": 4.98903332659248,
-  "max_pose_basis_fit_error": 0.08268184394477858,
-  "max_native_travel_error": 0.0,
-  "max_scale_error": 0.0,
-  "dll_sha256": "6536a2c390466ba295dad8df9f9d2137f8882fc86dcd2e9201e0a381d8c3be9a",
+  "runtime_pe_tests": 98,
+  "geometry_tests": 29,
+  "dll_sha256": "c71ea6cdd0832ee9ccfbf1c1c7df7c216a6ebc5d49a0d5f85a62fe771d679f89",
+  "keyblade_tip_magic": true,
+  "reaction_animations": "native KH1 Sora; KH2 source still pending",
   "limitations": [
-    "No Windows/KH1 or rendered-mesh test performed",
-    "Default KH2 Sora reaction source missing; original KH1 Sora reactions used pending capture",
-    "Spell release, collision, contact feel, Glide transitions and run appearance require in-game testing"
+    "No live Windows/KH1 playtest or rendered-mesh test.",
+    "Native allocation, clash and movement callbacks are mocked in the PE host; anchor bytes verified against supplied Steam executable.",
+    "Offline memory-query reductions are not game-FPS measurements."
   ]
 }

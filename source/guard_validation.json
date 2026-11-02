@@ -1,5 +1,5 @@
 {
-  "version": 19,
+  "version": 20,
   "passed": true,
   "game_runtime_tested": false,
   "scope": "main Aqua only",
@@ -21,8 +21,29 @@
     0,
     54
   ],
-  "angle": "360 degrees; native guard objects only",
-  "guard_action_requires_native_Guard_selection": true,
-  "numbered_profiles": "v18 guard bytes and native timing retained",
-  "native_unblockable_attacks": "native policy"
+  "additional_release_grace_native_ticks": 12.0,
+  "parry_grace_native_ticks": 12.0,
+  "maximum_lease_native_ticks": 168.0,
+  "body_capsule": {
+    "radius": 50.0,
+    "lower_center_above_actor": 35.0,
+    "upper_center_above_actor": 85.0,
+    "direction": "all angles"
+  },
+  "native_pool_objects_added": 1,
+  "template_requires_witnessed_native_Guard": true,
+  "body_shield_damage": 0,
+  "guard_animation_speed_in_parry": "native; D4 rate does not leak into6E/6F",
+  "retirement": "only matching private-data, owner and contact-mask slot; recycled slots untouched",
+  "cancel_on": [
+    "damage",
+    "new attack or cast",
+    "walking",
+    "airborne",
+    "ability change",
+    "unload",
+    "script or menu"
+  ],
+  "numbered_profiles": "v19/v18 bytes and native timing retained",
+  "game_collision_and_deflection_test_pending": true
 }

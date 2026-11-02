@@ -1,9 +1,9 @@
 {
-  "version": 19,
+  "version": 20,
   "passed": true,
   "game_runtime_tested": false,
-  "main": "Glide input and constructor replaced by tap504 burst",
-  "numbered_profiles": "original native Glide",
+  "main": "shared normal and Superglide constructor blocked when selected and air_dodge enabled",
+  "numbered_profiles": "prior native Glide behavior",
   "normal_native_motion_slots": [
     75,
     76,
@@ -11,5 +11,5 @@
     78
   ],
   "all_native_glide_motion_bytes_and_clocks_unmodified": true,
-  "new_native_glide_constructor_scope": "main Aqua only, air_dodge enabled"
+  "native_input_restored_when_unequipped_or_disabled": true
 }

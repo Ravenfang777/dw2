@@ -1,6 +1,6 @@
-﻿Ability,Aqua clip,Normal slot,Olympus slot,Forward timeline,Reverse timeline,Native motion delta factor,Defense window,Facing restriction
-aqua,400,110,72,0..26.5,26.5..53,0.33974358974358976,0..54,all angles for witnessed native Guard
-aqua 1,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
-aqua 2,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
-aqua 3,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
-aqua 4,400,110,72,v18 0..10,v18 36..52,1.0,v18 native,v18 native
+﻿Ability,Clip,Forward native clock,Reverse native clock,Motion delta factor,Native defense window,Body capsule radius,Release grace native ticks,Parry grace native ticks,Coverage
+aqua,400,0..26.5,26.5..53,0.33974358974358976,0..54,50,12,12,"all angles, native body shield"
+aqua 1,400,v18,v18,1.0,v18,native,0,0,native
+aqua 2,400,v18,v18,1.0,v18,native,0,0,native
+aqua 3,400,v18,v18,1.0,v18,native,0,0,native
+aqua 4,400,v18,v18,1.0,v18,native,0,0,native

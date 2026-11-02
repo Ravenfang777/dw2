@@ -97,6 +97,28 @@ static uintptr_t ABI native_motion_advance(uintptr_t actor,float delta){
 static int ABI native_guard_angle(uintptr_t first,uintptr_t second){
     (void)first;angle_calls++;return *(float*)(second+0x10)>=0.f;
 }
+static uintptr_t ABI native_guard_create(uintptr_t actor,uint32_t mask,const void*data){
+    uintptr_t pool=game_base+0x2db4710;
+    for(unsigned i=0;i<64;i++){
+        uintptr_t p=pool+i*0xc0;if(*(uint32_t*)p&0x800)continue;
+        memset((void*)p,0,0xc0);*(uint32_t*)p=0x80800;
+        *(uint32_t*)(p+0x34)=handle((void*)actor);*(uint32_t*)(p+0x5c)=handle(data);
+        *(uint32_t*)(p+0x54)=mask;*(uint32_t*)(game_base+0x2db7710)|=mask;return p;
+    }return 0;
+}
+static uint32_t ABI native_guard_mask(void){
+    uint32_t used=*(uint32_t*)(game_base+0x2db7710);
+    for(unsigned i=0;i<31;i++)if(!(used&(1u<<i)))return 1u<<i;
+    return 0;
+}
+static void ABI native_guard_free(uintptr_t p){
+    uint32_t mask=*(uint32_t*)(p+0x54);*(uint32_t*)p=0;
+    *(uint32_t*)(game_base+0x2db7710)&=~mask;
+}
+static int ABI native_guard_pool(uintptr_t work){
+    (void)work;return 19;
+}
+int bridge_guard_pool(uintptr_t f){return ((int(ABI*)(uintptr_t))f)(0);}
 uintptr_t bridge_guard_row(uintptr_t f,uintptr_t actor,uint32_t row){return ((uintptr_t(ABI*)(uintptr_t,uint32_t))f)(actor,row);}
 uintptr_t bridge_motion_advance(uintptr_t f,uintptr_t actor,float delta){return ((uintptr_t(ABI*)(uintptr_t,float))f)(actor,delta);}
 int bridge_guard_angle(uintptr_t f,uintptr_t first,uintptr_t second){return ((int(ABI*)(uintptr_t,uintptr_t))f)(first,second);}
@@ -113,6 +135,10 @@ static uint32_t ABI native_set_state(uintptr_t actor,uint32_t state){
 float bridge_move(uintptr_t f,uintptr_t actor,float*out){return ((float(ABI*)(uintptr_t,float*))f)(actor,out);}
 unsigned bridge_move_calls(void){return move_calls;}
 uintptr_t bridge_symbol(const char*n){
+    if(!strcmp(n,"NativeGuardCreate"))return (uintptr_t)native_guard_create;
+    if(!strcmp(n,"NativeGuardMask"))return (uintptr_t)native_guard_mask;
+    if(!strcmp(n,"NativeGuardFree"))return (uintptr_t)native_guard_free;
+    if(!strcmp(n,"NativeGuardPool"))return (uintptr_t)native_guard_pool;
     if(!strcmp(n,"NativeGuardRow"))return (uintptr_t)native_guard_row;
     if(!strcmp(n,"NativeMotionAdvance"))return (uintptr_t)native_motion_advance;
     if(!strcmp(n,"NativeGuardAngle"))return (uintptr_t)native_guard_angle;

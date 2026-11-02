@@ -47,7 +47,7 @@ def capsule_overlap(points,pair,radius):
 
 class VisualTests(unittest.TestCase):
     def test_second_swing_reaches_the_end_before_a_useful_chain_window(self):
-        for slot,finish in [(99,32),(100,44)]:
+        for slot,finish in [(99,30),(100,42)]:
             m=converted[slot];last=pose(model,m,float(m.frames-1));last[:,:3,3]-=helper_pose(m,m.frames-1)[-1,:3,3]
             for f in [float(finish),float(finish+4),float(m.frames-1)]:
                 at=pose(model,m,f);at[:,:3,3]-=helper_pose(m,f)[-1,:3,3]
@@ -77,7 +77,7 @@ class VisualTests(unittest.TestCase):
                   (82,-20.,converted[82],ROOT/'fixtures/v18_reference_s082.bin'),
                   (80,-20.,all_converted[(7,80)],ROOT/'fixtures/v18_blizzard_s080.bin')]
         for slot,degrees,m,path in variants:
-            old=parse_motion(path.read_bytes());yaw=Rotation.from_euler('y',degrees,degrees=True).as_matrix()
+            old=parse_motion(path.read_bytes());yaw=Rotation.from_euler('z' if slot==1 else 'y',degrees,degrees=True).as_matrix()
             for f in np.linspace(0,m.frames-1,11):
                 a=pose(model,old,float(f));b=pose(model,m,float(f));root=rotation(a[0])
                 expected=root@yaw@root.T@rotation(a[150])
@@ -93,7 +93,7 @@ class VisualTests(unittest.TestCase):
         self.assertLess(row['duration_seconds'],(old.frames-1)/old.fps)
     def test_301_strike_phase_and_completed_second_swing_agree_between_both_native_variants(self):
         for phase in [0.,.2,.5,1.]:
-            a=pose(model,converted[99],phase*32.);b=pose(model,converted[100],phase*44.)
+            a=pose(model,converted[99],phase*30.);b=pose(model,converted[100],phase*42.)
             a[:,:3,3]-=a[0,:3,3];b[:,:3,3]-=b[0,:3,3]
             for joint in [100,205,19,45]:self.assertLess(float(np.linalg.norm(a[joint,:3,3]-b[joint,:3,3])),3.5)
     def test_idle_front_hair_connected_chain_keeps_the_models_own_rest_pose(self):
@@ -212,7 +212,7 @@ class VisualTests(unittest.TestCase):
     def test_second_ground_event_edits_change_only_existing_time_values(self):
         import struct
         from aqua_event_timing_v18 import tracks
-        for slot,contact,finish in [(98,12.,22.),(99,6.4,32.),(100,8.8,44.)]:
+        for slot,contact,finish in [(98,12.,22.),(99,30.*8./37.,30.),(100,42.*8./37.,42.)]:
             before=original[slot].raw;after=converted[slot].raw
             self.assertEqual(tracks(before),tracks(after))
             allowed=set();active=[]
@@ -238,7 +238,7 @@ class VisualTests(unittest.TestCase):
                 self.assertEqual((rows[slot]['donor'],rows[slot]['source_range']),(clip,cut))
     def test_main301_ground_second_and305_353_407_air_clips_are_serialized(self):
         for slot,clip in [(99,'301'),(100,'301'),(102,'305'),(103,'353'),(104,'407')]:
-            self.assertEqual(by_slot[slot]['donor'],clip);self.assertIsNone(by_slot[slot]['source_range'])
+            self.assertEqual(by_slot[slot]['donor'],clip);self.assertEqual(by_slot[slot]['source_range'],[0,37] if slot in [99,100] else None)
         self.assertEqual(by_slot[99]['source_bank'],'base');self.assertEqual(by_slot[100]['source_bank'],'base')
     def test_item_007_395_uses_the_requested_shared_payload_in_both_native_item_actions(self):
         for slot in [58,59]:
@@ -262,6 +262,36 @@ class VisualTests(unittest.TestCase):
         for (profile,slot),m in all_converted.items():
             for f in np.linspace(0,m.frames-1,11):
                 np.testing.assert_allclose(helper_pose(m,float(f))[-1],helper_pose(original[slot],float(f))[-1],atol=1e-7,rtol=0)
+
+    def test_second_recovery_trim_removes_three_low_motion_source_frames(self):
+        study=json.loads((ROOT/'combo_recovery_analysis.json').read_text())
+        row=next(r for r in study['analysis'] if r['source']=='301')
+        self.assertEqual(row['removed_tail_frames'],[38,39,40])
+        self.assertLess(row['removed_tail_fraction_of_peak'],.05)
+        self.assertEqual([by_slot[s]['source_range'] for s in [99,100]],[[0,37],[0,37]])
+    def test_air_event_changes_preserve_counts_payloads_and_descriptors(self):
+        import struct
+        from aqua_event_timing_v20 import tracks
+        for slot in [102,103]:
+            before=original[slot].raw;after=converted[slot].raw;allowed=set()
+            self.assertEqual(tracks(before),tracks(after))
+            for _,kind,count,keys in tracks(before):
+                for i in range(count):
+                    at=keys+i*16
+                    if kind==5 or (slot==103 and kind==1):allowed.update(range(at,at+4))
+                    self.assertEqual(before[at+4:at+16],after[at+4:at+16])
+            start=struct.unpack_from('<I',before,60)[0]
+            self.assertTrue(all(before[i]==after[i] or i in allowed for i in range(start,len(before))))
+    def test_idle_roll_tilts_the_skull_to_soras_right_without_scaling(self):
+        from aqua_retarget_math import rotation
+        old=parse_motion((ROOT/'fixtures/v18_reference_s001.bin').read_bytes())
+        for f in np.linspace(0,converted[1].frames-1,9):
+            a=pose(model,old,float(f));b=pose(model,converted[1],float(f));root=rotation(a[0])
+            delta=root.T@rotation(b[150])@rotation(a[150]).T@root
+            vector=Rotation.from_matrix(delta).as_rotvec()
+            self.assertAlmostEqual(np.rad2deg(vector[2]),20.,delta=.8)
+            self.assertLess(abs(np.rad2deg(vector[1])),.8)
+            self.assertLess(float((delta@np.array([0.,1.,0.]))[0]),-.3)
 
 if __name__=='__main__':
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(VisualTests))

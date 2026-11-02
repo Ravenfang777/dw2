@@ -166,7 +166,7 @@
     "ground": "0x2A3E7C",
     "air": "0x2A419B"
   },
-  "version": 19,
+  "version": 20,
   "main_profile_only_stop_aero_rerouting": true,
   "main_stop_aero_ground_target": 55,
   "main_stop_aero_air_target": 80,

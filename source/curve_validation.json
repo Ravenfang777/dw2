@@ -1,7 +1,7 @@
 {
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "Aqua v19 main: full native Guard with source30fps forward/reverse, all-angle native guard, air305/353/407,366 trimmed12, tap replaces Glide, skull yaw and run swap",
+  "scope": "Aqua v20 main: right skull roll20,301 tail trim and matching alternate timing, longer air chain windows, wider native body Guard and grace, tap504 Glide replacement with bounded readmission",
   "file_growth": 0,
   "headers_counts_helper_hierarchy_and_travel_tracks_unchanged": true,
   "per_record_native_events_and_defense_windows_unchanged": false,
@@ -60,16 +60,16 @@
       "root": "travel",
       "source_bank": "base",
       "idle_front_hair": "bind151_154",
-      "head_yaw_character_degrees": 20.0,
+      "head_roll_character_degrees": 20.0,
       "fixture_stem": "s001",
       "olympus_slot": 1,
       "native_frames": 170,
       "motion_bytes": 19552,
-      "changed_bytes": 6143,
+      "changed_bytes": 6110,
       "dynamic_body_curves": 58,
       "static_body_curves": 0,
       "original_body_channel_capacity": 100,
-      "body_keys_used": 289,
+      "body_keys_used": 286,
       "reusable_key_capacity": 944,
       "max_normalized_curve_error": 0.9960534304471635,
       "max_pose_position_error": 0.7758459736849449,
@@ -1034,17 +1034,15 @@
       "request": 201,
       "action": "ground second",
       "donor": "301",
-      "source_range": null,
+      "source_range": [
+        0,
+        37
+      ],
       "loop": false,
       "grounded": true,
       "root": "travel",
       "source_bank": "base",
       "event_timing": {
-        "contact_after": 6.4,
-        "source_contact_frame": 8.0,
-        "source_frame_count": 41,
-        "chain_opens": 32.0,
-        "chain_closes": 48,
         "tracks": [
           {
             "track": 0,
@@ -1054,8 +1052,8 @@
               32.0
             ],
             "after_frames": [
-              5.4,
-              32.0
+              5.486486486486487,
+              30.0
             ]
           },
           {
@@ -1066,7 +1064,7 @@
               42.0
             ],
             "after_frames": [
-              32.0,
+              30.0,
               48.0
             ]
           },
@@ -1092,9 +1090,9 @@
               48.0
             ],
             "after_frames": [
-              5.4,
-              5.9,
-              6.4,
+              5.486486486486487,
+              5.986486486486487,
+              6.486486486486487,
               48.0
             ]
           },
@@ -1108,8 +1106,8 @@
               48.0
             ],
             "after_frames": [
-              5.4,
-              6.4,
+              5.486486486486487,
+              6.486486486486487,
               24.0,
               48.0
             ]
@@ -1129,48 +1127,54 @@
             ]
           }
         ],
-        "changed_bytes": 25,
         "counts_pointers_and_payloads_preserved": true,
-        "sound_and_effect_tracks_unchanged": true
+        "source_range": [
+          0,
+          37
+        ],
+        "chain_opens": 30.0,
+        "chain_closes": 48
       },
       "source_timing": "combo_finish_hold",
-      "native_hold_frame": 32,
+      "native_hold_frame": 30.0,
+      "runtime_playback_rate": 1.0,
       "fixture_stem": "s099",
       "olympus_slot": 61,
       "native_frames": 48,
       "motion_bytes": 27088,
-      "changed_bytes": 20826,
+      "changed_bytes": 20922,
       "dynamic_body_curves": 65,
       "static_body_curves": 0,
       "original_body_channel_capacity": 230,
       "body_keys_used": 1372,
       "reusable_key_capacity": 1380,
-      "max_normalized_curve_error": 1.4034876013563036,
-      "max_pose_position_error": 1.3799546921958052,
-      "max_pose_basis_error": 0.02611540776277252,
-      "max_segment_length_error": 3.6770586575585185e-12,
-      "max_quarter_frame_bone_step": 58.26886982230662,
+      "max_normalized_curve_error": 1.4015397101327784,
+      "max_pose_position_error": 1.110430857795109,
+      "max_pose_basis_error": 0.025959870656565708,
+      "max_segment_length_error": 4.078515303262975e-12,
+      "max_quarter_frame_bone_step": 56.11735588822254,
       "root_helper_error": 0.0,
       "validated_pose_samples": 189,
       "max_non_root_attachment_translation_error": 0.0,
-      "max_scale_error": 0.0
+      "max_scale_error": 0.0,
+      "native_fps": 60.0,
+      "duration_seconds": 0.7833333333333333,
+      "headers_unchanged": true
     },
     {
       "normal_slot": 100,
       "request": 202,
       "action": "ground alternate",
       "donor": "301",
-      "source_range": null,
+      "source_range": [
+        0,
+        37
+      ],
       "loop": false,
       "grounded": true,
       "root": "travel",
       "source_bank": "base",
       "event_timing": {
-        "contact_after": 8.8,
-        "source_contact_frame": 8.0,
-        "source_frame_count": 41,
-        "chain_opens": 44.0,
-        "chain_closes": 64,
         "tracks": [
           {
             "track": 0,
@@ -1180,8 +1184,8 @@
               30.0
             ],
             "after_frames": [
-              7.800000000000001,
-              44.0
+              8.08108108108108,
+              42.0
             ]
           },
           {
@@ -1192,7 +1196,7 @@
               54.0
             ],
             "after_frames": [
-              44.0,
+              42.0,
               64.0
             ]
           },
@@ -1219,11 +1223,11 @@
               30.0
             ],
             "after_frames": [
-              7.800000000000001,
-              8.8,
-              9.3,
-              9.8,
-              10.3
+              8.08108108108108,
+              9.08108108108108,
+              9.58108108108108,
+              10.08108108108108,
+              10.58108108108108
             ]
           },
           {
@@ -1237,11 +1241,11 @@
               30.0
             ],
             "after_frames": [
-              7.800000000000001,
-              8.05,
-              8.3,
-              8.55,
-              8.8
+              8.08108108108108,
+              8.33108108108108,
+              8.58108108108108,
+              8.83108108108108,
+              9.08108108108108
             ]
           },
           {
@@ -1259,31 +1263,39 @@
             ]
           }
         ],
-        "changed_bytes": 41,
         "counts_pointers_and_payloads_preserved": true,
-        "sound_and_effect_tracks_unchanged": true
+        "source_range": [
+          0,
+          37
+        ],
+        "chain_opens": 42.0,
+        "chain_closes": 64
       },
       "source_timing": "combo_finish_hold",
-      "native_hold_frame": 44,
+      "native_hold_frame": 42.0,
+      "runtime_playback_rate": 1.4,
       "fixture_stem": "s100",
       "olympus_slot": 62,
       "native_frames": 64,
       "motion_bytes": 32400,
-      "changed_bytes": 23732,
+      "changed_bytes": 22904,
       "dynamic_body_curves": 65,
       "static_body_curves": 0,
       "original_body_channel_capacity": 208,
-      "body_keys_used": 1578,
+      "body_keys_used": 1518,
       "reusable_key_capacity": 1702,
-      "max_normalized_curve_error": 0.9975555089742905,
-      "max_pose_position_error": 0.8728864474437623,
-      "max_pose_basis_error": 0.016538604532525203,
-      "max_segment_length_error": 4.433786671143025e-12,
-      "max_quarter_frame_bone_step": 43.81807030848274,
+      "max_normalized_curve_error": 0.9985898216471852,
+      "max_pose_position_error": 0.8074441642807207,
+      "max_pose_basis_error": 0.01946184949547239,
+      "max_segment_length_error": 5.6061821851471905e-12,
+      "max_quarter_frame_bone_step": 42.21134554525414,
       "root_helper_error": 0.0,
       "validated_pose_samples": 253,
       "max_non_root_attachment_translation_error": 0.0,
-      "max_scale_error": 0.0
+      "max_scale_error": 0.0,
+      "native_fps": 60.0,
+      "duration_seconds": 0.75,
+      "headers_unchanged": true
     },
     {
       "normal_slot": 101,
@@ -1408,6 +1420,60 @@
       "grounded": false,
       "root": "travel",
       "source_bank": "base",
+      "event_timing": {
+        "tracks": [
+          {
+            "track": 0,
+            "kind": 1,
+            "before_frames": [
+              6.0,
+              20.0
+            ],
+            "after_frames": [
+              6.0,
+              20.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 5,
+            "before_frames": [
+              18.0,
+              34.0
+            ],
+            "after_frames": [
+              18.0,
+              40.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 7,
+            "before_frames": [
+              2.0,
+              20.0
+            ],
+            "after_frames": [
+              2.0,
+              20.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 6,
+            "before_frames": [
+              0.0
+            ],
+            "after_frames": [
+              0.0
+            ]
+          }
+        ],
+        "counts_pointers_and_payloads_preserved": true,
+        "source_range": null,
+        "chain_opens": 18.0,
+        "chain_closes": 40
+      },
       "fixture_stem": "s102",
       "olympus_slot": 64,
       "native_frames": 40,
@@ -1439,6 +1505,60 @@
       "root": "travel",
       "source_bank": "p02ex_352.arc",
       "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e",
+      "event_timing": {
+        "tracks": [
+          {
+            "track": 0,
+            "kind": 1,
+            "before_frames": [
+              10.0,
+              20.0
+            ],
+            "after_frames": [
+              12.0,
+              25.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 5,
+            "before_frames": [
+              18.0,
+              32.0
+            ],
+            "after_frames": [
+              24.0,
+              42.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 7,
+            "before_frames": [
+              4.0,
+              20.0
+            ],
+            "after_frames": [
+              4.0,
+              20.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 6,
+            "before_frames": [
+              0.0
+            ],
+            "after_frames": [
+              0.0
+            ]
+          }
+        ],
+        "counts_pointers_and_payloads_preserved": true,
+        "source_range": null,
+        "chain_opens": 24.0,
+        "chain_closes": 42
+      },
       "fixture_stem": "s103",
       "olympus_slot": 65,
       "native_frames": 42,

@@ -66,13 +66,16 @@ static void blizzard_tick(uptr actor,int choice);
 static void air_dodge_clear(void);
 static void guard_clear(void);
 static int cache_choice=-1,pending_reported,last_choice=-1;
+static u32 frame_serial,admission_due,admission_scans,rebind_notes,suspend_notes;
+static int admission_waiting_idle;
+static uptr admission_actor,admission_array;static int admission_choice=-1;
 static u32 last_action=0xffffffffu,action_logs;
 
 static u32 r32(uptr p){return *(volatile u32*)p;}
 static u64 r64(uptr p){return *(volatile u64*)p;}
 static u8 r8(uptr p){return *(volatile u8*)p;}
 static void copy(void *dst,const void *src,usize n){u8*d=dst;const u8*s=src;for(usize i=0;i<n;i++)d[i]=s[i];}
-static int equal(const void*a,const void*b,usize n){const u8*x=a,*y=b;for(usize i=0;i<n;i++)if(x[i]!=y[i])return 0;return 1;}
+static int equal(const void*a,const void*b,usize n){const u8*x=a,*y=b;while(n>=8){if(*(const u64*)x!=*(const u64*)y)return 0;x+=8;y+=8;n-=8;}while(n--){if(*x++!=*y++)return 0;}return 1;}
 static usize length(const char*s){usize n=0;while(s[n])n++;return n;}
 static void zeros(void*p,usize n){u8*d=p;for(usize i=0;i<n;i++)d[i]=0;}
 
@@ -232,6 +235,11 @@ static int valid_motion(uptr motion,const AquaMotion *d,Binding *out,int *failur
    afterwards; an active attack, jump, cast or reaction completes first. */
 static int test_action(u32 action){return action!=0;}
 #include "aqua_cast_requests.h"
+static const u8 *active_part(const AquaMotion*d,const AquaPart*p,int choice){
+    if(choice>0&&p->blizzard&&((d->normal_slot==55u&&(blizzard_active&1u))||(d->normal_slot==80u&&(blizzard_active&2u))))return p->blizzard;
+    if(choice>0&&d->normal_slot==10u&&air_dodge_active&&p->dodge)return p->dodge;
+    return part_data(p,choice);
+}
 static int fast_binding(uptr actor,uptr array,int choice){
     if(!cast_cached(actor,array,choice))return 0;
     if(cache_actor!=actor||cache_array!=array||cache_choice!=choice||!cache_array_bytes||!memory(array,cache_array_bytes,0))return 0;
@@ -244,11 +252,7 @@ static int fast_binding(uptr actor,uptr array,int choice){
         for(unsigned k=0;k<7;k++)if(r32(b->motion+aqua_scalar_fields[k])!=d->scalars[k])return 0;
         for(unsigned j=0;j<aqua_motions[i].part_count;j++){
             const AquaPart *part=d->parts+j;uptr p=motion_part(b->motion,d,part,group);
-            const u8 *expected=part_data(part,choice);
-            if(part->blizzard&&((d->normal_slot==55u&&(blizzard_active&1u))||(d->normal_slot==80u&&(blizzard_active&2u))))expected=part->blizzard;
-            if(d->normal_slot==10){
-                if(air_dodge_active&&part->dodge)expected=part->dodge;
-            }
+            const u8 *expected=active_part(d,part,choice);
             if(p!=b->parts[j])return 0;
             if(!group&&!b->contiguous&&!memory(p+part->sentinel,4,0))return 0;
             if(!equal((void*)(p+part->sentinel),expected+part->sentinel,4))return 0;
@@ -259,6 +263,11 @@ static void motion_gate(uptr actor,int choice){
     u32 encoded_array=r32(actor+0x1d4);uptr array=decode(encoded_array);
     if(!array){clear_binding();return;}
     if(fast_binding(actor,array,choice))return;
+    int same_attempt=admission_actor==actor&&admission_array==array&&admission_choice==choice;
+    if(same_attempt&&(int)(frame_serial-admission_due)<0&&!(admission_waiting_idle&&!test_action(r32(actor+0x164)&0xfffu)))return;
+    admission_waiting_idle=0;
+    admission_actor=actor;admission_array=array;admission_choice=choice;
+    admission_due=frame_serial+8u;admission_scans++;
     Binding found[AQUA_MOTION_COUNT];zeros(found,sizeof(found));
     unsigned failed=AQUA_ANCHOR_INDEX;int failure=0,bank=-1;
     /* The common idle/walk prefix is identical in both banks. Identify the
@@ -291,7 +300,14 @@ static void motion_gate(uptr actor,int choice){
         if(reported_wait_array!=array){reported_wait_array=array;log_text("AQUA WAITING: original ground/air cast request table must verify before any body writes");}
         clear_binding();return;
     }
-    if(test_action(r32(actor+0x164)&0xfffu)){
+    int already_applied=cast_found.current==cast_found.next;
+    for(unsigned i=0;i<AQUA_MOTION_COUNT&&already_applied;i++)if(found[i].motion)
+        for(unsigned j=0;j<aqua_motions[i].part_count;j++){
+            const AquaPart*p=aqua_motions[i].parts+j;
+            if(!equal((void*)found[i].parts[j],active_part(aqua_motions+i,p,choice),p->size)){already_applied=0;break;}
+        }
+    if(!already_applied&&test_action(r32(actor+0x164)&0xfffu)){
+        admission_waiting_idle=1;
         if(!pending_reported){log_text("AQUA SWITCH PENDING: finish the current action and stand idle before switching");pending_reported=1;}return;
     }
     if((uptr)r64(base+SORA_RVA)!=actor||r32(actor+0x1d4)!=encoded_array)return;
@@ -305,13 +321,13 @@ static void motion_gate(uptr actor,int choice){
     CastBinding cast_again;
     if(r32(actor+0x1d8)!=cast_found.current||!cast_admit(actor,array,bank,choice,&cast_again)
         ||cast_again.original!=cast_found.original||cast_again.next!=cast_found.next)return;
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<aqua_motions[i].part_count;j++){
+    for(unsigned i=0;!already_applied&&i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<aqua_motions[i].part_count;j++){
         const AquaPart *part=aqua_motions[i].parts+j;const u8 *desired=part_data(part,choice);
         if(!equal((void*)found[i].parts[j],desired,part->size))copy((void*)found[i].parts[j],desired,part->size);
     }
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<aqua_motions[i].part_count;j++){
         const AquaPart *part=aqua_motions[i].parts+j;
-        if(!equal((void*)found[i].parts[j],part_data(part,choice),part->size)){clear_binding();return;}
+        if(!equal((void*)found[i].parts[j],already_applied?active_part(aqua_motions+i,part,choice):part_data(part,choice),part->size)){clear_binding();return;}
     }
     cache_low=(uptr)-1;cache_high=0;cache_array_bytes=cache_count=0;
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
@@ -324,9 +340,11 @@ static void motion_gate(uptr actor,int choice){
             if(p<cache_low)cache_low=p;if(end>cache_high)cache_high=end;
         }
     }
-    blizzard_active=0;
+    if(!already_applied)blizzard_active=0;
     cast_publish(actor,array,&cast_found);
     copy(cached,found,sizeof(cached));cache_actor=actor;cache_array=array;cache_choice=choice;pending_reported=0;reported_wait_array=0;
+    admission_due=frame_serial;
+    if(already_applied){if(rebind_notes++<12u)log_text("AQUA BINDING RECOVERED: all payloads and cast lookup verified; moving actor readmitted without body writes");return;}
     log_text(choice?"AQUA MOTIONS ENABLED: Aqua common body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all mapped original Sora records restored");
     log_text(bank?"AQUA BANK: normal Sora":"AQUA BANK: Olympus");
     log_number("AQUA verified motion count=",cache_count);
@@ -344,10 +362,10 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    magic_disabled=1; /* Native keyblade-tip casting is required for v19. */
+    magic_disabled=1; /* Native keyblade-tip casting is required for v20. */
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v19 loaded; MAIN ONLY: guard400 source30fps forward/reverse and full all-angle native Guard; air305/353/407;366 starts12; tap504 replaces held Glide and keeps direction; combat idle head left20, aerial Fire/Blizzard head right20; runs swapped; numbered tests retained");
+    log_text("KH1FM AQUA ANIMATION TEST v20 loaded; MAIN ONLY: guard400 source30fps forward/reverse, body-centered all-angle native shield plus12 ticks; air305/353/407 with longer chains;301 recovery trimmed;366 starts12; tap504 replaces both Glides through binding recovery; combat idle head tilted right20; numbered tests retained");
     if(magic_disabled)log_text("AQUA MAGIC: native keyblade-tip origins and effect matrices; palm redirection disabled by default");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Main Guard uses its full animation defense window and all-angle native guard objects.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
@@ -362,6 +380,7 @@ EXPORT void ABI OnFrame(void){
         ready=1;log_text("AQUA Steam Global build admitted");
     }
     if(!ready)return;
+    frame_serial++;
     if(kGetModuleHandleA("kh1-dual-wield.dll")){
         magic_conflict=1;
         if(!conflict_reported){log_text("AQUA SUSPENDED: disable Nine Styles / Dual Wield for this standalone ability test");conflict_reported=1;}
@@ -369,17 +388,27 @@ EXPORT void ABI OnFrame(void){
     }
     magic_conflict=0;magic_install();air_install();guard_install();
     uptr actor=(uptr)r64(base+SORA_RVA);
-    if(!memory(actor,0x378,0)||(r32(actor+0x374)&3u)!=1u){clear_binding();return;}
-    uptr save=save_block();if(!save){clear_binding();return;}
+    if(!memory(actor,0x378,0)||actor!=cache_actor){
+        if(cache_actor&&actor!=cache_actor){if(suspend_notes++<12u)log_text("AQUA BINDING RESET: actor identity changed");clear_binding();}
+        if(!memory(actor,0x378,0)){clear_binding();return;}
+    }
+    if((r32(actor+0x374)&3u)!=1u){
+        if(cache_choice>=0&&suspend_notes++<12u)log_text("AQUA BINDING SUSPENDED: actor residency temporarily changed; no motion writes");
+        guard_clear();cache_choice=-1;return;
+    }
+    uptr save=save_block();if(!save){
+        if(cache_choice>=0&&suspend_notes++<12u)log_text("AQUA BINDING SUSPENDED: save not ready; no motion writes");
+        guard_clear();cache_choice=-1;return;
+    }
     int choice=0;
     if(remove_mode){remove_ability(save);choice=0;}
     else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("AQUA WAITING: ability list full or not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"AQUA UNEQUIPPED");last_choice=choice;}
     air_requested_choice=choice;
+    motion_gate(actor,choice);
     guard_observe(actor);
     blizzard_tick(actor,choice);
     air_tick(actor,choice);
-    motion_gate(actor,choice);
     blizzard_tick(actor,choice);
     u32 action=r32(actor+0x164)&0xfffu;
     if(choice&&action!=last_action&&action_logs<192){
