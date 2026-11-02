@@ -5,8 +5,9 @@ ROOT=Path(__file__).resolve().parent
 report=json.loads((ROOT/'curve_validation.json').read_text())
 def u32(d,p):return struct.unpack_from('<I',d,p)[0]
 lines=['/* Generated from original and compact-FK motion fixtures. */',
-       '#define AQUA_MOTION_COUNT 9',
+       f'#define AQUA_MOTION_COUNT {len(report["motions"])}',
        '#define AQUA_PART_COUNT 5',
+       f'#define AQUA_ANCHOR_INDEX {next(i for i,r in enumerate(report["motions"]) if r["normal_slot"]==98)}',
        'typedef struct { unsigned int field,size,sentinel; const unsigned char *before,*after; } AquaPart;',
        'typedef struct { unsigned int request,normal_slot,olympus_slot,raw_bytes; unsigned int scalars[7]; AquaPart parts[AQUA_PART_COUNT]; } AquaMotion;',
        'static const unsigned int aqua_scalar_fields[7]={4,8,16,24,32,44,52};']
@@ -16,7 +17,7 @@ def array(name,data):
     lines.append('};')
 descriptors=[]
 for index,r in enumerate(report['motions']):
-    request=r['request'];before=(ROOT/f'fixtures/original_{request:02X}.bin').read_bytes();after=(ROOT/f'fixtures/aqua_{request:02X}.bin').read_bytes()
+    request=r['request'];stem=r['fixture_stem'];before=(ROOT/f'fixtures/original_{stem}.bin').read_bytes();after=(ROOT/f'fixtures/aqua_{stem}.bin').read_bytes()
     assert len(before)==len(after) and before[:80]==after[:80]
     channel_at=u32(before,28);body_keys=[]
     for i in range(u32(before,24)):

@@ -45,9 +45,10 @@ static int table_reported;
 static w16 log_path[1024],ini_path[1024];
 /* A real DIR64 relocation keeps the PE image independently relocatable. */
 static void *volatile relocation_anchor __attribute__((used))=&table[0];
-typedef struct {uptr motion,parts[AQUA_PART_COUNT];u32 handle,slot;} Binding;
+typedef struct {uptr motion,parts[AQUA_PART_COUNT];u32 handle,slot,contiguous;} Binding;
 static Binding cached[AQUA_MOTION_COUNT];
-static uptr cache_actor,cache_array,reported_wait_array;
+static uptr cache_actor,cache_array,reported_wait_array,cache_low,cache_high;
+static u32 cache_array_bytes,cache_count;
 static int cache_choice=-1,pending_reported,last_choice=-1;
 static u32 last_action=0xffffffffu,action_logs;
 
@@ -89,13 +90,13 @@ static void encode(const char*text,u8*out,usize cap){
         else out[n]=1; /* The supplied helper maps a space to 01. */
     }out[n]=0;
 }
-static void clear_binding(void){cache_actor=cache_array=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
+static void clear_binding(void){cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
 static uptr decode(u32 h){
     if(!h)return 0;
     if(!(h&0x80000000u))return (uptr)h;
     unsigned i=(h&0x7fffffffu)>>25;
     uptr address=base+BANK_RVA+(uptr)i*8;
-    if(i>=64||!memory(address,8,0))return 0;
+    if(i>=64)return 0; /* The fixed game-image bank table was admitted once. */
     uptr bank=(uptr)r64(address);return bank?bank+(h&0x1ffffffu):0;
 }
 static uptr relative_or_handle(uptr motion,u32 value,unsigned raw_bytes){
@@ -117,7 +118,7 @@ static int ensure_table(void){
         typedef u32 (ABI *HandleFn)(const void*);
         HandleFn handle=(HandleFn)(base+HANDLE_RVA);
         encode("aqua",encoded_name,sizeof(encoded_name));
-        encode("Aqua motion test ground air guard dodge",encoded_help,sizeof(encoded_help));
+        encode("Aqua movement attacks guard dodge magic and reactions",encoded_help,sizeof(encoded_help));
         name_handle=handle(encoded_name);help_handle=handle(encoded_help);
         if(!name_handle||!help_handle||decode(name_handle)!=(uptr)encoded_name||decode(help_handle)!=(uptr)encoded_help){
             name_handle=help_handle=0;return 0;
@@ -157,27 +158,34 @@ static void remove_ability(uptr save){
 static int valid_motion(uptr motion,const AquaMotion *d,Binding *out,int *failure){
     *failure=1;if(!memory(motion,80,0))return 0;
     *failure=2;for(unsigned i=0;i<7;i++)if(r32(motion+aqua_scalar_fields[i])!=d->scalars[i])return 0;
+    out->contiguous=1;
     for(unsigned i=0;i<AQUA_PART_COUNT;i++){
         const AquaPart *part=d->parts+i;uptr p=relative_or_handle(motion,r32(motion+part->field),d->raw_bytes);
         *failure=(int)(0x10u+part->field);
         if(!memory(p,part->size,1)||(!equal((void*)p,part->before,part->size)&&!equal((void*)p,part->after,part->size)))return 0;
         out->parts[i]=p;
+        if(p<motion||p+part->size<motion||p+part->size>motion+d->raw_bytes)out->contiguous=0;
     }
     out->motion=motion;*failure=0;return 1;
 }
-static int test_action(u32 action){
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(action==aqua_motions[i].request)return 1;
-    return 0;
-}
+/* New data is published only at idle. Locomotion may be sampled from it
+   afterwards; an active attack, jump, cast or reaction completes first. */
+static int test_action(u32 action){return action!=0;}
 static int fast_binding(uptr actor,uptr array,int choice){
-    if(cache_actor!=actor||cache_array!=array||cache_choice!=choice)return 0;
+    if(cache_actor!=actor||cache_array!=array||cache_choice!=choice||!cache_array_bytes||!memory(array,cache_array_bytes,0))return 0;
+    int group=cache_high>cache_low&&cache_high-cache_low<0x1000000u&&memory(cache_low,cache_high-cache_low,0);
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
         Binding *b=cached+i;const AquaMotion *d=aqua_motions+i;
-        if(!b->motion||!memory(array+b->slot*4u,4,0)||r32(array+b->slot*4u)!=b->handle||!memory(b->motion,80,0))return 0;
+        if(!b->motion)continue;
+        if(r32(array+b->slot*4u)!=b->handle)return 0;
+        if(!group&&!memory(b->motion,b->contiguous?d->raw_bytes:80,0))return 0;
+        for(unsigned k=0;k<7;k++)if(r32(b->motion+aqua_scalar_fields[k])!=d->scalars[k])return 0;
         for(unsigned j=0;j<AQUA_PART_COUNT;j++){
             const AquaPart *part=d->parts+j;uptr p=relative_or_handle(b->motion,r32(b->motion+part->field),d->raw_bytes);
             const u8 *expected=choice?part->after:part->before;
-            if(p!=b->parts[j]||!memory(p+part->sentinel,4,0)||!equal((void*)(p+part->sentinel),expected+part->sentinel,4))return 0;
+            if(p!=b->parts[j])return 0;
+            if(!group&&!b->contiguous&&!memory(p+part->sentinel,4,0))return 0;
+            if(!equal((void*)(p+part->sentinel),expected+part->sentinel,4))return 0;
         }
     }return 1;
 }
@@ -186,51 +194,66 @@ static void motion_gate(uptr actor,int choice){
     if(!array){clear_binding();return;}
     if(fast_binding(actor,array,choice))return;
     Binding found[AQUA_MOTION_COUNT];zeros(found,sizeof(found));
-    unsigned failed=0;int failure=0,bank=-1;
+    unsigned failed=AQUA_ANCHOR_INDEX;int failure=0,bank=-1;
+    /* The common idle/walk prefix is identical in both banks. Identify the
+       bank with the independently tested C8 record, never with that prefix. */
+    const AquaMotion *anchor=aqua_motions+AQUA_ANCHOR_INDEX;
     for(int attempt=0;attempt<2;attempt++){
-        int admitted=1;
-        for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
-            const AquaMotion *d=aqua_motions+i;u32 slot=attempt?d->normal_slot:d->olympus_slot;
-            found[i].slot=slot;failed=i;failure=1;
-            if(!memory(array+slot*4u,4,0)){admitted=0;break;}
-            found[i].handle=r32(array+slot*4u);
-            if(!valid_motion(decode(found[i].handle),d,found+i,&failure)){admitted=0;break;}
-        }
-        if(admitted){bank=attempt;break;}
-        /* A verified C8 identifies its bank. Report a later admission failure
-           in that bank rather than retrying unrelated physical slots. */
-        if(failed>0)break;
+        u32 slot=attempt?anchor->normal_slot:anchor->olympus_slot;
+        Binding candidate;zeros(&candidate,sizeof(candidate));found[failed].slot=slot;failure=1;
+        if(!memory(array+slot*4u,4,0))continue;
+        if(valid_motion(decode(r32(array+slot*4u)),anchor,&candidate,&failure)){bank=attempt;break;}
+    }
+    if(bank>=0)for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
+        const AquaMotion *d=aqua_motions+i;u32 slot=bank?d->normal_slot:d->olympus_slot;
+        if(slot==0xffffffffu)continue;
+        found[i].slot=slot;failed=i;failure=1;
+        if(!memory(array+slot*4u,4,0)){bank=-1;break;}
+        found[i].handle=r32(array+slot*4u);
+        if(!valid_motion(decode(found[i].handle),d,found+i,&failure)){bank=-1;break;}
     }
     if(bank<0){
         if(reported_wait_array!=array){reported_wait_array=array;
-            log_text("AQUA WAITING: all nine motion records must verify before any body writes");
+            log_text("AQUA WAITING: all mapped motion records must verify before any body writes");
             log_number("AQUA rejected request=",aqua_motions[failed].request);
             log_number("AQUA admission stage=",(uptr)failure);
             log_number("AQUA candidate physical slot=",found[failed].slot);
         }clear_binding();return;
     }
     if(test_action(r32(actor+0x164)&0xfffu)){
-        if(!pending_reported){log_text("AQUA SWITCH PENDING: finish current attack guard or dodge before body toggle");pending_reported=1;}return;
+        if(!pending_reported){log_text("AQUA SWITCH PENDING: finish the current action and stand idle before switching");pending_reported=1;}return;
     }
     if((uptr)r64(base+SORA_RVA)!=actor||r32(actor+0x1d4)!=encoded_array)return;
     /* Recheck every destination after admission; failure prevents every write. */
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
+        if(!found[i].motion)continue;
         Binding again;int reason;
         if(r32(array+found[i].slot*4u)!=found[i].handle||!valid_motion(found[i].motion,aqua_motions+i,&again,&reason))return;
         for(unsigned j=0;j<AQUA_PART_COUNT;j++)if(again.parts[j]!=found[i].parts[j])return;
     }
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
         const AquaPart *part=aqua_motions[i].parts+j;const u8 *desired=choice?part->after:part->before;
         if(!equal((void*)found[i].parts[j],desired,part->size))copy((void*)found[i].parts[j],desired,part->size);
     }
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
         const AquaPart *part=aqua_motions[i].parts+j;
         if(!equal((void*)found[i].parts[j],choice?part->after:part->before,part->size)){clear_binding();return;}
     }
+    cache_low=(uptr)-1;cache_high=0;cache_array_bytes=cache_count=0;
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
+        if(!found[i].motion)continue;cache_count++;
+        if(found[i].motion<cache_low)cache_low=found[i].motion;
+        if(found[i].motion+80>cache_high)cache_high=found[i].motion+80;
+        if((found[i].slot+1)*4u>cache_array_bytes)cache_array_bytes=(found[i].slot+1)*4u;
+        for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+            uptr p=found[i].parts[j],end=p+aqua_motions[i].parts[j].size;
+            if(p<cache_low)cache_low=p;if(end>cache_high)cache_high=end;
+        }
+    }
     copy(cached,found,sizeof(cached));cache_actor=actor;cache_array=array;cache_choice=choice;pending_reported=0;reported_wait_array=0;
-    log_text(choice?"AQUA MOTIONS ENABLED: nine compact FK body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all nine original Sora body records restored");
+    log_text(choice?"AQUA MOTIONS ENABLED: Aqua common body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all mapped original Sora records restored");
     log_text(bank?"AQUA BANK: normal Sora":"AQUA BANK: Olympus");
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)log_number("AQUA verified request=",aqua_motions[i].request);
+    log_number("AQUA verified motion count=",cache_count);
 }
 
 EXPORT void ABI OnInit(const w16 *mod_path){
@@ -239,8 +262,8 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    log_text("KH1FM AQUA BODY COMBO TEST v6 loaded by Panacea; ability name=aqua; ground air guard dodge body poses");
-    log_text("On disk: original Sora/Olympus MSETs. All nine records must verify before body writes. Native defensive behavior is unchanged.");
+    log_text("KH1FM AQUA ANIMATION TEST v7 loaded by Panacea; ability name=aqua; corrected attachments and expanded common motions");
+    log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: id117 will be removed from the loaded ability list");
 }
 EXPORT void ABI OnFrame(void){
@@ -266,7 +289,7 @@ EXPORT void ABI OnFrame(void){
     if(choice!=last_choice){log_text(choice?"AQUA EQUIPPED":"AQUA UNEQUIPPED");last_choice=choice;}
     motion_gate(actor,choice);
     u32 action=r32(actor+0x164)&0xfffu;
-    if(choice&&action!=last_action&&action>=0xc8u&&action<=0xdfu&&action_logs<64){
+    if(choice&&action!=last_action&&action_logs<192){
         log_number("AQUA native action request=",action);action_logs++;
     }
     last_action=action;

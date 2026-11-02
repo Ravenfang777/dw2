@@ -1,0 +1,72 @@
+Normal slot,Native request descriptors,Frames,Status
+18,0x11,48,No reviewed Aqua assignment
+19,0x12,36,No reviewed Aqua assignment
+20,0x13,20,No reviewed Aqua assignment
+21,0x14,28,No reviewed Aqua assignment
+22,0x15,32,No reviewed Aqua assignment
+23,0x16,32,No reviewed Aqua assignment
+24,0x17,24,No reviewed Aqua assignment
+25,0x18,24,No reviewed Aqua assignment
+26,0x19,20,No reviewed Aqua assignment
+27,0x1B,320,No reviewed Aqua assignment
+28,0x1C,54,No reviewed Aqua assignment
+29,0x1D,40,No reviewed Aqua assignment
+30,0x1E,30,No reviewed Aqua assignment
+31,0x1F,60,No reviewed Aqua assignment
+32,0x20,60,No reviewed Aqua assignment
+33,0x21,56,No reviewed Aqua assignment
+34,0x22,56,No reviewed Aqua assignment
+35,0x23,46,No reviewed Aqua assignment
+36,0x24,320,No reviewed Aqua assignment
+37,0x25,54,No reviewed Aqua assignment
+38,0x26,40,No reviewed Aqua assignment
+39,0x27,40,No reviewed Aqua assignment
+40,0x28,60,No reviewed Aqua assignment
+41,0x29,60,No reviewed Aqua assignment
+42,0x2A,40,No reviewed Aqua assignment
+43,0x2B,40,No reviewed Aqua assignment
+44,0x2C,46,No reviewed Aqua assignment
+45,0x2D,120,No reviewed Aqua assignment
+46,0x2E,80,No reviewed Aqua assignment
+47,0x2F,48,No reviewed Aqua assignment
+48,0x30,78,No reviewed Aqua assignment
+49,0x31,28,No reviewed Aqua assignment
+50,0x32,330,No reviewed Aqua assignment
+51,0x33,32,No reviewed Aqua assignment
+52,0x34,32,No reviewed Aqua assignment
+53,0x35,60,No reviewed Aqua assignment
+60,0x40,40,No reviewed Aqua assignment
+71,0x6A,48,No reviewed Aqua assignment
+72,0x6E,60,No reviewed Aqua assignment
+73,0x6F,64,No reviewed Aqua assignment
+74,0x70,40,No reviewed Aqua assignment
+75,0x71 0x76,120,No reviewed Aqua assignment
+76,0x72 0x77,60,No reviewed Aqua assignment
+77,0x73 0x78,60,No reviewed Aqua assignment
+78,0x74 0x79,60,No reviewed Aqua assignment
+83,0xA6,80,No reviewed Aqua assignment
+84,0xB5,60,No reviewed Aqua assignment
+85,0xB6,80,No reviewed Aqua assignment
+86,0xB7,60,No reviewed Aqua assignment
+87,0xB8,60,No reviewed Aqua assignment
+88,0xB9,40,No reviewed Aqua assignment
+89,0xBA,40,No reviewed Aqua assignment
+90,0xBB,54,No reviewed Aqua assignment
+91,0xBC,10,Native Glide phase; no reviewed Aqua assignment
+92,0xBD,60,Native Glide phase; no reviewed Aqua assignment
+93,0xBE,12,Native Glide phase; no reviewed Aqua assignment
+94,0xC0,80,No reviewed Aqua assignment
+95,0xC1,80,No reviewed Aqua assignment
+96,0xC2,80,No reviewed Aqua assignment
+97,0xC3,80,No reviewed Aqua assignment
+105,0xCF,48,Native attack-ability action; no reviewed Aqua assignment
+106,0xD0,94,Native attack-ability action; no reviewed Aqua assignment
+107,0xD1,76,Native attack-ability action; no reviewed Aqua assignment
+108,0xD2,80,Native attack-ability action; no reviewed Aqua assignment
+109,0xD3,76,Native attack-ability action; no reviewed Aqua assignment
+111,0xD5,86,Native special-combat action; no reviewed Aqua assignment
+112,0xD6,56,Native special-combat action; no reviewed Aqua assignment
+113,0xD7,100,Native special-combat action; no reviewed Aqua assignment
+114,0xD8,94,Native special-combat action; no reviewed Aqua assignment
+115,0xD9,66,Native special-combat action; no reviewed Aqua assignment
+116,0xDA,100,Native special-combat action; no reviewed Aqua assignment
