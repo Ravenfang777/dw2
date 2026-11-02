@@ -1,7 +1,7 @@
 {
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "Aqua v16 retained numbered combos/casts or common transient visual",
+  "scope": "Aqua v17 retained numbered combos/casts or common transient visual",
   "file_growth": 0,
   "headers_counts_helper_hierarchy_and_travel_tracks_unchanged": true,
   "per_record_native_events_and_defense_windows_unchanged": true,

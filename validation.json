@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 17,
   "test_round": "revised Test4",
   "offline_checks_passed": true,
   "game_runtime_tested": false,
@@ -19,13 +19,13 @@
   ],
   "main_ground_combo": [
     "300",
-    "365",
+    "300",
     "366"
   ],
   "main_air_combo": [
-    "351",
-    "352",
-    "393"
+    "305",
+    "407",
+    "351"
   ],
   "main_blizzard_ground_air": [
     "391",
@@ -35,8 +35,8 @@
   "blizzard_added_queue_entries": 0,
   "ground_contact_frames": [
     12,
-    24,
-    36
+    8.170212765957446,
+    11.23404255319149
   ],
   "second_source_finish_and_chain_open_frames": [
     32,
@@ -46,9 +46,10 @@
     16,
     20
   ],
-  "glide": "350 opening0..20 / held20 / closing20..40",
-  "air_dodge": "504 Master-style KH1 movement adaptation",
-  "run_head_lift_degrees": 12,
+  "glide": "original native default; no Aqua overrides",
+  "air_dodge": "504 Dual D145/18 baseline at2x displacement, unchanged duration",
+  "run_head_skin_joint": 150,
+  "run_head_direction": "authored source head5; hair helper151 at bind",
   "keyblade_tip_magic": true,
   "numbered_combo_and_cast_poses_retained": true,
   "test_sets": [
@@ -102,23 +103,23 @@
     ]
   ],
   "native_motion_headers_counts_and_sizes_preserved": true,
-  "normal_motion_records": 51,
-  "olympus_motion_records": 50,
+  "normal_motion_records": 47,
+  "olympus_motion_records": 46,
   "helper_slots": 11,
   "original_installed_msets": true,
-  "serialized_profile_and_transient_assignments": 107,
-  "distinct_fitted_records": 88,
-  "runtime_pe_tests": 72,
-  "geometry_tests": 21,
-  "pose_samples": 19424,
+  "serialized_profile_and_transient_assignments": 102,
+  "distinct_fitted_records": 81,
+  "runtime_pe_tests": 71,
+  "geometry_tests": 22,
+  "pose_samples": 17693,
   "max_pose_position_fit_error": 4.98903332659248,
   "max_pose_basis_fit_error": 0.08268184394477858,
   "max_native_travel_error": 0.0,
   "max_scale_error": 0.0,
-  "dll_sha256": "6a483ee3b4ba6cb232f6ef36829a05c3bb5fe1bb7cda48fd81d8ff1012bcdc86",
+  "dll_sha256": "486d991c2b76e2deab8b661a191e29f11aafe32fd12567cd6bed0f0835a0eb91",
   "limitations": [
     "No Windows/KH1 or rendered-mesh test performed",
-    "Master-style movement uses documented KH1 test tuning; exact KH2 growth parameters not imported",
+    "Dual D growth145/18 and2x policy matched; existing KH1 gravity/release adapter retained",
     "Spell release, collision, contact feel, Glide transitions and run appearance require in-game testing"
   ]
 }

@@ -25,9 +25,6 @@ for profile in range(1,5):
 dodge_report=json.loads((ROOT/'dodge/curve_validation.json').read_text())
 assert len(dodge_report['motions'])==1 and dodge_report['motions'][0]['donor']=='504'
 all_converted[(5,10)]=parse_motion((ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes())
-glide_stop_report=json.loads((ROOT/'glide_stop/curve_validation.json').read_text())
-all_converted[(6,10)]=parse_motion((ROOT/'glide_stop/fixtures/aqua_s010.bin').read_bytes())
-
 blizzard_report=json.loads((ROOT/'blizzard/curve_validation.json').read_text())
 for row in blizzard_report['motions']:
     all_converted[(7,row['normal_slot'])]=parse_motion((ROOT/f"blizzard/fixtures/aqua_{row['fixture_stem']}.bin").read_bytes())
@@ -56,18 +53,34 @@ class VisualTests(unittest.TestCase):
                 np.testing.assert_allclose(at,last,atol=.005,rtol=0)
             earlier=pose(model,m,float(finish-12))
             self.assertGreater(float(np.linalg.norm(earlier[100,:3,3]-pose(model,m,finish)[100,:3,3])),2.)
-    def test_running_head_is_lifted_while_the_torso_and_bind_hair_are_preserved(self):
+    def test_running_skull_is_a_real_skin_joint_and_the_previous_target_was_only_a_helper(self):
+        import struct
+        raw=MODEL.read_bytes();u=lambda at:struct.unpack_from('<I',raw,at)[0]
+        mobj=u(4);header=mobj+u(mobj+32);table=header+u(header+4)
+        self.assertEqual((u(table+150*48+44)>>30)&3,1)
+        self.assertEqual((u(table+151*48+44)>>30)&3,0)
+    def test_running_face_uses_the_authored_head_orientation_with_hair_root_in_bind(self):
         from aqua_retarget_math import rotation
         for slot in [5,6,7]:
-            # The reference was the shipped v15 run. Freeze those source curves
-            # for a comparison which does not repeat the correction formula.
             old=parse_motion((ROOT/f'fixtures/v15_run_s{slot:03}.bin').read_bytes())
             for f in np.linspace(0,converted[slot].frames-1,9):
                 a=pose(model,old,float(f));b=pose(model,converted[slot],float(f))
-                fa=rotation(a[151])@rotation(model.bind[151]).T@np.array([0.,0.,1.])
-                fb=rotation(b[151])@rotation(model.bind[151]).T@np.array([0.,0.,1.])
-                self.assertGreater(fb[1]-fa[1],.17)
-                np.testing.assert_allclose(a[:144],b[:144],atol=.004,rtol=0)
+                wanted=rotation(a[151])@rotation(model.bind[151]).T
+                actual=rotation(b[150])@rotation(model.bind[150]).T
+                np.testing.assert_allclose(actual,wanted,atol=.012,rtol=0)
+                # The face is lifted, with no added rotation on the hair helper.
+                self.assertGreater((actual@np.array([0.,0.,1.]))[1]-(rotation(a[150])@rotation(model.bind[150]).T@np.array([0.,0.,1.]))[1],.17)
+                local=model.local.copy()
+                for bone,kind,value in converted[slot].constants:local[bone,kind-1]=value
+                apply(converted[slot].channels,local,float(f))
+                np.testing.assert_allclose(Rotation.from_euler('xyz',local[151,3:6]).as_matrix(),Rotation.from_euler('xyz',model.local[151,3:6]).as_matrix(),atol=1e-6,rtol=0)
+                np.testing.assert_allclose(a[:150],b[:150],atol=.004,rtol=0)
+    def test_new_second300_strike_matches_the_first300_pose_phase_before_chaining(self):
+        first=pose(model,converted[98],12.);first[:,:3,3]-=first[0,:3,3]
+        for slot,finish in [(99,32.),(100,44.)]:
+            impact=12.*finish/47.
+            second=pose(model,converted[slot],impact);second[:,:3,3]-=second[0,:3,3]
+            for joint in [100,205,19,45]:self.assertLess(float(np.linalg.norm(first[joint,:3,3]-second[joint,:3,3])),3.5)
     def test_blizzard_variants_preserve_every_native_spell_event_and_allocation(self):
         for row in blizzard_report['motions']:
             slot=row['normal_slot'];m=all_converted[(7,slot)];native=original[slot]
@@ -145,7 +158,7 @@ class VisualTests(unittest.TestCase):
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
     def test_requested_action_clips_and_test_4_combos_match_serialized_reports(self):
-        actions={99:'365',100:'365',101:'366',102:'351',103:'352',104:'393',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
+        actions={99:'300',100:'300',101:'366',102:'305',103:'407',104:'351',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
@@ -159,8 +172,8 @@ class VisualTests(unittest.TestCase):
             self.assertEqual(actual,dict(zip(range(98,105),[ground[0],ground[1],ground[1],ground[2],*air])))
     def test_second_ground_event_edits_change_only_existing_time_values(self):
         import struct
-        from aqua_event_timing_v16 import tracks
-        for slot,contact,finish in [(98,12.,22.),(99,24.,32.),(100,36.,44.)]:
+        from aqua_event_timing_v17 import tracks
+        for slot,contact,finish in [(98,12.,22.),(99,384./47.,32.),(100,528./47.,44.)]:
             before=original[slot].raw;after=converted[slot].raw
             self.assertEqual(tracks(before),tracks(after))
             allowed=set();active=[]
@@ -173,7 +186,7 @@ class VisualTests(unittest.TestCase):
                 self.assertEqual(times,sorted(times))
                 if kind==5:self.assertEqual(times,[finish,40. if slot==98 else float(original[slot].frames)])
                 if kind in [6,7]:self.assertEqual(before[keys:keys+count*16],after[keys:keys+count*16])
-            self.assertEqual(min(active),contact)
+            self.assertAlmostEqual(min(active),contact,places=5)
             start=struct.unpack_from('<I',before,60)[0]
             self.assertTrue(all(before[i]==after[i] or i in allowed for i in range(start,len(before))))
     def test_numbered_profiles_retain_v13_fire_and_cure_poses(self):
@@ -184,26 +197,15 @@ class VisualTests(unittest.TestCase):
             rows={r['normal_slot']:r for r in data['motions']}
             for slot,(clip,cut) in expected.items():
                 self.assertEqual((rows[slot]['donor'],rows[slot]['source_range']),(clip,cut))
-    def test_both_main_second_ground_variants_and_air_second_use_the_new_requested_clips(self):
-        for slot,clip in [(99,'365'),(100,'365'),(103,'352')]:
+    def test_new_main300_ground_second_and305_407_351_air_clips_are_serialized(self):
+        for slot,clip in [(99,'300'),(100,'300'),(102,'305'),(103,'407'),(104,'351')]:
             self.assertEqual(by_slot[slot]['donor'],clip);self.assertIsNone(by_slot[slot]['source_range'])
-        self.assertEqual(by_slot[99]['source_sha256'],by_slot[100]['source_sha256'])
+        self.assertEqual(by_slot[99]['source_bank'],'base');self.assertEqual(by_slot[100]['source_bank'],'base')
     def test_item_007_395_uses_the_requested_shared_payload_in_both_native_item_actions(self):
         for slot in [58,59]:
             row=by_slot[slot]
             self.assertEqual(row['donor'],'395');self.assertEqual(row['source_aliases'],'007 / 395')
             self.assertEqual(row['source_sha256'],'bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96')
-    def test_glide_opening_reaches_a_static_middle_pose_and_matches_the_closing_boundary(self):
-        stop=all_converted[(6,10)];end=pose(model,stop,0)
-        end[:,:3,3]-=helper_pose(stop,0)[-1,:3,3]
-        for slot in range(75,79):
-            row=by_slot[slot];m=converted[slot]
-            self.assertEqual(row['donor'],'350');self.assertEqual(row['source_range'],[0,20])
-            self.assertEqual(row['native_hold_frame'],40)
-            for f in [40.,45.,float(m.frames-1)]:
-                actual=pose(model,m,f);actual[:,:3,3]-=helper_pose(m,f)[-1,:3,3]
-                np.testing.assert_allclose(actual,end,atol=.004,rtol=0,err_msg=(slot,f))
-        self.assertEqual(glide_stop_report['motions'][0]['source_range'],[20,40])
     def test_supported_idle_stances_allow_room_for_soras_boots(self):
         minimum=float(np.linalg.norm(model.bind[43,:3,3]-model.bind[17,:3,3])*1.35)
         for slot in [0,1]:

@@ -1,16 +1,6 @@
-﻿Ability,Phase,Aqua clip,Source frames,Native timing,Normal slots,Olympus slots,Fall clip
-aqua,opening,350,0..20,0..40,"75,76,77,78","37,38,39,40",506
-aqua,held middle,350,20,clock held40 while native Glide runs,"75,76,77,78","37,38,39,40",506
-aqua,closing,350,20..40,0..39,10,10,506
-aqua 1,opening,350,0..20,0..40,"75,76,77,78","37,38,39,40",506
-aqua 1,held middle,350,20,clock held40 while native Glide runs,"75,76,77,78","37,38,39,40",506
-aqua 1,closing,350,20..40,0..39,10,10,506
-aqua 2,opening,350,0..20,0..40,"75,76,77,78","37,38,39,40",506
-aqua 2,held middle,350,20,clock held40 while native Glide runs,"75,76,77,78","37,38,39,40",506
-aqua 2,closing,350,20..40,0..39,10,10,506
-aqua 3,opening,350,0..20,0..40,"75,76,77,78","37,38,39,40",506
-aqua 3,held middle,350,20,clock held40 while native Glide runs,"75,76,77,78","37,38,39,40",506
-aqua 3,closing,350,20..40,0..39,10,10,506
-aqua 4,opening,350,0..20,0..40,"75,76,77,78","37,38,39,40",506
-aqua 4,held middle,350,20,clock held40 while native Glide runs,"75,76,77,78","37,38,39,40",506
-aqua 4,closing,350,20..40,0..39,10,10,506
+﻿Ability,Visual,Normal slots,Olympus slots,Aqua overrides,Clock and queued frame changes,Opening flight ending,Normal fall after native exit
+aqua,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
+aqua 1,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
+aqua 2,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
+aqua 3,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506
+aqua 4,original Sora native Glide,"75,76,77,78","37,38,39,40",0,0,native,506

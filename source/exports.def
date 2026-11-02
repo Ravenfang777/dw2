@@ -1,0 +1,5 @@
+LIBRARY kh1-aqua.dll
+EXPORTS
+  DllMain
+  OnInit
+  OnFrame

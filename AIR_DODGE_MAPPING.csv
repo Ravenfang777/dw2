@@ -1,6 +1,6 @@
-﻿Ability,Ability id,Aqua clip,Trigger,Neutral stick,Tilted stick,Held rise test units,Horizontal test speed,Native frames,Fall clip,Collision,Extra defense or damage
-aqua,117,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
-aqua 1,118,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
-aqua 2,119,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
-aqua 3,120,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
-aqua 4,121,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
+﻿Ability,Ability id,Aqua clip,Trigger,Neutral stick,Tilted stick,Dual D base height,Dual D base speed,Travel multiplier,Effective full held rise,Effective horizontal speed,Native frames,Fall clip,Collision,Extra defense or damage
+aqua,117,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,145,18,2,290,36,40,506,native displacement callback before collision,False
+aqua 1,118,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,145,18,2,290,36,40,506,native displacement callback before collision,False
+aqua 2,119,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,145,18,2,290,36,40,506,native displacement callback before collision,False
+aqua 3,120,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,145,18,2,290,36,40,506,native displacement callback before collision,False
+aqua 4,121,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,145,18,2,290,36,40,506,native displacement callback before collision,False

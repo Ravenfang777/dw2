@@ -1,22 +1,8 @@
 {
+  "version": 17,
   "passed": true,
-  "windows_or_game_executed": false,
-  "user_supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
-  "movement_state": 21,
-  "native_glide_constructor": "0x2B2D30",
-  "native_glide_first_request": "0x71",
-  "directional_requests": [
-    "0x71",
-    "0x72",
-    "0x73",
-    "0x74"
-  ],
-  "same_record_request_aliases": [
-    "0x76",
-    "0x77",
-    "0x78",
-    "0x79"
-  ],
+  "game_runtime_tested": false,
+  "default_native_glide": true,
   "normal_slots": [
     75,
     76,
@@ -29,35 +15,10 @@
     39,
     40
   ],
-  "native_release_handler": "0x2B2BF0",
-  "native_release_fall_request_instruction": "0x2B2CD1: mov edx, 6",
-  "source_clip": "350",
-  "source_frames": 41,
-  "source_fps": 30,
-  "source_sha256": "42d386309f137dbd10c82e53948c1986ba80d76fb15f63da6df89df1290efdd8",
-  "opening_source_range": [
-    0,
-    20
-  ],
-  "opening_native_frames": [
-    0,
-    40
-  ],
-  "held_source_frame": 20,
-  "native_clock_and_queued_frame_cap": 40,
-  "direction_changes_keep_progress": true,
-  "closing_source_range": [
-    20,
-    40
-  ],
-  "closing_normal_slot": 10,
-  "closing_native_frames": 40,
-  "closing_restore_clip": "506",
-  "native_movement_state_and_physics_preserved": true,
-  "native_glide_unlock_and_input_requirements_preserved": true,
-  "requires_admitted_control_hook_for_phase_control": true,
-  "header_motion_table_or_allocation_expansion": false,
-  "version": 16,
-  "middle": "Aqua350 frame20 held through native steering and motion changes",
-  "phase_handoff_native_frame": 40
+  "aqua_body_overrides": 0,
+  "opening_held_and_closing_overlays": 0,
+  "clock_or_queue_frame_writes": 0,
+  "native_physics_unlock_input_and_steering": true,
+  "regular_glide_guard_scope": "only during committed504; otherwise original constructor",
+  "normal_fall_after_native_glide": "existing main/profile falling506; no350 closing restart"
 }

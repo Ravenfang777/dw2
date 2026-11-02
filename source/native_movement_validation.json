@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 17,
   "passed": true,
   "game_runtime_tested": false,
   "supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
@@ -33,31 +33,43 @@
       "tilted stick directional speed",
       "finite action returns native fall"
     ],
-    "exact_kh2_parameters_extracted": false,
-    "reference_two_times_distance_multiplier_used": false
+    "recorded_dual_d_baseline": {
+      "height": 145.0,
+      "speed": 18.0,
+      "source": "prior v52 kh1-dual-wield.log recovered from earlier project context"
+    },
+    "reference_two_times_distance_multiplier_used": true,
+    "exact_kh2_gravity_and_release_coefficients_extracted": false
   },
-  "kh1_test_tuning": {
-    "height_units_held": 96,
-    "initial_up_speed_per_native_frame": 12,
-    "gravity_per_native_frame_squared": 0.75,
-    "horizontal_speed_per_native_frame": 6,
-    "release_up_speed_cap": 4,
-    "fall_speed_cap": 20,
-    "native_animation_frames": 40
+  "movement": {
+    "base_height": 145.0,
+    "base_horizontal_speed": 18.0,
+    "distance_multiplier": 2.0,
+    "effective_held_height": 290.0,
+    "effective_horizontal_speed": 36.0,
+    "adapter_base_gravity": 0.75,
+    "adapter_base_release_up_cap": 4.0,
+    "adapter_base_fall_cap": 20.0,
+    "native_visual_frames": 40,
+    "animation_or_arc_time_multiplier": 1.0
   },
   "actor_position_written_by_mod": false,
   "collision_and_landing_callbacks_native": true,
   "extra_guard_invulnerability_or_attack_grant": false,
   "source_animation": "504",
   "normal_falling_animation": "506",
-  "run_head_lift_degrees": 12,
-  "supplied_v15_log": {
-    "filename": "kh1-aqua(5).log",
-    "sha256": "0016236af6c59a2b427d705a9665d5a8c3c3728f820018b1ba1377f33d78a0fd",
-    "accepted_animation_but_no_movement_in_v15": true
+  "run_head_skin_joint": 150,
+  "run_head_source_bone": 5,
+  "hair_helper_bind_rotation": 151,
+  "supplied_v16_log": {
+    "filename": "kh1-aqua(6).log",
+    "sha256": "8590f3b943ac7bff253085bdff21d5e15585b209bcb00164426e1c586544b8f4",
+    "accepted_dodge_count": 14,
+    "movement_callback_observed_count": 14,
+    "both_ground_chain_variants_and_finisher_observed": true
   },
   "limitations": [
-    "KH1-specific movement tuning follows Master-style structure; not a byte-identical KH2 controller port",
+    "Recorded Dual D145/18 and2x displacement policy reproduced; KH1 gravity/release adapter retained rather than claiming a full KH2 controller port",
     "Windows/KH1 not executed; collision behavior needs live verification"
   ]
 }

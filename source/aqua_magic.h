@@ -1,4 +1,4 @@
-/* V16 uses native keyblade-tip spell origins and effect matrices. No palm
+/* V17 uses native keyblade-tip spell origins and effect matrices. No palm
  * attachment detours are installed, including with an older hand_magic INI.
  * These memory APIs and the absolute jump writer serve the movement hooks. */
 extern void* (ABI *kVirtualAlloc)(void*,usize,u32,u32) HIDDEN;

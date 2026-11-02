@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 17,
   "passed": true,
   "game_runtime_tested": false,
   "normal_slots": [
@@ -14,8 +14,8 @@
   ],
   "source_clips": [
     "300",
-    "365",
-    "365"
+    "300",
+    "300"
   ],
   "native_event_sampler_rva": "0x394770",
   "native_chain_flag_reader": "0x29EFB0 reads actor+1CC bit0x400000",
@@ -108,7 +108,7 @@
       "sound_and_effect_tracks_unchanged": true
     },
     "99": {
-      "contact_after": 24,
+      "contact_after": 8.170212765957446,
       "chain_opens": 32,
       "chain_closes": 48,
       "tracks": [
@@ -120,7 +120,7 @@
             32.0
           ],
           "after_frames": [
-            24.0,
+            8.170212765957446,
             32.0
           ]
         },
@@ -160,7 +160,7 @@
           "after_frames": [
             6.0,
             8.0,
-            24.0,
+            8.170212765957446,
             48.0
           ]
         },
@@ -175,8 +175,8 @@
           ],
           "after_frames": [
             6.0,
+            8.170212765957446,
             24.0,
-            25.0,
             48.0
           ]
         },
@@ -195,12 +195,12 @@
           ]
         }
       ],
-      "changed_bytes": 6,
+      "changed_bytes": 12,
       "counts_pointers_and_payloads_preserved": true,
       "sound_and_effect_tracks_unchanged": true
     },
     "100": {
-      "contact_after": 36,
+      "contact_after": 11.23404255319149,
       "chain_opens": 44,
       "chain_closes": 64,
       "tracks": [
@@ -212,7 +212,7 @@
             30.0
           ],
           "after_frames": [
-            36.0,
+            11.23404255319149,
             44.0
           ]
         },
@@ -251,11 +251,11 @@
             30.0
           ],
           "after_frames": [
-            22.0,
-            36.0,
-            38.0,
-            40.0,
-            42.0
+            10.23404255319149,
+            11.23404255319149,
+            11.73404255319149,
+            12.23404255319149,
+            12.73404255319149
           ]
         },
         {
@@ -269,11 +269,11 @@
             30.0
           ],
           "after_frames": [
-            22.0,
-            36.0,
-            38.0,
-            40.0,
-            42.0
+            10.23404255319149,
+            10.73404255319149,
+            11.23404255319149,
+            11.73404255319149,
+            12.23404255319149
           ]
         },
         {
@@ -291,7 +291,7 @@
           ]
         }
       ],
-      "changed_bytes": 23,
+      "changed_bytes": 38,
       "counts_pointers_and_payloads_preserved": true,
       "sound_and_effect_tracks_unchanged": true
     }

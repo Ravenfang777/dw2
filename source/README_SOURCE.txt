@@ -1,79 +1,65 @@
-AQUA V16 SOURCE / REPRODUCIBILITY
-
-The supplied original EXE is Steam Global timestamp1721645006, SHA256
- d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac.
-Its full bytes and the user's log are not redistributed. Native anchors and
-Master-reference provenance are recorded in native_movement_validation.json.
+AQUA V17 SOURCE / REPRODUCIBILITY
 
 Build DLL on Linux with Python3, GCC and GNU ld PE support:
  python3 generate_data.py
  python3 build.py
  python3 test_runtime.py
  python3 test_visuals.py
-NumPy/SciPy are required for pose fitting/geometry; Python3/GCC for runtime mocks.
-The runtime checks map the actual emitted PE with Win64 ABI/import mocks.
-They are not Windows/KH1 execution or a rendered-mesh test.
+NumPy/SciPy are needed for pose fitting/geometry. Runtime tests map the actual
+emitted PE with Win64 ABI/import mocks; they are not Windows/KH1 execution.
 
-Optional source pose rebuild from this directory:
- python3 retargeting/tools/build_aqua_complete_v16.py --profile 0 --output .
- python3 retargeting/tools/build_aqua_complete_v16.py --profile 1 --output sets/p1
-Profiles2..4 use sets/p2..p4;5 uses dodge;6 uses glide_stop;7 uses blizzard.
-The builder finds model/PAM/ARC inputs below retargeting and original MSETs in
-../assets. --slots limits rebuilt native records. The sampling cache is rebuilt
-from immutable baseline data; refinements are applied once. Regenerate data,
-rebuild the DLL and run checks after modifying any serialized fixture.
+Optional source pose rebuild from this source directory:
+ python3 retargeting/tools/build_aqua_complete_v17.py --profile 0 --output .
+ python3 retargeting/tools/build_aqua_complete_v17.py --profile 1 --output sets/p1
+Profiles2..4 use sets/p2..p4;5 uses dodge;7 uses blizzard. No profile6 Glide
+closing overlay exists in v17. The builder resolves its model/PAM/ARC inputs
+below retargeting, with original MSETs in ../assets. --slots limits records.
+The immutable sampling baseline is refined once. Regenerate data, rebuild and
+run checks after changing fixtures. Previous plan/refiner modules are explicit
+dependencies, not the current behavior. The v17 CSVs and plan are authoritative.
 
-Blizzard selector: aqua_blizzard.h recognizes current/newly queued logical37/84
-including native request flags, verifies the admitted55/80 motion parts, then
-copies only full391/316 body curves into those original records. Their native
-spell events and request lookup remain. Restore the shared317/390 body before
-the next spell, interruption, ability-off or idle profile switch. No recovery
-append, terminal reordering, MP call or projectile hook exists in v16.
+Main ground300/300/366; air305/407/351. Both99/100 use300 and complete it at
+native32/44 before kind5 chain windows32..48/44..64. Contact times are selected
+from the first300 pose's12/47 phase:384/47 and528/47 native frames. First98
+retains contact12 and chain22..40. Existing event payloads, descriptors, counts,
+encoded handles and sound/effect keys stay original. Only existing hit/chain
+frame floats change for main98/99/100; numbered tests use native event timing.
+The actual native event sampler0x394770 is exercised by the runtime tests.
 
-Main timing: aqua_event_timing_v16 changes existing hit/chain frame floats for
-98/99/100 only. It preserves every descriptor, key payload, sound and effect key.
-Second365 reaches its last source frame at native32/44, then holds. Kind5 opens
-32/44 through48/64, giving16/20 native frames to chain after the full swing.
-The sixth runtime AquaPart admits the known event-key stream through header60,
-checking all encoded descriptor/key handles. All native allocation sizes/counts
-remain original. Other profiles use original event times, and off restores them.
+Default Glide:75..78 are absent from the47-record Aqua patch table. There are
+no Glide body writes, clocks, queued-frame edits, opening/holding/closing state,
+350 fall overlays or extra endings. The only remaining Glide hook is the
+existing constructor guard for active504; every other call resumes native code.
+Tests populate independent original Glide records in both mock banks and verify
+all bytes, clocks and queued start frames through all five profiles and turns.
 
-Aerial dodge: aqua_air_dodge.h verifies and installs control0x2A6220, regular
-Glide constructor0x2B26C0 and native state2 displacement0x2AF6A0 hooks. It admits
-all anchors and obtains all code-page protections before patching any entry.
-The control trampoline relocates the RIP cookie load; the Glide trampoline
-relocates its common constructor call. The16-byte movement span is entirely
-position independent and preserves its TEST flags before resuming native code.
-Outside admitted504, all three original functions pass through.
+Dual D2x: the earlier v52 log recorded growth height145 and speed18. The supplied
+NineStyles_v52.patch aerial_dodge_step multiplies displacement by2 while leaving
+timing unchanged. V17 stores unscaled145/18 baseline motion and applies2 to all
+requested XYZ displacement and handoff velocity values. The existing40-frame504
+visual and once-per-airtime/free-air input policy remain. The KH1 gravity/release
+adapter (.75 /4 /20 baseline) remains explicit: exact KH2 coefficients and motion
+202's length are absent, so this does not claim a complete KH2 controller import.
+Native collision resolves the displacement. No actor+10 position writes occur.
 
-On a fresh free-air Circle, native state setter0x2B1960 selects fall callbacks,
-then native queue0x29F980 restarts fall10 with504 body. The native input command
-predicate remains the checked low-byte/bit24 test. A held takeoff cannot retrigger;
-landing rearms once per airtime. Deferred cached Glide selection is blocked only
-for that live session. Native controller commands and busy actions interrupt it.
+Run head fix: native MDLS link word bit30..31 identifies skinned bones. Joint150
+has skin flag1; helper151 has flag0. V16 incorrectly added lift at151, moving
+hair without the skull. V17 refines only run5/6/7: transfer the authored source
+head5 orientation (formerly mapped to151) to150 and restore151's bind rotation.
+Skull150 and the attached subtree then follow the same head. No torso/neck,
+attachment translation, bind length, scale or travel change is introduced.
+The geometry test compares the REAL skinned skull150 to independent frozen
+pre-v16 authored-head fixtures, and checks the raw native skin flags/hair local.
 
-Movement borrows the supplied Master begin_aerial_dodge structure: neutral up,
-normalized stick travel, held arc, finite action, native fall handoff. Exact KH2
-growth values are absent from the supplied extract. The separately documented
-96/6/.75 values are KH1 test tuning, without the v52 style's2x distance multiplier.
-The callback returns requested displacement before KH1's collision pass. It never
-writes actor+10 position. Native wall/ceiling/floor/collision callbacks remain.
-A release caps upward speed; the native ceiling bit clips lift. At normal handoff,
-arc values are reset to the actual actor Y, and fall506 resumes. No defense or
-hitbox import is added. This is not a full source-identical Master port.
+Blizzard remains the v16 selector: logical37/84 and original native event tracks
+stay; main casts temporarily receive full391/316 bodies in55/80. No native spell
+queue append, terminal reordering, projectile/MP hook or element change exists.
+Restore the shared317/390 pose on the next action, off or profile transition.
+Keyblade-tip attachment0x30, original native defensive windows and all numbered
+combo/cast fixtures remain. Five saved zero-AP IDs117..121 remain exclusive.
 
-Glide retains Aqua350 throughout start/held middle/closing. Native current and
-queued visual clocks cap40 after the opening, including direction changes. No
-native Sora body is republished during flight. Native Glide physics/unlocks are
-untouched. 350 stop uses the fall overlay, then506 returns on end/interruption.
-
-Run refinement: aqua_refine_v16 lifts head151 by12 degrees only on slots5/6/7
-relative to the character's root-right axis. It preserves torso and local bind
-hair, joint translations, scale, helper travel and all unrelated motions.
-Previous run fixtures are frozen solely for independent geometry comparison.
-
-IDs117..121, exclusivity, idle transactions, original request pointers, keyblade
-tip attachment0x30, wrist and limb refinements and native defensive windows stay.
-Current mappings are the root CSVs; source event timing is in validation JSON.
-Previous plan/refiner modules are retained as explicit build dependencies.
-Existing upstream license files remain in licenses.
+Native hook anchors and source/log evidence are in the validation JSON files.
+The original Steam Global EXE timestamp1721645006 has SHA256
+ d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac.
+Its full bytes and the user's video/log are not redistributed. Existing upstream
+licenses remain in licenses. Test limits are stated in README_FIRST.txt.
