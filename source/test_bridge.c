@@ -11,10 +11,10 @@ static unsigned nranges,queries;
 static uintptr_t game_base;
 static int remove_mode,conflict;
 static int hand_magic=1,air_enabled=1,alloc_failure,protect_failure;
-static unsigned control_calls,control_words[4],control_mode;
+static unsigned control_calls,control_words[4],control_mode,queue_calls;
 static unsigned matrix_code,point_code;static float point_fraction;
 static char output[131072];static size_t used;
-void bridge_reset(uintptr_t game){game_base=game;nranges=queries=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=0;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
+void bridge_reset(uintptr_t game){game_base=game;nranges=queries=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=queue_calls=0;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
 void bridge_magic_modes(int enabled,int noalloc,int noprotect){hand_magic=enabled;alloc_failure=noalloc;protect_failure=noprotect;}
 void bridge_range(uintptr_t start,size_t size,uint32_t protect){ranges[nranges].start=start;ranges[nranges].size=size;ranges[nranges].protect=protect;nranges++;}
 void bridge_modes(int remove,int other){remove_mode=remove;conflict=other;}
@@ -44,16 +44,22 @@ void bridge_air_modes(int enabled,unsigned mode){air_enabled=enabled;control_mod
 void bridge_control(uintptr_t f,uintptr_t actor,uintptr_t dir){((void(ABI*)(uintptr_t,uintptr_t))f)(actor,dir);}
 unsigned bridge_control_calls(void){return control_calls;}
 unsigned bridge_control_word(unsigned i){return i<4?control_words[i]:0;}
+unsigned bridge_queue_calls(void){return queue_calls;}
+void bridge_commit(uintptr_t actor){
+    uint32_t count=*(uint32_t*)(actor+0x178),request=*(uint32_t*)(actor+0x17c)&0xffff;
+    if(count==1&&(request==6||(request>=0x71&&request<=0x74)||(request>=0x76&&request<=0x79))){
+        *(uint32_t*)(actor+0x164)=request;*(float*)(actor+0x16c)=*(float*)(actor+0x184);*(uint32_t*)(actor+0x178)=0;
+    }
+}
 static void ABI native_queue(uintptr_t actor,uint32_t request,float frame){
+    queue_calls++;
     *(uint32_t*)(actor+0x178)=1;*(uint32_t*)(actor+0x17c)=request;*(float*)(actor+0x184)=frame;
 }
 static void ABI native_control(uintptr_t actor,uintptr_t dir){
     (void)dir;control_calls++;uint32_t*pad=(uint32_t*)(game_base+0x298ca90);
     unsigned fields[4]={1,2,4,5};for(unsigned i=0;i<4;i++)control_words[i]=pad[fields[i]];
     if(control_mode==1)pad[2]^=0x40000000u;
-    if(*(uint32_t*)(actor+0x178)&&*(uint32_t*)(actor+0x17c)==6){
-        *(uint32_t*)(actor+0x164)=6;*(float*)(actor+0x16c)=0;*(uint32_t*)(actor+0x178)=0;
-    }
+    if(control_mode!=3)bridge_commit(actor);
     if(control_mode==2)*(uint32_t*)(actor+0x164)=0xcc;
 }
 uintptr_t bridge_symbol(const char*n){

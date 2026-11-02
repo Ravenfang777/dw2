@@ -1,6 +1,7 @@
 {
-  "version": 12,
+  "version": 13,
   "test_round": 4,
+  "test_round_label": "revised Test4",
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -17,91 +18,105 @@
     120,
     121
   ],
-  "main_ground_finisher": "411",
+  "main_ground_combo": [
+    "300",
+    "218",
+    "366"
+  ],
   "main_air_combo": [
-    "407",
-    "352",
-    "353"
+    "351",
+    "353",
+    "393"
+  ],
+  "item_use": "395",
+  "item_source_aliases": "007 / 395",
+  "glide": "350",
+  "glide_opening_source_range": [
+    0,
+    20
+  ],
+  "glide_held_source_frame": 20,
+  "glide_closing_source_range": [
+    20,
+    40
   ],
   "air_dodge": "504",
   "normal_falling": "506",
   "test_4_combos": [
     [
       [
-        "622",
-        "623",
-        "045"
+        "316",
+        "317",
+        "318"
       ],
       [
-        "220",
-        "221",
+        "391",
+        "390",
+        "427"
+      ]
+    ],
+    [
+      [
+        "315",
+        "371",
+        "366"
+      ],
+      [
+        "365",
+        "218",
+        "332"
+      ]
+    ],
+    [
+      [
+        "393",
+        "411",
+        "352"
+      ],
+      [
+        "616",
+        "407",
         "351"
       ]
     ],
     [
       [
-        "353",
-        "399",
-        "411"
+        "510",
+        "511",
+        "512"
       ],
       [
-        "413",
-        "710",
-        "711"
-      ]
-    ],
-    [
-      [
-        "060",
-        "022",
-        "023"
-      ],
-      [
-        "025",
-        "026",
-        "052"
-      ]
-    ],
-    [
-      [
-        "701",
-        "700",
-        "708"
-      ],
-      [
-        "395",
-        "051",
-        "505"
+        "504",
+        "514",
+        "399"
       ]
     ]
   ],
-  "air_aliases": {
-    "395": "007 / 395",
-    "051": "008 / 051",
-    "505": "060 / 505"
-  },
-  "normal_motion_records_per_profile": 47,
-  "olympus_motion_records_per_profile": 46,
-  "unique_generated_pose_variants": 76,
-  "actual_pe_mock_tests": 50,
-  "geometry_assignment_tests": 14,
-  "pose_samples": 16548,
-  "max_pose_position_fit_error": 4.978390892545143,
+  "normal_motion_records_per_profile": 51,
+  "olympus_motion_records_per_profile": 50,
+  "unique_generated_pose_variants": 81,
+  "actual_pe_mock_tests": 59,
+  "geometry_assignment_tests": 15,
+  "pose_samples": 17893,
+  "max_pose_position_fit_error": 4.98903332659248,
   "max_non_root_attachment_translation_error": 0.0,
   "max_scale_error": 0.0,
   "native_travel_error": 0.0,
   "original_motion_lengths_headers_counts_and_msets_preserved": true,
   "helper_slots": 11,
   "left_palm_magic": 206,
+  "air_dodge_always_native_queued_restart": true,
   "air_dodge_one_per_airtime": true,
   "air_dodge_directional_input_allowed": true,
-  "air_dodge_neutral_stick_required": false,
-  "air_dodge_extra_invulnerability": false,
-  "dll_sha256": "e33032b5cdfebb59ac0aa51f55aa191b34cc63a790a03c9098b75cc01ba04e92",
+  "air_dodge_input_diagnostics": true,
+  "glide_native_unlock_required": true,
+  "glide_direction_changes_keep_pose_progress": true,
+  "dll_sha256": "1ee73d5f740f1654b5342feb98ba7d87bc5097fceff911ae195b4f6e5a5d47d2",
   "limitations": [
     "Windows/KH1 execution and rendered appearance pending",
-    "Directional airborne Circle and new clips require in-game testing",
-    "504 uses native fall gravity and40-frame timing; no added BBS travel or invulnerability",
-    "Thunder retains v10 alternate casting duration86/78"
+    "The cause of504 failure has not been confirmed by an in-game log",
+    "Native Glide unlock/input/physics remain;350 phase transitions need in-game testing",
+    "504 retains native fall gravity and40-frame timing with no extra invulnerability",
+    "Thunder retains v10 alternate casting durations86/78"
   ]
 }

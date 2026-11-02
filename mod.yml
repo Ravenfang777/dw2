@@ -1,8 +1,8 @@
-title: KH1FM Aqua Animation Test v12
+title: KH1FM Aqua Animation Test v13
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Test 4: main aqua air407/352/353 and airborne Circle dodge504 with neutral or directional stick input. Four new combo test sets with verified aliases; retains finisher411, fall506, action casts and LEFT-hand magic. Steam Global / Panacea; disable older Aqua packages and Nine Styles / Dual Wield.
+  Revised Test4: main ground300/218/366, air351/353/393, item007/395 and actual native Glide350 opening/held-middle/closing. Circle504 queues a native restart with input diagnostics. Four new combo sets; retains LEFT-hand magic, casts and falling506. Steam Global/Panacea; disable older Aqua and Nine Styles.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy

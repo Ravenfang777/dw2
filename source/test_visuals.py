@@ -1,4 +1,4 @@
-"""Independent checks of serialized V12 base, aerial dodge and four Test 4 profiles."""
+"""Independent checks of serialized V13 base, Glide phases, aerial dodge and revised Test 4 profiles."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
@@ -25,6 +25,8 @@ for profile in range(1,5):
 dodge_report=json.loads((ROOT/'dodge/curve_validation.json').read_text())
 assert len(dodge_report['motions'])==1 and dodge_report['motions'][0]['donor']=='504'
 all_converted[(5,10)]=parse_motion((ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes())
+glide_stop_report=json.loads((ROOT/'glide_stop/curve_validation.json').read_text())
+all_converted[(6,10)]=parse_motion((ROOT/'glide_stop/fixtures/aqua_s010.bin').read_bytes())
 
 @lru_cache(maxsize=1)
 def clearance_samples():
@@ -47,7 +49,7 @@ class VisualTests(unittest.TestCase):
         # The frozen V8 positions only compare the same source actions; V10's
         # newly assigned casts, fall, finisher and air combo have different poses.
         slots=np.load(ROOT/'fixtures/v8_arm_reference.npz')['slots']
-        same_source=~np.isin(slots,[10,54,55,56,57,79,80,81,82,101,102,103,104])
+        same_source=~np.isin(slots,[10,54,55,56,57,58,59,79,80,81,82,99,100,101,102,103,104])
         before=before[same_source];after=after[same_source]
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[4,7],:]-before[:,:,[4,7],:],axis=3))),23.)
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[8,9],:]-before[:,:,[8,9],:],axis=3))),2.)
@@ -110,30 +112,34 @@ class VisualTests(unittest.TestCase):
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
     def test_requested_action_clips_and_test_4_combos_match_serialized_reports(self):
-        actions={101:'411',102:'407',103:'352',104:'353',10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
+        actions={99:'218',100:'218',101:'366',102:'351',103:'353',104:'393',58:'395',59:'395',10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
-        wanted=[(['622','623','045'],['220','221','351']),
-                (['353','399','411'],['413','710','711']),
-                (['060','022','023'],['025','026','052']),
-                (['701','700','708'],['395','051','505'])]
+        wanted=[(['316','317','318'],['391','390','427']),
+                (['315','371','366'],['365','218','332']),
+                (['393','411','352'],['616','407','351']),
+                (['510','511','512'],['504','514','399'])]
         for profile,(ground,air) in enumerate(wanted,1):
             rows=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())['motions']
             actual={r['normal_slot']:r['donor'] for r in rows}
             self.assertEqual(actual,dict(zip(range(98,105),[ground[0],ground[1],ground[1],ground[2],*air])))
-    def test_test_4_aliases_keep_the_requested_shared_payloads_and_separate_plain_060(self):
-        rows=json.loads((ROOT/'sets/p4/curve_validation.json').read_text())['motions'];by={r['normal_slot']:r for r in rows}
-        expected={102:('395','007 / 395','bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96'),
-                  103:('051','008 / 051','50e65b49cf95e17b7eab8f09435ed11bb66748931a42cabaa47337d55add6e52'),
-                  104:('505','060 / 505','be0d13b489bddbfe255b4e55fc9821ed1500947396a04290e1672a312554dcd5')}
-        for slot,(clip,aliases,sha) in expected.items():
-            self.assertEqual((by[slot]['donor'],by[slot]['source_aliases'],by[slot]['source_sha256']),(clip,aliases,sha))
-        ground=json.loads((ROOT/'sets/p3/curve_validation.json').read_text())['motions']
-        first=next(r for r in ground if r['normal_slot']==98)
-        self.assertEqual(first['donor'],'060')
-        self.assertEqual(first['source_sha256'],'71d6effd143365ddd2472e79479f628b62c875083748a70e01438b7dd5fd07d9')
-        self.assertNotEqual(first['source_sha256'],by[104]['source_sha256'])
+    def test_item_007_395_uses_the_requested_shared_payload_in_both_native_item_actions(self):
+        for slot in [58,59]:
+            row=by_slot[slot]
+            self.assertEqual(row['donor'],'395');self.assertEqual(row['source_aliases'],'007 / 395')
+            self.assertEqual(row['source_sha256'],'bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96')
+    def test_glide_opening_reaches_a_static_middle_pose_and_matches_the_closing_boundary(self):
+        stop=all_converted[(6,10)];end=pose(model,stop,0)
+        end[:,:3,3]-=helper_pose(stop,0)[-1,:3,3]
+        for slot in range(75,79):
+            row=by_slot[slot];m=converted[slot]
+            self.assertEqual(row['donor'],'350');self.assertEqual(row['source_range'],[0,20])
+            self.assertEqual(row['native_hold_frame'],40)
+            for f in [40.,45.,float(m.frames-1)]:
+                actual=pose(model,m,f);actual[:,:3,3]-=helper_pose(m,f)[-1,:3,3]
+                np.testing.assert_allclose(actual,end,atol=.004,rtol=0,err_msg=(slot,f))
+        self.assertEqual(glide_stop_report['motions'][0]['source_range'],[20,40])
     def test_supported_idle_stances_allow_room_for_soras_boots(self):
         minimum=float(np.linalg.norm(model.bind[43,:3,3]-model.bind[17,:3,3])*1.35)
         for slot in [0,1]:
