@@ -9,7 +9,7 @@ aqua,117,run,0x02,6,6,004,base,full,True,36,travel
 aqua,117,combat run,0x02,7,7,013,base,full,True,36,travel
 aqua,117,jump takeoff,0x04,8,8,005,base,"[0, 9]",False,26,travel
 aqua,117,jump rise,0x05,9,9,005,base,"[9, 12]",False,14,travel
-aqua,117,fall,0x06,10,10,006,base,"[7, 15]",True,40,travel
+aqua,117,fall,0x06,10,10,506,p02ex_150.arc,full,True,40,travel
 aqua,117,landing,0x07,11,11,007,base,full,False,28,travel
 aqua,117,high jump takeoff,0x09,12,12,014,base,"[0, 16]",False,34,travel
 aqua,117,high jump rise,0x0A,13,13,014,base,"[16, 31]",False,26,travel
@@ -17,10 +17,10 @@ aqua,117,ledge hang,0x0D,14,14,020,base,"[55, 94]",True,120,hand_anchor
 aqua,117,ledge climb start,0x0E,15,15,021,base,"[0, 4]",False,68,hand_anchor
 aqua,117,ledge climb finish,0x0F,16,16,021,base,"[4, 13]",False,28,climb
 aqua,117,ledge landing recovery,0x10,17,not present,007,base,full,False,40,native
-aqua,117,ground cast release,0x36,54,17,354,base,"[0, 23]",False,28,travel
-aqua,117,ground overhead cast,0x37,55,18,320,base,full,False,86,travel
-aqua,117,ground support cast,0x38,56,19,354,base,full,False,68,travel
-aqua,117,ground cast recovery,0x3D,57,20,354,base,"[23, 35]",False,60,travel
+aqua,117,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",False,28,travel
+aqua,117,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,False,86,travel
+aqua,117,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,False,68,travel
+aqua,117,Fire cast recovery,0x3D,57,20,316,p02ex_151.arc,"[20, 30]",False,60,travel
 aqua,117,ground item use,0x3E,58,21,600,base,full,False,82,travel
 aqua,117,air item use,0x3F,59,22,601,p02ex_628.arc,full,False,72,travel
 aqua,117,front high flinch,0x48,61,24,200,base,full,False,70,native
@@ -33,10 +33,10 @@ aqua,117,air front reaction,0x4E,67,30,214,base,full,False,30,native
 aqua,117,air back reaction,0x4F,68,31,215,base,full,False,30,native
 aqua,117,air front recovery,0x50,69,32,214,base,full,False,38,native
 aqua,117,air back recovery,0x51,70,33,215,base,full,False,38,native
-aqua,117,air cast release,0x83,79,41,355,base,"[0, 21]",False,28,travel
-aqua,117,air overhead cast,0x84,80,42,320,base,full,False,78,travel
-aqua,117,air support cast,0x85,81,43,355,base,full,False,68,travel
-aqua,117,air cast recovery,0x8A,82,44,355,base,"[21, 33]",False,52,travel
+aqua,117,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28,travel
+aqua,117,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
+aqua,117,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
+aqua,117,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
 aqua,117,ground first,0xC8,98,60,300,base,full,False,48,travel
 aqua,117,ground second,0xC9,99,61,301,base,full,False,48,travel
 aqua,117,ground alternate,0xCA,100,62,302,base,full,False,64,travel
@@ -56,7 +56,7 @@ aqua 1,118,run,0x02,6,6,004,base,full,True,36,travel
 aqua 1,118,combat run,0x02,7,7,013,base,full,True,36,travel
 aqua 1,118,jump takeoff,0x04,8,8,005,base,"[0, 9]",False,26,travel
 aqua 1,118,jump rise,0x05,9,9,005,base,"[9, 12]",False,14,travel
-aqua 1,118,fall,0x06,10,10,006,base,"[7, 15]",True,40,travel
+aqua 1,118,fall,0x06,10,10,506,p02ex_150.arc,full,True,40,travel
 aqua 1,118,landing,0x07,11,11,007,base,full,False,28,travel
 aqua 1,118,high jump takeoff,0x09,12,12,014,base,"[0, 16]",False,34,travel
 aqua 1,118,high jump rise,0x0A,13,13,014,base,"[16, 31]",False,26,travel
@@ -64,10 +64,10 @@ aqua 1,118,ledge hang,0x0D,14,14,020,base,"[55, 94]",True,120,hand_anchor
 aqua 1,118,ledge climb start,0x0E,15,15,021,base,"[0, 4]",False,68,hand_anchor
 aqua 1,118,ledge climb finish,0x0F,16,16,021,base,"[4, 13]",False,28,climb
 aqua 1,118,ledge landing recovery,0x10,17,not present,007,base,full,False,40,native
-aqua 1,118,ground cast release,0x36,54,17,354,base,"[0, 23]",False,28,travel
-aqua 1,118,ground overhead cast,0x37,55,18,320,base,full,False,86,travel
-aqua 1,118,ground support cast,0x38,56,19,354,base,full,False,68,travel
-aqua 1,118,ground cast recovery,0x3D,57,20,354,base,"[23, 35]",False,60,travel
+aqua 1,118,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",False,28,travel
+aqua 1,118,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,False,86,travel
+aqua 1,118,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,False,68,travel
+aqua 1,118,Fire cast recovery,0x3D,57,20,316,p02ex_151.arc,"[20, 30]",False,60,travel
 aqua 1,118,ground item use,0x3E,58,21,600,base,full,False,82,travel
 aqua 1,118,air item use,0x3F,59,22,601,p02ex_628.arc,full,False,72,travel
 aqua 1,118,front high flinch,0x48,61,24,200,base,full,False,70,native
@@ -80,17 +80,17 @@ aqua 1,118,air front reaction,0x4E,67,30,214,base,full,False,30,native
 aqua 1,118,air back reaction,0x4F,68,31,215,base,full,False,30,native
 aqua 1,118,air front recovery,0x50,69,32,214,base,full,False,38,native
 aqua 1,118,air back recovery,0x51,70,33,215,base,full,False,38,native
-aqua 1,118,air cast release,0x83,79,41,355,base,"[0, 21]",False,28,travel
-aqua 1,118,air overhead cast,0x84,80,42,320,base,full,False,78,travel
-aqua 1,118,air support cast,0x85,81,43,355,base,full,False,68,travel
-aqua 1,118,air cast recovery,0x8A,82,44,355,base,"[21, 33]",False,52,travel
-aqua 1,118,ground first,0xC8,98,60,045,p02ex_004.arc,full,False,48,travel
-aqua 1,118,ground second,0xC9,99,61,217,p02ex_009.arc,full,False,48,travel
-aqua 1,118,ground alternate,0xCA,100,62,217,p02ex_009.arc,full,False,64,travel
-aqua 1,118,ground finisher,0xCB,101,63,218,p02ex_009.arc,full,False,80,travel
-aqua 1,118,air first,0xCC,102,64,332,p02ex_101.arc,full,False,40,travel
-aqua 1,118,air second,0xCD,103,65,357,p02ex_102.arc,full,False,42,travel
-aqua 1,118,air finisher,0xCE,104,66,361,p02ex_111.arc,full,False,56,travel
+aqua 1,118,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28,travel
+aqua 1,118,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
+aqua 1,118,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
+aqua 1,118,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
+aqua 1,118,ground first,0xC8,98,60,392,p02ex_155.arc,full,False,48,travel
+aqua 1,118,ground second,0xC9,99,61,393,p02ex_155.arc,full,False,48,travel
+aqua 1,118,ground alternate,0xCA,100,62,393,p02ex_155.arc,full,False,64,travel
+aqua 1,118,ground finisher,0xCB,101,63,428,p02ex_156.arc,full,False,80,travel
+aqua 1,118,air first,0xCC,102,64,429,p02ex_156.arc,full,False,40,travel
+aqua 1,118,air second,0xCD,103,65,504,p02ex_157.arc,full,False,42,travel
+aqua 1,118,air finisher,0xCE,104,66,514,p02ex_157.arc,full,False,56,travel
 aqua 1,118,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 1,118,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel
 aqua 2,119,idle,0x00,0,0,001,base,full,True,120,travel
@@ -103,7 +103,7 @@ aqua 2,119,run,0x02,6,6,004,base,full,True,36,travel
 aqua 2,119,combat run,0x02,7,7,013,base,full,True,36,travel
 aqua 2,119,jump takeoff,0x04,8,8,005,base,"[0, 9]",False,26,travel
 aqua 2,119,jump rise,0x05,9,9,005,base,"[9, 12]",False,14,travel
-aqua 2,119,fall,0x06,10,10,006,base,"[7, 15]",True,40,travel
+aqua 2,119,fall,0x06,10,10,506,p02ex_150.arc,full,True,40,travel
 aqua 2,119,landing,0x07,11,11,007,base,full,False,28,travel
 aqua 2,119,high jump takeoff,0x09,12,12,014,base,"[0, 16]",False,34,travel
 aqua 2,119,high jump rise,0x0A,13,13,014,base,"[16, 31]",False,26,travel
@@ -111,10 +111,10 @@ aqua 2,119,ledge hang,0x0D,14,14,020,base,"[55, 94]",True,120,hand_anchor
 aqua 2,119,ledge climb start,0x0E,15,15,021,base,"[0, 4]",False,68,hand_anchor
 aqua 2,119,ledge climb finish,0x0F,16,16,021,base,"[4, 13]",False,28,climb
 aqua 2,119,ledge landing recovery,0x10,17,not present,007,base,full,False,40,native
-aqua 2,119,ground cast release,0x36,54,17,354,base,"[0, 23]",False,28,travel
-aqua 2,119,ground overhead cast,0x37,55,18,320,base,full,False,86,travel
-aqua 2,119,ground support cast,0x38,56,19,354,base,full,False,68,travel
-aqua 2,119,ground cast recovery,0x3D,57,20,354,base,"[23, 35]",False,60,travel
+aqua 2,119,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",False,28,travel
+aqua 2,119,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,False,86,travel
+aqua 2,119,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,False,68,travel
+aqua 2,119,Fire cast recovery,0x3D,57,20,316,p02ex_151.arc,"[20, 30]",False,60,travel
 aqua 2,119,ground item use,0x3E,58,21,600,base,full,False,82,travel
 aqua 2,119,air item use,0x3F,59,22,601,p02ex_628.arc,full,False,72,travel
 aqua 2,119,front high flinch,0x48,61,24,200,base,full,False,70,native
@@ -127,17 +127,17 @@ aqua 2,119,air front reaction,0x4E,67,30,214,base,full,False,30,native
 aqua 2,119,air back reaction,0x4F,68,31,215,base,full,False,30,native
 aqua 2,119,air front recovery,0x50,69,32,214,base,full,False,38,native
 aqua 2,119,air back recovery,0x51,70,33,215,base,full,False,38,native
-aqua 2,119,air cast release,0x83,79,41,355,base,"[0, 21]",False,28,travel
-aqua 2,119,air overhead cast,0x84,80,42,320,base,full,False,78,travel
-aqua 2,119,air support cast,0x85,81,43,355,base,full,False,68,travel
-aqua 2,119,air cast recovery,0x8A,82,44,355,base,"[21, 33]",False,52,travel
-aqua 2,119,ground first,0xC8,98,60,362,p02ex_111.arc,full,False,48,travel
-aqua 2,119,ground second,0xC9,99,61,363,p02ex_111.arc,full,False,48,travel
-aqua 2,119,ground alternate,0xCA,100,62,363,p02ex_111.arc,full,False,64,travel
-aqua 2,119,ground finisher,0xCB,101,63,350,p02ex_116.arc,full,False,80,travel
-aqua 2,119,air first,0xCC,102,64,365,p02ex_123.arc,full,False,40,travel
-aqua 2,119,air second,0xCD,103,65,366,p02ex_128.arc,full,False,42,travel
-aqua 2,119,air finisher,0xCE,104,66,370,p02ex_133.arc,full,False,56,travel
+aqua 2,119,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28,travel
+aqua 2,119,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
+aqua 2,119,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
+aqua 2,119,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
+aqua 2,119,ground first,0xC8,98,60,515,p02ex_204.arc,full,False,48,travel
+aqua 2,119,ground second,0xC9,99,61,517,p02ex_204.arc,full,False,48,travel
+aqua 2,119,ground alternate,0xCA,100,62,517,p02ex_204.arc,full,False,64,travel
+aqua 2,119,ground finisher,0xCB,101,63,550,p02ex_204.arc,full,False,80,travel
+aqua 2,119,air first,0xCC,102,64,650,p02ex_205.arc,full,False,40,travel
+aqua 2,119,air second,0xCD,103,65,557,p02ex_206.arc,full,False,42,travel
+aqua 2,119,air finisher,0xCE,104,66,411,p02ex_313.arc,full,False,56,travel
 aqua 2,119,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 2,119,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel
 aqua 3,120,idle,0x00,0,0,001,base,full,True,120,travel
@@ -150,7 +150,7 @@ aqua 3,120,run,0x02,6,6,004,base,full,True,36,travel
 aqua 3,120,combat run,0x02,7,7,013,base,full,True,36,travel
 aqua 3,120,jump takeoff,0x04,8,8,005,base,"[0, 9]",False,26,travel
 aqua 3,120,jump rise,0x05,9,9,005,base,"[9, 12]",False,14,travel
-aqua 3,120,fall,0x06,10,10,006,base,"[7, 15]",True,40,travel
+aqua 3,120,fall,0x06,10,10,506,p02ex_150.arc,full,True,40,travel
 aqua 3,120,landing,0x07,11,11,007,base,full,False,28,travel
 aqua 3,120,high jump takeoff,0x09,12,12,014,base,"[0, 16]",False,34,travel
 aqua 3,120,high jump rise,0x0A,13,13,014,base,"[16, 31]",False,26,travel
@@ -158,10 +158,10 @@ aqua 3,120,ledge hang,0x0D,14,14,020,base,"[55, 94]",True,120,hand_anchor
 aqua 3,120,ledge climb start,0x0E,15,15,021,base,"[0, 4]",False,68,hand_anchor
 aqua 3,120,ledge climb finish,0x0F,16,16,021,base,"[4, 13]",False,28,climb
 aqua 3,120,ledge landing recovery,0x10,17,not present,007,base,full,False,40,native
-aqua 3,120,ground cast release,0x36,54,17,354,base,"[0, 23]",False,28,travel
-aqua 3,120,ground overhead cast,0x37,55,18,320,base,full,False,86,travel
-aqua 3,120,ground support cast,0x38,56,19,354,base,full,False,68,travel
-aqua 3,120,ground cast recovery,0x3D,57,20,354,base,"[23, 35]",False,60,travel
+aqua 3,120,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",False,28,travel
+aqua 3,120,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,False,86,travel
+aqua 3,120,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,False,68,travel
+aqua 3,120,Fire cast recovery,0x3D,57,20,316,p02ex_151.arc,"[20, 30]",False,60,travel
 aqua 3,120,ground item use,0x3E,58,21,600,base,full,False,82,travel
 aqua 3,120,air item use,0x3F,59,22,601,p02ex_628.arc,full,False,72,travel
 aqua 3,120,front high flinch,0x48,61,24,200,base,full,False,70,native
@@ -174,17 +174,17 @@ aqua 3,120,air front reaction,0x4E,67,30,214,base,full,False,30,native
 aqua 3,120,air back reaction,0x4F,68,31,215,base,full,False,30,native
 aqua 3,120,air front recovery,0x50,69,32,214,base,full,False,38,native
 aqua 3,120,air back recovery,0x51,70,33,215,base,full,False,38,native
-aqua 3,120,air cast release,0x83,79,41,355,base,"[0, 21]",False,28,travel
-aqua 3,120,air overhead cast,0x84,80,42,320,base,full,False,78,travel
-aqua 3,120,air support cast,0x85,81,43,355,base,full,False,68,travel
-aqua 3,120,air cast recovery,0x8A,82,44,355,base,"[21, 33]",False,52,travel
-aqua 3,120,ground first,0xC8,98,60,370,p02ex_133.arc,full,False,48,travel
-aqua 3,120,ground second,0xC9,99,61,371,p02ex_133.arc,full,False,48,travel
-aqua 3,120,ground alternate,0xCA,100,62,371,p02ex_133.arc,full,False,64,travel
-aqua 3,120,ground finisher,0xCB,101,63,372,p02ex_137.arc,full,False,80,travel
-aqua 3,120,air first,0xCC,102,64,373,p02ex_137.arc,full,False,40,travel
-aqua 3,120,air second,0xCD,103,65,506,p02ex_150.arc,full,False,42,travel
-aqua 3,120,air finisher,0xCE,104,66,315,p02ex_151.arc,full,False,56,travel
+aqua 3,120,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28,travel
+aqua 3,120,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
+aqua 3,120,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
+aqua 3,120,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
+aqua 3,120,ground first,0xC8,98,60,399,p02ex_346.arc,full,False,48,travel
+aqua 3,120,ground second,0xC9,99,61,352,p02ex_352.arc,full,False,48,travel
+aqua 3,120,ground alternate,0xCA,100,62,352,p02ex_352.arc,full,False,64,travel
+aqua 3,120,ground finisher,0xCB,101,63,353,p02ex_352.arc,full,False,80,travel
+aqua 3,120,air first,0xCC,102,64,500,p02ex_501.arc,full,False,40,travel
+aqua 3,120,air second,0xCD,103,65,501,p02ex_501.arc,full,False,42,travel
+aqua 3,120,air finisher,0xCE,104,66,503,p02ex_501.arc,full,False,56,travel
 aqua 3,120,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 3,120,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel
 aqua 4,121,idle,0x00,0,0,001,base,full,True,120,travel
@@ -197,7 +197,7 @@ aqua 4,121,run,0x02,6,6,004,base,full,True,36,travel
 aqua 4,121,combat run,0x02,7,7,013,base,full,True,36,travel
 aqua 4,121,jump takeoff,0x04,8,8,005,base,"[0, 9]",False,26,travel
 aqua 4,121,jump rise,0x05,9,9,005,base,"[9, 12]",False,14,travel
-aqua 4,121,fall,0x06,10,10,006,base,"[7, 15]",True,40,travel
+aqua 4,121,fall,0x06,10,10,506,p02ex_150.arc,full,True,40,travel
 aqua 4,121,landing,0x07,11,11,007,base,full,False,28,travel
 aqua 4,121,high jump takeoff,0x09,12,12,014,base,"[0, 16]",False,34,travel
 aqua 4,121,high jump rise,0x0A,13,13,014,base,"[16, 31]",False,26,travel
@@ -205,10 +205,10 @@ aqua 4,121,ledge hang,0x0D,14,14,020,base,"[55, 94]",True,120,hand_anchor
 aqua 4,121,ledge climb start,0x0E,15,15,021,base,"[0, 4]",False,68,hand_anchor
 aqua 4,121,ledge climb finish,0x0F,16,16,021,base,"[4, 13]",False,28,climb
 aqua 4,121,ledge landing recovery,0x10,17,not present,007,base,full,False,40,native
-aqua 4,121,ground cast release,0x36,54,17,354,base,"[0, 23]",False,28,travel
-aqua 4,121,ground overhead cast,0x37,55,18,320,base,full,False,86,travel
-aqua 4,121,ground support cast,0x38,56,19,354,base,full,False,68,travel
-aqua 4,121,ground cast recovery,0x3D,57,20,354,base,"[23, 35]",False,60,travel
+aqua 4,121,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",False,28,travel
+aqua 4,121,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,False,86,travel
+aqua 4,121,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,False,68,travel
+aqua 4,121,Fire cast recovery,0x3D,57,20,316,p02ex_151.arc,"[20, 30]",False,60,travel
 aqua 4,121,ground item use,0x3E,58,21,600,base,full,False,82,travel
 aqua 4,121,air item use,0x3F,59,22,601,p02ex_628.arc,full,False,72,travel
 aqua 4,121,front high flinch,0x48,61,24,200,base,full,False,70,native
@@ -221,16 +221,16 @@ aqua 4,121,air front reaction,0x4E,67,30,214,base,full,False,30,native
 aqua 4,121,air back reaction,0x4F,68,31,215,base,full,False,30,native
 aqua 4,121,air front recovery,0x50,69,32,214,base,full,False,38,native
 aqua 4,121,air back recovery,0x51,70,33,215,base,full,False,38,native
-aqua 4,121,air cast release,0x83,79,41,355,base,"[0, 21]",False,28,travel
-aqua 4,121,air overhead cast,0x84,80,42,320,base,full,False,78,travel
-aqua 4,121,air support cast,0x85,81,43,355,base,full,False,68,travel
-aqua 4,121,air cast recovery,0x8A,82,44,355,base,"[21, 33]",False,52,travel
-aqua 4,121,ground first,0xC8,98,60,316,p02ex_151.arc,full,False,48,travel
-aqua 4,121,ground second,0xC9,99,61,317,p02ex_152.arc,full,False,48,travel
-aqua 4,121,ground alternate,0xCA,100,62,317,p02ex_152.arc,full,False,64,travel
-aqua 4,121,ground finisher,0xCB,101,63,318,p02ex_152.arc,full,False,80,travel
-aqua 4,121,air first,0xCC,102,64,391,p02ex_153.arc,full,False,40,travel
-aqua 4,121,air second,0xCD,103,65,390,p02ex_154.arc,full,False,42,travel
-aqua 4,121,air finisher,0xCE,104,66,427,p02ex_154.arc,full,False,56,travel
+aqua 4,121,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28,travel
+aqua 4,121,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
+aqua 4,121,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
+aqua 4,121,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
+aqua 4,121,ground first,0xC8,98,60,510,p02ex_501.arc,full,False,48,travel
+aqua 4,121,ground second,0xC9,99,61,511,p02ex_501.arc,full,False,48,travel
+aqua 4,121,ground alternate,0xCA,100,62,511,p02ex_501.arc,full,False,64,travel
+aqua 4,121,ground finisher,0xCB,101,63,512,p02ex_501.arc,full,False,80,travel
+aqua 4,121,air first,0xCC,102,64,513,p02ex_501.arc,full,False,40,travel
+aqua 4,121,air second,0xCD,103,65,507,p02ex_509.arc,full,False,42,travel
+aqua 4,121,air finisher,0xCE,104,66,508,p02ex_509.arc,full,False,56,travel
 aqua 4,121,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 4,121,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel

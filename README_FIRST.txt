@@ -1,107 +1,129 @@
-KH1FM AQUA ANIMATION TEST v9
+KH1FM AQUA ANIMATION TEST v10 - TEST 2
 Steam Global / OpenKH Panacea
 
+MAIN AQUA ACTIONS
+Action                   Ground source   Air source
+Fire                     316             391
+Thunder                  317             390
+Cure                     318             427
+Falling                  506
+
+Fire uses one continuous source clip through KH1's release/recovery records:
+316 frames 0..20 then 20..30; 391 frames 0..31 then 31..48.
+506 replaces falling only. Jump takeoff/rise and landing keep their V9 poses.
+The original aqua ground/air combos remain the same as V9.
+
 FIVE ABILITIES, ALL 0 AP
-aqua   : original Aqua combo set, with corrected wrist pivots/arm clearance
-aqua 1 : ground 045 217 218 ; air 332 357 361
-aqua 2 : ground 362 363 350 ; air 365 366 370
-aqua 3 : ground 370 371 372 ; air 373 506 315
-aqua 4 : ground 316 317 318 ; air 391 390 427
+aqua   : main Aqua moveset, with the action assignments above
+aqua 1 : Test 2 ground 392 393 428 ; air 429 504 514
+aqua 2 : Test 2 ground 515 517 550 ; air 650 557 411
+aqua 3 : Test 2 ground 399 352 353 ; air 500 501 503
+aqua 4 : Test 2 ground 510 511 512 ; air 513 507 508
 
-These are alternatives. Each includes the common Aqua movement, jumps,
-casting poses, items, reactions, Guard and Cartwheel. Selecting a new Aqua
-entry unequips the other Aqua entries. Native abilities retain their states.
-Unequipping the selected Aqua entry restores the original mapped Sora motions.
-Change selections while idle; an active action finishes before the data switch.
-The first slot is the first attack, the second is the second attack, and the
-third is the finisher. KH1's alternate second ground attack uses that same
-second source clip, so it stays within your selected three-animation set.
+The numbered entries inherit the main movement, falling, casting, items,
+reactions, Guard and Cartwheel. Only their ground/air combo sets differ.
+The first clip is attack one, the second attack two, the third the finisher.
+KH1's alternate second ground attack also uses the selected second clip.
+Selecting a new Aqua entry turns the other Aqua entries off. Native ability
+states are retained. Select while idle; active actions finish before switching.
+Ability ids117..121 and saved selections remain compatible with V9.
 
-V9 CORRECTIONS
-- Moved hand bending to Sora's anatomical hand pivots. Distal forearm helpers
-  now follow the forearm rather than rotating with the hand; this targets the
-  combat-idle wrist/cuff separation and applies across all five profiles.
-- Strengthened arm clearance during the original ground and air finishers,
-  including tests of the upper-arm and forearm interiors against the torso.
-  Segment lengths, local attachment offsets and scales remain unchanged.
-- Moved the working native spell-origin and glow/effect-matrix route to the
-  LEFT palm (the other hand from v8). It applies to all five Aqua profiles.
-- Kept the corrected hair rest rotations from v8.
+SHARED KH1 CAST RECORDS
+Native KH1 dispatch is ground request 0x36 + spell index, air 0x83 + index.
+Fire=0, Blizzard=1, Thunder=2, Cure=3, Gravity=4, Stop=5, Aero=6.
+Thunder and Cure normally share a physical animation record. While any Aqua
+entry is active, an actor-local copy of the existing request table routes only
+Thunder requests 0x38/0x85 to the alternate casting record. Cure keeps 0x39/0x86.
+All other request words/flags, table sizes, record counts and original tables
+stay intact. Unequipping Aqua restores the exact original lookup pointer.
+No new native-code hook is used for this cast separation.
+
+Blizzard/Gravity share 317 on the ground and 390 in the air. Stop/Aero share
+318 on the ground and 427 in the air. These inherited poses are intentional
+for this test; the spells still run their native KH1 effects and game logic.
+Thunder now uses that alternate record's native duration: 86 ground frames
+and 78 air frames, instead of 68/68. Its cast/recovery timing needs an in-game
+check. Other record durations stay as V9. This is an animation test; the BBS
+clips' original durations are resampled to the selected KH1 records.
+
+RETAINED CORRECTIONS
+- Anatomical hand pivots100/205 and forearm-helper alignment from V9.
+- Original main-combo finisher arm-clearance adjustment from V9.
+- Hair rest rotations from V8; no animated anatomical stretch or scale.
+- Working native spell-origin and glow/effect-matrix route to the LEFT palm206
+  in all five profiles. The prior right-hand route has not been reinstated.
 
 INSTALL
 1. Fully close KH1.
-2. Disable Aqua v8 and all older Aqua packages, Sora Restore Check, and
+2. Disable Aqua v9 and all older Aqua packages, Sora Restore Check, and
    Nine Styles / Dual Wield. Keep other Sora model/moveset replacements off.
-3. Import this ZIP into OpenKH and enable Aqua Animation Test v9.
-4. Build and Run. Load your save. Missing Aqua entries are added unequipped;
-   a previously saved selection is respected. Existing native entries are not
-   evicted. If the ability list lacks room, the log reports the missing space.
-5. Select aqua or aqua 1..4 in Abilities while standing idle. You do not need
-   to equip the original aqua entry along with one of the numbered entries.
+3. Import this ZIP into OpenKH and enable Aqua Animation Test v10.
+4. Build and Run, then load your save. Missing Aqua entries are added off;
+   a saved selection is respected. Native entries are never evicted to fit.
+5. Equip aqua or one of aqua 1..4 while standing idle. The main aqua entry
+   does not need to be equipped along with a numbered entry.
 
 TEST
-- First use aqua to compare combat idle from front/side and the original
-  ground finisher. Check forearm-to-hand alignment and arms crossing the body.
-- Cast ground/air spells and confirm launch points and attached glow use the
-  LEFT hand. Recheck a spell with all Aqua entries off for native behavior.
-- Select aqua 1, then 2, 3 and 4 while idle. Test three-hit ground and air
-  combos with each. For a clean test, unequip Slapshot, Sliding Dash, Vortex,
-  Hurricane Blast and other native combo replacements. Their unassigned
-  actions otherwise retain their native animations. Guard and Dodge Roll
-  still need their native abilities equipped.
-- Repeat on your other save, after a room transition and after a save reload.
+- With aqua equipped, check Fire, Thunder and Cure on the ground and in the
+  air. Check spell release, recovery and the LEFT-hand launch/glow alignment.
+- Step off a ledge and check 506 during falling. Check jumps/landing as well.
+- Switch through aqua 1..4 while idle and test three-hit ground/air combos.
+  Unequip Slapshot, Sliding Dash, Vortex, Hurricane Blast and other native
+  combo replacements for a clean test; their separate actions stay native.
+  Guard and Dodge Roll still need their native abilities equipped.
+- Turn every Aqua entry off and recheck native casting. Repeat after room
+  changes and after save reloads on both saves.
 
 RETURN
 Return the NEW kh1-aqua.log beside the game EXE and a short comparison video.
-Its first line must say ANIMATION TEST v9. The log records 0x2F normal / 0x2E
-Olympus records and profile 0=native, 1=aqua, 2=aqua 1, 3=aqua 2, 4=aqua 3,
-5=aqua 4. Hand queries log AQUA HAND MAGIC ORIGIN / MATRIX with the native
-request number. CHECK_AQUA_V9.cmd optionally checks installation hashes and
-writes Aqua_Animation_Check_v9.txt.
+Its first line must say ANIMATION TEST v10 Test 2. Profile numbers in the log:
+0=native, 1=aqua, 2=aqua 1, 3=aqua 2, 4=aqua 3, 5=aqua 4.
+AQUA CAST REQUESTS reports enabling/restoring the separated Thunder lookup.
+CHECK_AQUA_V10.cmd optionally checks installation hashes and writes
+Aqua_Animation_Check_v10.txt.
 
-SCOPE AND TIMING
-The selected source clips are resampled to the existing KH1 action durations.
-This tests animations. Native KH1 hit events, damage, spell simulation, MP,
-projectile trajectories, targeting, guard coverage, dodge invincibility and
-actor travel remain in use. The native weapon-attachment position/matrix
-queries are redirected to the left hand during eligible Aqua casts.
-Source animations do not bring their BBS commands, projectiles or effects into
-the combo. Guard is still the Barrier pose with KH1 Guard behavior.
-
-Both installed MSET files are your original files. In-memory poses fit within
-their existing tables; headers, lengths, counts and eleven helpers retain the
-original layout. Current foreign/unknown records block body writes. Other
-Sora costume/forms banks are not admitted by this test.
+SCOPE
+KH1 damage, targeting, projectile scripts, spell simulation, MP, guard coverage,
+dodge invincibility and actor travel remain native. Native attachment queries
+use the left hand during eligible Aqua casts. BBS commands, damage and effects
+are not imported. Guard uses the Barrier pose with KH1 Guard behavior.
+Both installed MSET files are original. Motion poses use only existing table
+allocations; all motion headers, counts, lengths and eleven helpers remain
+original. Unknown/foreign body records or request tables block writes.
+Only the supplied normal Sora and Olympus banks are admitted.
 
 FILE GUIDE
-ABILITY_SETS.txt lists the five abilities and exact numeric selections.
-ANIMATION_MAP.csv lists all five profiles' effective motion assignments.
-TEST_CLIP_SOURCES.csv gives source banks, frame counts, hashes and fitted slots.
+ABILITY_SETS.txt gives exact Test 2 combos.
+ANIMATION_MAP.csv lists all five profiles' effective action assignments.
+TEST_CLIP_SOURCES.csv gives the new casts/falling and Test 2 source banks,
+frame counts, payload hashes and fitted slots. 399 uses p02ex_346.arc,
+353 uses p02ex_352.arc, and 411 uses p02ex_313.arc (dedicated source banks).
+These numbered labels are not assumed to be official BBS command names.
 REMAINING_NATIVE.csv lists unassigned native records.
-The earlier 349-clip source inventory CSV/JSON is included under inventory;
-use this package's ANIMATION_MAP.csv for the current ability assignments.
-045 uses p02ex_004.arc; 370 uses p02ex_133.arc. Numbered source labels are not
-assumed to be official BBS command names.
+The earlier 349-clip CSV/JSON inventory is included under inventory. Its
+source metadata is unchanged; ANIMATION_MAP.csv has current assignments.
 
-OPTIONAL NATIVE-MAGIC FALLBACK
-To test the v9 poses with native spell attachments, copy
-DISABLE_HAND_MAGIC_kh1-aqua.ini beside the game EXE as kh1-aqua.ini and restart.
-Remove that INI and restart to restore left-hand routing.
+OPTIONAL NATIVE-MAGIC ATTACHMENTS
+Copy DISABLE_HAND_MAGIC_kh1-aqua.ini beside the game EXE as kh1-aqua.ini and
+restart to retain native weapon-tip attachments with these animation poses.
+Remove that INI and restart to restore left-hand attachment routing. This
+option does not disable the separated Thunder animation lookup.
 
 SAVE / REMOVE ALL AQUA ENTRIES
-Saving in-game may retain ids117..121. To remove all five, copy
-REMOVE_AQUA_kh1-aqua.ini beside the game EXE as kh1-aqua.ini, leave v9 enabled,
+Saving in-game may retain ids117..121. To remove them, copy
+REMOVE_AQUA_kh1-aqua.ini beside the game EXE as kh1-aqua.ini, leave v10 enabled,
 restart and load each save to clean. Check AQUA ABILITIES REMOVED, then save
-in-game. Exit, remove the INI, disable v9 and rebuild. Native ability order
-is preserved; only these five test ids are removed.
+in-game. Exit, remove the INI, disable v10 and rebuild. Native ability order
+is preserved; only these five ids are removed.
 
 VALIDATION
-34 tests execute the compiled PE DLL in a Win64 ABI mock host. They include
-all five selections in both banks, exclusivity, save/reload behavior, removal,
-exact restoration and the distinct left-palm attachment route.
-12 independent geometry tests cover all 75 generated records, including the
-forearm helper angles, source capacities, hair rest shape, unit skin bases,
-native travel and transitions. The original finisher's joint/capsule overlap
-is substantially reduced. These checks do not render Sora's mesh or execute
-Windows/KH1. The final idle/finisher appearance and left-hand FX need your
-in-game comparison; some clipping may still need adjustment.
+38 tests execute the compiled PE DLL in a Win64 ABI mock host. They include
+all five profiles in both banks, exact action lookup mappings, only two changed
+request words, original lookup/body restoration, reloads, exclusivity, removal,
+foreign-data rejection and the distinct left-palm attachment route.
+14 geometry/assignment tests cover all 75 generated records, native capacities,
+hair, wrist helpers, bind lengths/scales, Fire phase continuity, looping fall,
+jump transitions and the retained main-finisher clearance adjustment.
+These checks do not render Sora's mesh or execute Windows/KH1. The new cast
+routing and timing, source-clip appearance and final FX alignment need your
+in-game check. Some mesh clipping may still need adjustment.

@@ -1,5 +1,6 @@
 {
-  "version": 9,
+  "version": 10,
+  "test_round": 2,
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -19,8 +20,8 @@
   "normal_motion_records_per_profile": 47,
   "olympus_motion_records_per_profile": 46,
   "unique_generated_records": 75,
-  "actual_pe_mock_tests": 34,
-  "geometry_transition_tests": 12,
+  "actual_pe_mock_tests": 38,
+  "geometry_transition_tests": 14,
   "pose_samples": 16391,
   "max_pose_position_fit_error": 4.0448012958590915,
   "max_non_root_attachment_translation_error": 0.0,
@@ -29,10 +30,85 @@
   "original_motion_lengths_headers_and_counts_preserved": true,
   "helper_slots": 11,
   "original_msets_on_disk": true,
+  "main_actions": {
+    "Fire": [
+      316,
+      391
+    ],
+    "Thunder": [
+      317,
+      390
+    ],
+    "Cure": [
+      318,
+      427
+    ],
+    "Falling": 506
+  },
+  "test_2_combos": [
+    [
+      [
+        "392",
+        "393",
+        "428"
+      ],
+      [
+        "429",
+        "504",
+        "514"
+      ]
+    ],
+    [
+      [
+        "515",
+        "517",
+        "550"
+      ],
+      [
+        "650",
+        "557",
+        "411"
+      ]
+    ],
+    [
+      [
+        "399",
+        "352",
+        "353"
+      ],
+      [
+        "500",
+        "501",
+        "503"
+      ]
+    ],
+    [
+      [
+        "510",
+        "511",
+        "512"
+      ],
+      [
+        "513",
+        "507",
+        "508"
+      ]
+    ]
+  ],
+  "cast_request_words_changed": [
+    56,
+    133
+  ],
+  "thunder_cast_frames": {
+    "ground": 86,
+    "air": 78,
+    "previous_ground": 68,
+    "previous_air": 68
+  },
   "left_palm_magic": 206,
-  "dll_sha256": "1409d67eebb5171958d4e6a25a0233a8a5243a2845aea5b70582f2d334d04d83",
+  "dll_sha256": "a4856ca89104b0324118de61c8737675d615d4dccf309bebdc5c1e77c1b6f170",
   "limitations": [
-    "Windows/KH1 rendering of v9 pending",
+    "Windows/KH1 execution, rendering and Thunder cast timing of v10 pending",
     "Arm separation uses joint/capsule checks; some mesh clipping may remain",
     "Numbered clips use native KH1 durations and hit events; BBS commands/effects are not imported"
   ]

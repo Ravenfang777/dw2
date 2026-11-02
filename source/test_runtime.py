@@ -67,6 +67,10 @@ class Host:
         self.motion=self.motions[98];self.original_motion=raw[98]
         self.key_offset=struct.unpack_from('<I',raw[98],40)[0];self.runtime_original=self.runtime_originals[98]
         w32(self.actor+0x1d4,bridge.bridge_encode(self.array))
+        self.request_original=(ROOT/f"fixtures/requests_{'he' if olympus else 'normal'}_original.bin").read_bytes()
+        self.requests=self.buffer(self.request_original)
+        self.original_request_handle=bridge.bridge_encode(self.requests)
+        w32(self.actor+0x1d8,self.original_request_handle)
     def buffer(self,data):
         p=allocate((len(data)+4095)&~4095);put(p,data);bridge.bridge_range(p,len(data),4);self.buffers.append(p);return p
     def load_pe(self):
@@ -115,6 +119,11 @@ class Host:
         data[:80]=self.runtime_originals[slot][:80];return bytes(data)
     def assert_all(self,test,on):
         for r in self.records:test.assertEqual(self.body(r['normal_slot']),self.expected(r['normal_slot'],on),r['action'])
+        active=self.decode(r32(self.actor+0x1d8))
+        wanted=(ROOT/f"fixtures/requests_{'he' if self.slot==60 else 'normal'}_{'aqua' if on else 'original'}.bin").read_bytes()
+        test.assertEqual(C.string_at(active,len(wanted)),wanted)
+        test.assertEqual(C.string_at(self.requests,len(self.request_original)),self.request_original)
+        if not on:test.assertEqual(r32(self.actor+0x1d8),self.original_request_handle)
     def snapshot(self):return {r['normal_slot']:self.body(r['normal_slot']) for r in self.records}
     def matrix(self,actor=None,code=0x30):
         out=(C.c_float*16)();bridge.bridge_matrix(self.game+0x29ea00,self.actor if actor is None else actor,code,out);return list(out)
@@ -122,6 +131,34 @@ class Host:
         out=(C.c_float*4)();bridge.bridge_point(self.game+0x29eb20,self.actor if actor is None else actor,code,fraction,out);return list(out)
 
 class RuntimeTests(unittest.TestCase):
+    def test_ground_and_air_fire_thunder_cure_resolve_to_requested_distinct_records(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True);h.frame()
+            for profile in range(5):
+                h.equip(True,profile);h.frame();h.assert_all(self,profile+1)
+                p=h.decode(r32(h.actor+0x1d8))
+                targets=[54,55,56,79,80,81] if bank==98 else [17,18,19,41,42,43]
+                self.assertEqual([r32(p+q*4)&0xfff for q in [0x36,0x38,0x39,0x83,0x85,0x86]],targets)
+                self.assertEqual([i//4 for i in range(0,len(h.request_original),4)
+                                  if C.string_at(p+i,4)!=h.request_original[i:i+4]],[0x38,0x85])
+            h.equip(False,4);h.frame();h.assert_all(self,False)
+    def test_unknown_request_descriptor_blocks_all_body_writes_and_lookup_changes(self):
+        h=Host();h.frame();h.equip(True)
+        w32(h.requests+0x38*4,0x1001);before=h.snapshot();pointer=r32(h.actor+0x1d8)
+        h.frame();self.assertEqual(h.snapshot(),before);self.assertEqual(r32(h.actor+0x1d8),pointer)
+        self.assertIn('cast request table must verify',bridge.bridge_log().decode())
+    def test_foreign_request_pointer_is_retained_and_native_reload_is_readmitted(self):
+        h=Host();h.frame();h.equip(True);h.frame()
+        foreign=h.buffer(bytes(1408));pointer=bridge.bridge_encode(foreign)
+        w32(h.actor+0x1d8,pointer);h.equip(False);before=h.snapshot();h.frame()
+        self.assertEqual(h.snapshot(),before);self.assertEqual(r32(h.actor+0x1d8),pointer)
+        w32(h.actor+0x1d8,h.original_request_handle);h.frame();h.assert_all(self,False)
+    def test_request_restore_waits_for_cast_completion_and_rejects_changed_original(self):
+        h=Host();h.frame();h.equip(True);h.frame();pointer=r32(h.actor+0x1d8)
+        w32(h.actor+0x164,0x38);h.equip(False);h.frame();self.assertEqual(r32(h.actor+0x1d8),pointer)
+        w32(h.actor+0x164,0);w32(h.requests+0x39*4,0x1002);before=h.snapshot();h.frame()
+        self.assertEqual(h.snapshot(),before);self.assertEqual(r32(h.actor+0x1d8),pointer)
+        put(h.requests,h.request_original);h.frame();h.assert_all(self,False)
     def test_all_five_lowercase_names_are_registered_with_zero_ap(self):
         h=Host();h.frame();table=r64(h.game+0x2d36d48)
         expected=[b'\x45\x55\x59\x45\0']+[b'\x45\x55\x59\x45\x01'+bytes([0x21+i])+b'\0' for i in range(1,5)]
@@ -211,11 +248,14 @@ class RuntimeTests(unittest.TestCase):
         h=Host();h.frame();h.equip(True);h.frame();put(h.motions[103],h.runtime_originals[103]);h.frame();h.assert_all(self,True)
         h.equip(False);h.frame();h.assert_all(self,False)
     def test_bank_switch_with_identical_idle_prefix_uses_c8_and_restores_on_reentry(self):
-        h=Host();h.frame();h.equip(True);h.frame();old=(h.records,h.record_by_slot,h.motions,h.runtime_originals,h.array);old_bytes=h.snapshot()
+        h=Host();h.frame();h.equip(True);h.frame();old=(h.records,h.record_by_slot,h.motions,h.runtime_originals,h.array,h.slot,h.requests,h.request_original,h.original_request_handle);old_bytes=h.snapshot();old_request=r32(h.actor+0x1d8)
         h.activate_bank(True,True);h.frame();h.assert_all(self,True);h.equip(False);h.frame();h.assert_all(self,False)
         for slot,data in old_bytes.items():self.assertEqual(C.string_at(old[2][slot],len(data)),data)
-        h.records,h.record_by_slot,h.motions,h.runtime_originals,h.array=old
-        w32(h.actor+0x1d4,bridge.bridge_encode(h.array));h.frame();h.assert_all(self,False)
+        h.records,h.record_by_slot,h.motions,h.runtime_originals,h.array,h.slot,h.requests,h.request_original,h.original_request_handle=old
+        # Native bank backups restore both pointers, possibly retaining the
+        # earlier actor-local Aqua request table. That route must be restorable.
+        w32(h.actor+0x1d4,bridge.bridge_encode(h.array));w32(h.actor+0x1d8,old_request)
+        h.frame();h.assert_all(self,False)
     def test_invalid_table_pointer_cannot_patch_any_other_valid_record(self):
         h=Host();h.frame();h.equip(True);w32(h.motions[79]+40,0);before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
     def test_saved_equipped_aqua_is_respected_without_duplicate_grant(self):

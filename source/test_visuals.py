@@ -1,4 +1,4 @@
-"""Independent checks of serialized V9 base and four test profiles."""
+"""Independent checks of serialized V10 base and four Test 2 profiles."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
@@ -52,6 +52,11 @@ class VisualTests(unittest.TestCase):
         self.assertLess(score(after[i]),score(before[i])*.5)
     def test_limb_clearance_keeps_wrist_and_ankle_displacements_bounded(self):
         before,after=clearance_samples()
+        # The frozen V8 positions only compare the same source actions; V10's
+        # newly assigned casts and falling intentionally have different poses.
+        slots=np.load(ROOT/'fixtures/v8_arm_reference.npz')['slots']
+        same_source=~np.isin(slots,[10,54,55,56,57,79,80,81,82])
+        before=before[same_source];after=after[same_source]
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[4,7],:]-before[:,:,[4,7],:],axis=3))),23.)
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[8,9],:]-before[:,:,[8,9],:],axis=3))),2.)
     def test_distal_forearm_helpers_keep_bind_angles_instead_of_bending_with_the_hand(self):
@@ -105,6 +110,26 @@ class VisualTests(unittest.TestCase):
             pa=pose(model,a,float(a.frames-1));pb=pose(model,b,0)
             pa[:,:3,3]-=helper_pose(a,float(a.frames-1))[-1,:3,3];pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0)
+    def test_fire_casts_continue_across_release_and_recovery(self):
+        for release,recovery in [(54,57),(79,82)]:
+            a=converted[release];b=converted[recovery]
+            pa=pose(model,a,float(a.frames-1));pb=pose(model,b,0)
+            pa[:,:3,3]-=helper_pose(a,float(a.frames-1))[-1,:3,3]
+            pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
+            np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
+    def test_requested_action_clips_and_test_2_combos_match_serialized_reports(self):
+        actions={10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
+        for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
+        self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
+        self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
+        wanted=[(['392','393','428'],['429','504','514']),
+                (['515','517','550'],['650','557','411']),
+                (['399','352','353'],['500','501','503']),
+                (['510','511','512'],['513','507','508'])]
+        for profile,(ground,air) in enumerate(wanted,1):
+            rows=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())['motions']
+            actual={r['normal_slot']:r['donor'] for r in rows}
+            self.assertEqual(actual,dict(zip(range(98,105),[ground[0],ground[1],ground[1],ground[2],*air])))
     def test_supported_idle_stances_allow_room_for_soras_boots(self):
         minimum=float(np.linalg.norm(model.bind[43,:3,3]-model.bind[17,:3,3])*1.35)
         for slot in [0,1]:

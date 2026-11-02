@@ -48,10 +48,10 @@ static int slots_reported;
 static const char *profile_names[AQUA_ABILITIES]={"aqua","aqua 1","aqua 2","aqua 3","aqua 4"};
 static const char *profile_help[AQUA_ABILITIES]={
     "Aqua movement attacks guard dodge magic and reactions",
-    "Ground 045 217 218 Air 332 357 361",
-    "Ground 362 363 350 Air 365 366 370",
-    "Ground 370 371 372 Air 373 506 315",
-    "Ground 316 317 318 Air 391 390 427"};
+    "Test 2 Ground 392 393 428 Air 429 504 514",
+    "Test 2 Ground 515 517 550 Air 650 557 411",
+    "Test 2 Ground 399 352 353 Air 500 501 503",
+    "Test 2 Ground 510 511 512 Air 513 507 508"};
 static int table_reported;
 static w16 log_path[1024],ini_path[1024];
 /* A real DIR64 relocation keeps the PE image independently relocatable. */
@@ -206,7 +206,9 @@ static int valid_motion(uptr motion,const AquaMotion *d,Binding *out,int *failur
 /* New data is published only at idle. Locomotion may be sampled from it
    afterwards; an active attack, jump, cast or reaction completes first. */
 static int test_action(u32 action){return action!=0;}
+#include "aqua_cast_requests.h"
 static int fast_binding(uptr actor,uptr array,int choice){
+    if(!cast_cached(actor,array,choice))return 0;
     if(cache_actor!=actor||cache_array!=array||cache_choice!=choice||!cache_array_bytes||!memory(array,cache_array_bytes,0))return 0;
     int group=cache_high>cache_low&&cache_high-cache_low<0x1000000u&&memory(cache_low,cache_high-cache_low,0);
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
@@ -255,6 +257,11 @@ static void motion_gate(uptr actor,int choice){
             log_number("AQUA candidate physical slot=",found[failed].slot);
         }clear_binding();return;
     }
+    CastBinding cast_found;
+    if(!cast_admit(actor,array,bank,choice,&cast_found)){
+        if(reported_wait_array!=array){reported_wait_array=array;log_text("AQUA WAITING: original ground/air cast request table must verify before any body writes");}
+        clear_binding();return;
+    }
     if(test_action(r32(actor+0x164)&0xfffu)){
         if(!pending_reported){log_text("AQUA SWITCH PENDING: finish the current action and stand idle before switching");pending_reported=1;}return;
     }
@@ -266,6 +273,9 @@ static void motion_gate(uptr actor,int choice){
         if(r32(array+found[i].slot*4u)!=found[i].handle||!valid_motion(found[i].motion,aqua_motions+i,&again,&reason))return;
         for(unsigned j=0;j<AQUA_PART_COUNT;j++)if(again.parts[j]!=found[i].parts[j])return;
     }
+    CastBinding cast_again;
+    if(r32(actor+0x1d8)!=cast_found.current||!cast_admit(actor,array,bank,choice,&cast_again)
+        ||cast_again.original!=cast_found.original||cast_again.next!=cast_found.next)return;
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
         const AquaPart *part=aqua_motions[i].parts+j;const u8 *desired=part_data(part,choice);
         if(!equal((void*)found[i].parts[j],desired,part->size))copy((void*)found[i].parts[j],desired,part->size);
@@ -285,6 +295,7 @@ static void motion_gate(uptr actor,int choice){
             if(p<cache_low)cache_low=p;if(end>cache_high)cache_high=end;
         }
     }
+    cast_publish(actor,array,&cast_found);
     copy(cached,found,sizeof(cached));cache_actor=actor;cache_array=array;cache_choice=choice;pending_reported=0;reported_wait_array=0;
     log_text(choice?"AQUA MOTIONS ENABLED: Aqua common body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all mapped original Sora records restored");
     log_text(bank?"AQUA BANK: normal Sora":"AQUA BANK: Olympus");
@@ -302,7 +313,7 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
     static const w16 magic_key[]={'h','a','n','d','_','m','a','g','i','c',0};
     magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v9 loaded by Panacea; aqua and aqua 1..4; wrist pivot correction and LEFT-hand magic");
+    log_text("KH1FM AQUA ANIMATION TEST v10 Test 2 loaded by Panacea; aqua and aqua 1..4; action-specific cast poses, fall506 and LEFT-hand magic");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }

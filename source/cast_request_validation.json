@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "user_supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
+  "timestamp": 1721645006,
+  "native_instruction_evidence": {
+    "0x2a3ea4": "83c236",
+    "0x2a4210": "81c283000000",
+    "0x2a020a": "8b4908",
+    "0x2a0234": "8b0c90",
+    "0x29ef09": "488d8fd0010000",
+    "0x29ef1f": "8b8fd4010000"
+  },
+  "native_ground_request": "0x36 + spell index",
+  "native_air_request": "0x83 + spell index",
+  "spell_indices": {
+    "Fire": 0,
+    "Blizzard": 1,
+    "Thunder": 2,
+    "Cure": 3,
+    "Gravity": 4,
+    "Stop": 5,
+    "Aero": 6
+  },
+  "actor_motion_array_field": "0x1D4",
+  "actor_request_table_field": "0x1D8",
+  "native_request_resolver_rva": "0x2A01E0",
+  "actor_local_copy_while_aqua_selected": true,
+  "native_code_hooks_added": 0,
+  "original_request_tables_never_written": true,
+  "request_table_expansion": 0,
+  "changes": [
+    {
+      "bank": "normal",
+      "bytes": 1408,
+      "changed_words": [
+        {
+          "request": "0x38",
+          "before": "0x1038",
+          "after": "0x1037"
+        },
+        {
+          "request": "0x85",
+          "before": "0x1051",
+          "after": "0x1050"
+        }
+      ],
+      "all_other_words_and_flags_unchanged": true
+    },
+    {
+      "bank": "he",
+      "bytes": 1408,
+      "changed_words": [
+        {
+          "request": "0x38",
+          "before": "0x1013",
+          "after": "0x1012"
+        },
+        {
+          "request": "0x85",
+          "before": "0x102b",
+          "after": "0x102a"
+        }
+      ],
+      "all_other_words_and_flags_unchanged": true
+    }
+  ],
+  "thunder_cast_frames": {
+    "ground": 86,
+    "air": 78,
+    "previous_ground": 68,
+    "previous_air": 68
+  },
+  "shared_poses": {
+    "Blizzard/Gravity": "317 ground; 390 air",
+    "Stop/Aero": "318 ground; 427 air"
+  },
+  "windows_or_game_executed": false,
+  "native_command_kind_2_dispatch_verified": {
+    "ground": "0x2A3E7C",
+    "air": "0x2A419B"
+  }
+}
