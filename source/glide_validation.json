@@ -1,15 +1,18 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
-  "main": "shared normal and Superglide constructor blocked when selected and air_dodge enabled",
-  "numbered_profiles": "prior native Glide behavior",
-  "normal_native_motion_slots": [
+  "main": "ordinary Glide replaced by one tap504 per airtime; native Superglide retained",
+  "normal_constructor_return": "0x2B26CE blocked",
+  "superglide_constructor_return": "0x2B275E passes original",
+  "successful_superglide_interrupts_dodge": true,
+  "rejected_superglide_does_not_cancel_dodge": true,
+  "native_ability_and_button_eligibility_retained": true,
+  "native_glide_motion_slots": [
     75,
     76,
     77,
     78
   ],
-  "all_native_glide_motion_bytes_and_clocks_unmodified": true,
-  "native_input_restored_when_unequipped_or_disabled": true
+  "all_glide_motion_bytes_and_headers_unchanged": true
 }

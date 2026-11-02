@@ -6,7 +6,7 @@ entry, curve admission and reversible gate. It is not a Windows/game test.
 from pathlib import Path
 import ctypes as C,json,struct,subprocess,sys,unittest
 ROOT=Path(__file__).resolve().parent
-subprocess.run(['gcc','-std=c11','-O2','-shared','-fPIC','test_bridge.c','-o','test_bridge.so'],cwd=ROOT,check=True)
+subprocess.run(['gcc','-std=c11','-O2','-shared','-fPIC','test_bridge.c','-o','test_bridge.so','-lm'],cwd=ROOT,check=True)
 bridge=C.CDLL(str(ROOT/'test_bridge.so'))
 for name,args,ret in [('bridge_reset',[C.c_size_t],None),('bridge_range',[C.c_size_t,C.c_size_t,C.c_uint],None),('bridge_modes',[C.c_int,C.c_int],None),('bridge_log',[],C.c_char_p),('bridge_queries',[],C.c_uint),('bridge_encode',[C.c_size_t],C.c_uint),('bridge_symbol',[C.c_char_p],C.c_size_t),('bridge_call0',[C.c_size_t],None),('bridge_init',[C.c_size_t],None)]:
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
@@ -20,6 +20,7 @@ bridge.bridge_guard_row.argtypes=[C.c_size_t,C.c_size_t,C.c_uint];bridge.bridge_
 bridge.bridge_motion_advance.argtypes=[C.c_size_t,C.c_size_t,C.c_float];bridge.bridge_motion_advance.restype=C.c_size_t
 bridge.bridge_guard_angle.argtypes=[C.c_size_t,C.c_size_t,C.c_size_t];bridge.bridge_guard_angle.restype=C.c_int
 bridge.bridge_guard_pool.argtypes=[C.c_size_t];bridge.bridge_guard_pool.restype=C.c_int
+bridge.bridge_glide_eligible.argtypes=[C.c_int];bridge.bridge_glide_eligible.restype=None
 bridge.bridge_motion_delta.argtypes=[];bridge.bridge_motion_delta.restype=C.c_float
 libc=C.CDLL(None);libc.mmap.argtypes=[C.c_void_p,C.c_size_t,C.c_int,C.c_int,C.c_int,C.c_long];libc.mmap.restype=C.c_void_p
 
@@ -41,7 +42,7 @@ class Host:
         for address in getattr(self,'buffers',[])+[getattr(self,'game',0),getattr(self,'image',0)]:
             size=allocation_sizes.pop(address,0)
             if size:libc.munmap(address,size)
-    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0,guard=False):
+    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0,guard=False,jump=False):
         self.game=allocate(0x3000000);bridge.bridge_reset(self.game);bridge.bridge_range(self.game,0x3000000,0x40);bridge.bridge_modes(remove,conflict)
         w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp);put(self.game+0x233fbdc,struct.pack('<f',1.))
         self.buffers=[]
@@ -92,6 +93,16 @@ class Host:
             put(self.game+0x2b3560,bytes.fromhex('4883ec2883b9b400000000')+call(b'NativeGuardFree')+bytes.fromhex('4883c428c3'))
             # Preserve native RIP-relative anchor; the following ABI mock returns the mask.
             put(self.game+0x2b3760,bytes.fromhex('8b15aa3fb00233c9')+b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeGuardMask'))+b'\xff\xe0')
+        if jump:
+            assert air
+            put(self.game+0x2afda0,(ROOT/'fixtures/native_jump_launch.bin').read_bytes())
+            put(self.game+0x2af530,(ROOT/'fixtures/native_jump_curve.bin').read_bytes())
+            for rva,raw in json.loads((ROOT/'fixtures/native_jump_constants.json').read_text()).items():put(self.game+int(rva,16),bytes.fromhex(raw))
+            put(self.game+0x38503e,bytes.fromhex('f30f51c0c3')) # sqrtf SSE stub
+            put(self.game+0x3850f2,b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeSinf'))+b'\xff\xe0')
+            put(self.game+0x386ad0,bytes.fromhex('0f10020f1101c3')) # exact native vector copy
+            put(self.game+0x2af630,b'\xc3') # queue/animation handoff is outside this arc sample
+            self.jump_stats=self.buffer(bytes(0xe4));w32(self.actor+0x6c,bridge.bridge_encode(self.jump_stats))
         self.load_pe()
     def activate_bank(self,olympus,encoded_fields=False):
         self.slot=60 if olympus else 98
@@ -250,7 +261,7 @@ class Host:
         self.control(state=2,request=6)
 
 class RuntimeTests(unittest.TestCase):
-    def test_main_tap_replaces_glide_commits_direction_and_can_repeat_after_a_new_tap(self):
+    def test_main_tap_commits_direction_and_requires_landing_before_another_dodge(self):
         for bank in [98,60]:
             h=Host(slot=bank,air=True,control_mode=4);h.arm_air()
             h.control(down=6,pressed=0);self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(h.body(10),h.expected(10,1))
@@ -262,6 +273,8 @@ class RuntimeTests(unittest.TestCase):
             for _ in range(3):h.control(down=6,pressed=0)
             self.assertEqual(bridge.bridge_queue_calls(),calls);self.assertEqual(h.body(10),h.expected(10,1))
             h.control();h.control(down=6,pressed=6,x=1,tilt=1)
+            self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(bridge.bridge_queue_calls(),calls)
+            h.control(state=0,request=0,height=0);h.control(state=2,request=6);h.control(down=6,pressed=6,x=1,tilt=1)
             self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(bridge.bridge_queue_calls(),calls+1)
             h.native_glide();self.assertEqual(bridge.bridge_native_glide_calls(),0)
     def test_main_neutral_tap_uses_existing_horizontal_momentum_then_character_facing(self):
@@ -306,7 +319,7 @@ class RuntimeTests(unittest.TestCase):
             bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
             self.assertAlmostEqual(bridge.bridge_motion_delta(),53./156. if profile==0 else 1.,places=6)
             w32(h.actor+0x164,0xcb);h.clock(0.);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
-            self.assertAlmostEqual(bridge.bridge_motion_delta(),47./35. if profile==0 else 1.,places=6)
+            self.assertAlmostEqual(bridge.bridge_motion_delta(),47./32. if profile==0 else 1.,places=6)
             for slot in [101,110]:self.assertEqual(h.body(slot)[:80],h.runtime_originals[slot][:80])
     def test_default_glide_preserves_all_four_native_bodies_clocks_and_queues_in_numbered_profiles(self):
         for bank in [98,60]:
@@ -534,10 +547,10 @@ class RuntimeTests(unittest.TestCase):
         h.control(down=6,pressed=6);self.assertEqual(h.body(10),h.expected(10,1))
         self.assertEqual(bridge.bridge_control_word(0)&6,6)
     def test_air_hook_admission_and_failure_paths_leave_original_control_bytes(self):
-        for reason in ['control','glide','move','state','can','queue','alloc','protect','remove']:
+        for reason in ['control','glide','normal_ctor','super_ctor','move','state','can','queue','alloc','protect','remove']:
             h=Host(air=True,fail_alloc=reason=='alloc',fail_protect=reason=='protect',air_dodge=reason!='disabled',remove=reason=='remove')
-            if reason in ['control','glide','move','state','can','queue']:
-                address=h.game+{'control':0x2a6220,'glide':0x2b2d30,'move':0x2af6a0,'state':0x2b1960,'can':0x297870,'queue':0x29f980}[reason]
+            if reason in ['control','glide','normal_ctor','super_ctor','move','state','can','queue']:
+                address=h.game+{'control':0x2a6220,'glide':0x2b2d30,'normal_ctor':0x2b26c0,'super_ctor':0x2b2750,'move':0x2af6a0,'state':0x2b1960,'can':0x297870,'queue':0x29f980}[reason]
                 C.c_ubyte.from_address(address).value^=1
             before=C.string_at(h.game+0x2a6220,17);h.frame()
             self.assertEqual(C.string_at(h.game+0x2a6220,17),before,reason)
@@ -607,7 +620,7 @@ class RuntimeTests(unittest.TestCase):
     def test_ground_hits_and_usable_chain_windows_use_the_actual_native_event_sampler(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
-            for slot,contact,start,end in [(98,12.,22.,40.),(99,30.*8/37.,30.,48.),(100,42.*8/37.,42.,64.)]:
+            for slot,contact,start,end in [(98,12.,22.,40.),(99,6.4,24.,48.),(100,8.96,33.6,64.)]:
                 self.assertNotEqual((h.event(slot,4,contact-.5) or 0)&0xffff0000,0x160000)
                 self.assertEqual(h.event(slot,4,contact)&0xffff0000,0x160000)
                 self.assertNotEqual(h.event(slot,5,start-.5),1)
@@ -948,13 +961,14 @@ class RuntimeTests(unittest.TestCase):
         w32(h.actor+0x374,0);h.frame();w32(h.actor+0x374,1);h.frame()
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(h.move()[0][:3],[14.,-.75,0.])
         h.clock(39.);h.frame();self.assertEqual(h.body(10),h.expected(10,1))
-    def test_main_shared_constructor_blocks_both_glides_even_when_binding_is_unavailable(self):
+    def test_main_blocks_regular_glide_but_preserves_superglide_through_binding_recovery(self):
         for reason in ['normal','resident','corrupt']:
             h=Host(air=True);h.arm_air()
             if reason=='resident':w32(h.actor+0x374,0);h.frame();w32(h.actor+0x374,1)
             elif reason=='corrupt':w32(h.motions[104]+24,999);h.frame()
-            for entry in [0x2b26c0,0x2b2750]:bridge.bridge_glide(h.game+entry,h.actor)
-            self.assertEqual(bridge.bridge_native_glide_calls(),0)
+            h.native_glide();self.assertEqual(bridge.bridge_native_glide_calls(),0)
+            bridge.bridge_glide(h.game+0x2b2750,h.actor);self.assertEqual(bridge.bridge_native_glide_calls(),1)
+            self.assertEqual(r32(h.glide_work+0x104)&1,1)
     def test_numbered_off_and_disabled_shared_glide_paths_pass_both_native_constructors(self):
         for profile,enabled in [(0,0),(1,1),(2,1),(3,1),(4,1)]:
             h=Host(air=True,air_dodge=enabled);h.arm_air(profile)
@@ -969,23 +983,130 @@ class RuntimeTests(unittest.TestCase):
         for _ in range(120):h.frame()
         self.assertEqual(h.snapshot(),before);self.assertLess(bridge.bridge_queries()-q,12000)
         self.assertLess(bridge.bridge_log().decode().count('AQUA WAITING:'),3)
-        for entry in [0x2b26c0,0x2b2750]:bridge.bridge_glide(h.game+entry,h.actor)
-        self.assertEqual(bridge.bridge_native_glide_calls(),0)
+        h.native_glide();self.assertEqual(bridge.bridge_native_glide_calls(),0)
+        bridge.bridge_glide(h.game+0x2b2750,h.actor);self.assertEqual(bridge.bridge_native_glide_calls(),1)
     def test_air_combo_keeps_a_usable_followup_window_to_end_of_each_nonfinisher(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
-            for slot,start,end in [(102,18.,40.),(103,24.,42.)]:
+            for slot,start,end in [(102,18.,40.),(103,22.,42.)]:
                 self.assertEqual(h.event(slot,5,start),1);self.assertEqual(h.event(slot,5,end-.1),1)
                 self.assertEqual(h.event(slot,5,end),0)
                 for dt in [.5,1.,2.,4.]:self.assertGreaterEqual(sum(h.event(slot,5,f)==1 for f in __import__('numpy').arange(start+.1,end,dt)),4)
-            self.assertEqual([h.record_by_slot[x]['donor'] for x in [102,103,104]],['305','353','407'])
+            self.assertEqual([h.record_by_slot[x]['donor'] for x in [102,103,104]],['305','407','353'])
     def test_both_second_ground_variants_have_identical_real_contact_and_chain_timing(self):
         h=Host(guard=True,encoded_fields=True);h.frame();h.equip(True);h.frame()
         hits=[];chains=[]
-        for request,slot,finish in [(0xc9,99,30.),(0xca,100,42.)]:
+        for request,slot,finish in [(0xc9,99,24.),(0xca,100,33.6)]:
             w32(h.actor+0x164,request);h.clock(0.);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
-            rate=bridge.bridge_motion_delta();hits.append((finish*8./37.)/rate);chains.append(finish/rate)
+            rate=bridge.bridge_motion_delta();hits.append((finish*8./30.)/rate);chains.append(finish/rate)
         self.assertAlmostEqual(hits[0],hits[1],places=5);self.assertAlmostEqual(chains[0],chains[1],places=5)
+
+    def test_main_fast_dodge_moves_same_distance_and_lift_in_two_thirds_time(self):
+        for bank in [98,60]:
+            for dt in [.5,1.,2.,4.]:
+                for motion_first in [False,True]:
+                    h=Host(slot=bank,air=True,guard=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+                    elapsed=0.;total=[0.,0.,0.]
+                    while elapsed<26.:
+                        if motion_first:bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,dt)
+                        out,_=h.move(dt)
+                        for k in range(3):total[k]+=out[k]
+                        elapsed+=min(dt,26.-elapsed)
+                        if not motion_first:bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,dt)
+                    self.assertEqual(total,[546.,-29.25,0.]);self.assertEqual(h.body(10),h.expected(10,1))
+                    self.assertEqual(C.c_float.from_address(h.actor+0x3c0).value,14.)
+    def test_fast_dodge_advances_504_animation_by_one_and_a_half_per_native_tick(self):
+        h=Host(air=True,guard=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+        self.assertEqual(bridge.bridge_motion_delta(),1.5);self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,1.5)
+        self.assertEqual(h.move()[0],[21.,-1.125,0.,21.])
+        for slot,p in h.native_glide_motions.items():self.assertEqual(C.string_at(p,len(h.native_glide_originals[slot])),h.native_glide_originals[slot])
+    def test_fast_dodge_retains_direction_and_same_diagonal_distance(self):
+        import math
+        for x,z in [(0,1),(0,-1),(-1,0),(.7,.7)]:
+            h=Host(air=True,guard=True);h.arm_air();h.control(down=6,pressed=6,x=x,z=z,tilt=1)
+            out,_=h.move();self.assertAlmostEqual(math.hypot(out[0],out[2]),21.,places=4)
+            h.control(down=0,x=-x,z=-z,tilt=1)
+            after,_=h.move();self.assertEqual(after,out)
+    def test_main_dodge_budget_stays_spent_through_superglide_ability_switch_and_binding_reset(self):
+        for reason in ['superglide','ability','binding']:
+            h=Host(air=True,guard=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+            h.clock(39.);h.frame();h.control()
+            if reason=='superglide':bridge.bridge_glide(h.game+0x2b2750,h.actor)
+            elif reason=='ability':
+                h.equip(False);h.frame();h.equip(True);h.frame()
+            else:
+                w32(h.motions[104]+24,999);h.frame()
+                # Restore only the known scalar from its original header, then wait for bounded admission.
+                w32(h.motions[104]+24,struct.unpack_from('<I',h.runtime_originals[104],24)[0]);[h.frame() for _ in range(9)]
+            h.control(state=2,request=6);calls=bridge.bridge_queue_calls()
+            h.control(down=6,pressed=6,x=1,tilt=1);self.assertEqual(bridge.bridge_queue_calls(),calls)
+            self.assertEqual(h.body(10),h.expected(10,1))
+            h.control(state=0,request=0,height=0);h.control(state=2,request=6)
+            h.control(down=6,pressed=6,x=1,tilt=1);self.assertEqual(bridge.bridge_queue_calls(),calls+1)
+    def test_grounded_while_aqua_is_off_rearms_exactly_the_next_airtime(self):
+        h=Host(air=True,guard=True);h.arm_air();h.control(down=6,pressed=6);h.clock(39.);h.frame()
+        h.equip(False);w32(h.actor+0x164,0);w32(h.actor+0x70,0);put(h.actor+0x3d4,struct.pack('<f',0.));h.frame()
+        h.equip(True);h.frame();h.control(state=2,request=6);calls=bridge.bridge_queue_calls()
+        h.control(down=6,pressed=6);self.assertEqual(bridge.bridge_queue_calls(),calls+1)
+    def test_native_superglide_can_interrupt_a_dodge_without_resetting_its_budget(self):
+        h=Host(air=True,guard=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        h.move();bridge.bridge_glide(h.game+0x2b2750,h.actor)
+        self.assertEqual(r32(h.actor+0x70),21);self.assertEqual(r32(h.glide_work+0x104)&1,1)
+        self.assertEqual(h.body(10),h.expected(10,1));calls=bridge.bridge_queue_calls()
+        h.control(state=2,request=6);h.control(down=6,pressed=6);self.assertEqual(bridge.bridge_queue_calls(),calls)
+    def test_rejected_superglide_does_not_cancel_a_live_dodge(self):
+        h=Host(air=True,guard=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        bridge.bridge_glide_eligible(0);bridge.bridge_glide(h.game+0x2b2750,h.actor)
+        self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(h.move()[0][0],21.)
+    def launch_native_jump(self,h,request=4,height=160.,elapsed=4.):
+        w32(h.actor+0x70,1);w32(h.actor+0x164,request);put(h.actor+0x3b0,struct.pack('<f',elapsed))
+        put(h.actor+0x14,struct.pack('<f',500.));put(h.jump_stats+0x10,struct.pack('<f',height))
+        out=h.buffer(struct.pack('<4f',12.,4.,6.,7.))
+        result=bridge.bridge_move(h.game+0x2afda0,h.actor,C.cast(out,C.POINTER(C.c_float)))
+        return list((C.c_float*4).from_address(out)),result
+    def test_real_native_normal_and_high_jump_receive_25_percent_more_height_in_main_only(self):
+        import math
+        for bank in [98,60]:
+            for profile in range(5):
+                for request in [4,9]:
+                    h=Host(slot=bank,air=True,jump=True);h.frame();h.equip(True,profile);h.frame()
+                    out,result=self.launch_native_jump(h,request,160.)
+                    factor=1.25 if profile==0 else 1.
+                    self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(C.c_float.from_address(h.actor+0x3bc).value,-160.*factor)
+                    gravity=struct.unpack('<f',bytes.fromhex(json.loads((ROOT/'fixtures/native_jump_constants.json').read_text())['0x3e9d14'])[:4])[0]
+                    self.assertAlmostEqual(C.c_float.from_address(h.actor+0x3b8).value,math.sqrt(320./gravity*factor),places=4)
+                    self.assertEqual(C.c_float.from_address(h.actor+0x14).value,500.)
+                    self.assertEqual(out[:3],[12.,4.,6.]);self.assertEqual(result,12.)
+    def test_real_native_jump_curve_reaches_the_higher_apex_with_its_gravity_unchanged(self):
+        import math
+        h=Host(air=True,jump=True);h.frame();h.equip(True);h.frame();self.launch_native_jump(h,height=160.)
+        duration=C.c_float.from_address(h.actor+0x3b8).value;out=h.buffer(bytes(16))
+        put(h.actor+0x3b0,struct.pack('<f',duration));bridge.bridge_move(h.game+0x2af530,h.actor,C.cast(out,C.POINTER(C.c_float)))
+        self.assertAlmostEqual(C.c_float.from_address(out+4).value,-200.,places=4)
+        put(h.actor+0x3b0,struct.pack('<f',duration+2.));bridge.bridge_move(h.game+0x2af530,h.actor,C.cast(out,C.POINTER(C.c_float)))
+        gravity=struct.unpack('<f',bytes.fromhex(json.loads((ROOT/'fixtures/native_jump_constants.json').read_text())['0x3e9d14'])[:4])[0]
+        self.assertAlmostEqual(C.c_float.from_address(out+4).value,-200.+.5*gravity*4.,places=3)
+    def test_jump_boost_waits_for_native_takeoff_and_does_not_compound(self):
+        h=Host(air=True,jump=True);h.frame();h.equip(True);h.frame()
+        self.launch_native_jump(h,elapsed=0.);self.assertEqual(r32(h.actor+0x70),1)
+        self.launch_native_jump(h,elapsed=4.);height=C.c_float.from_address(h.actor+0x3bc).value
+        w32(h.actor+0x164,5);out=h.buffer(bytes(16));bridge.bridge_move(h.game+0x2afda0,h.actor,C.cast(out,C.POINTER(C.c_float)))
+        self.assertEqual(C.c_float.from_address(h.actor+0x3bc).value,height)
+    def test_jump_hook_bad_anchor_and_protection_failure_leave_native_code_unchanged(self):
+        for bad in ['anchor','alloc','protect']:
+            h=Host(air=True,jump=True,fail_alloc=int(bad=='alloc'),fail_protect=1 if bad=='protect' else 0)
+            if bad=='anchor':C.c_ubyte.from_address(h.game+0x2afda0).value^=1
+            before=C.string_at(h.game+0x2afda0,18);h.frame();self.assertEqual(C.string_at(h.game+0x2afda0,18),before)
+    def test_second_attack_chain_opens_earlier_and_finished_pose_hold_runs_twice_as_fast(self):
+        for request,slot,finish,rate in [(0xc9,99,24.,1.),(0xca,100,33.6,1.4)]:
+            h=Host(guard=True,encoded_fields=True);h.frame();h.equip(True);h.frame();w32(h.actor+0x164,request)
+            h.clock(finish);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+            self.assertAlmostEqual(bridge.bridge_motion_delta(),rate*2.,places=5)
+            self.assertEqual(h.event(slot,5,finish+.01),1)
+            self.assertLess(finish/rate,30.)
+            h.clock(finish-rate*.5);bridge.bridge_motion_advance(h.game+0x29f0a0,h.actor,1.)
+            self.assertAlmostEqual(bridge.bridge_motion_delta(),rate*1.5,places=4)
 
 
 if __name__=='__main__':

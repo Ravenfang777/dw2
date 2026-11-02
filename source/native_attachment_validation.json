@@ -1,11 +1,12 @@
 {
   "passed": true,
-  "version": 20,
+  "version": 21,
   "mode": "native keyblade-tip",
   "native_attachment_code": "0x30",
   "attachment_function_hooks": 0,
   "palm_redirection": false,
   "legacy_hand_magic_ini_ignored": true,
   "game_runtime_tested": false,
-  "retained_mode_from_version": 15
+  "retained_mode_from_version": 15,
+  "retained_from_v20": true
 }

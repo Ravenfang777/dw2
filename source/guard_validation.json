@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
   "scope": "main Aqua only",
@@ -45,5 +45,6 @@
     "script or menu"
   ],
   "numbered_profiles": "v19/v18 bytes and native timing retained",
-  "game_collision_and_deflection_test_pending": true
+  "game_collision_and_deflection_test_pending": true,
+  "retained_from_v20": true
 }

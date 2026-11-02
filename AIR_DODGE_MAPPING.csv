@@ -1,6 +1,6 @@
-﻿Ability,Ability id,Aqua clip,Trigger,Direction,Release stops travel,Native frames,Speed,Lift per native unit,Requested duration,Fall clip
-aqua,117,504,"fresh airborne tap, replaces normal and Superglide through binding recovery","captured movement, then momentum/facing fallback",False,40,14,0.75,39,506
-aqua 1,118,504,v18 fresh Circle once per airtime,live stick steering,neutral brakes horizontal,40,14,0.75,39,506
-aqua 2,119,504,v18 fresh Circle once per airtime,live stick steering,neutral brakes horizontal,40,14,0.75,39,506
-aqua 3,120,504,v18 fresh Circle once per airtime,live stick steering,neutral brakes horizontal,40,14,0.75,39,506
-aqua 4,121,504,v18 fresh Circle once per airtime,live stick steering,neutral brakes horizontal,40,14,0.75,39,506
+﻿Ability,Clip,Speed,Lift per tick,Duration ticks,Animation rate,Distance,Lift,Uses per airtime,Rearm,Superglide
+aqua,504,21.0,1.125,26.0,1.5,546.0,29.25,1,landing,native retained
+aqua 1,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained
+aqua 2,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained
+aqua 3,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained
+aqua 4,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained

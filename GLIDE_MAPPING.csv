@@ -1,6 +1,6 @@
-﻿Ability,Visual,Native motion slots,Native motion bytes changed,Held Glide activation,Native clocks unmodified,Fall after exit
-aqua,504 tap replacement,"75,76,77,78",False,suppressed,True,506
-aqua 1,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
-aqua 2,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
-aqua 3,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
-aqua 4,original Sora native Glide,"75,76,77,78",False,v18 native,True,506
+﻿Ability,Regular Glide,Superglide,Native motion slots,Native motion bytes
+aqua,replaced by one tap504 per airtime,native ability and activation retained,"75,76,77,78",unchanged
+aqua 1,native v20/v18 behavior,native v20/v18 behavior,"75,76,77,78",unchanged
+aqua 2,native v20/v18 behavior,native v20/v18 behavior,"75,76,77,78",unchanged
+aqua 3,native v20/v18 behavior,native v20/v18 behavior,"75,76,77,78",unchanged
+aqua 4,native v20/v18 behavior,native v20/v18 behavior,"75,76,77,78",unchanged

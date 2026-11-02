@@ -1,77 +1,90 @@
-KH1FM AQUA ANIMATION TEST v20
+KH1FM AQUA ANIMATION TEST v21
 Steam Global / OpenKH Panacea
 
 INSTALL
-Fully close KH1. Disable v19/older Aqua tests and Nine Styles/Dual Wield or
-other conflicting combat builds. Import this ZIP into OpenKH, enable it, then
-Build and Run. Equip MAIN aqua while idle. The log banner must say v20.
-Use CHECK_AQUA_V20.cmd to check compiled file hashes if needed.
+Fully close KH1. Disable v20/older Aqua tests and conflicting Nine Styles /
+Dual Wield or combat builds. Install this ZIP in OpenKH, enable it, then Build
+and Run. Equip MAIN aqua while idle. The log banner must say v21.
+CHECK_AQUA_V21.cmd checks the compiled installation hashes if needed.
 
 MAIN AQUA CHANGES
-- Combat idle tilts Sora's actual skinned skull20 degrees RIGHT. This replaces
-  v19's left-facing yaw. Hair bind corrections remain. Aerial Fire/Blizzard
-  retain the prior right-facing yaw; run animations retain the prior swap.
-- Ground combo remains300 ->301 ->366. Trim301's quiet final3 source frames
-  (retain0..37). Both native variants now reach the contact and follow-up
-  phases at matching real times: hit about6.49 ticks, follow-up30 ticks.
-  The first swing's contact timing remains unchanged.366 retains its existing
-  source12..47 trim and playback rate; no additional leading frames were cut.
-- Air combo remains305 ->353 ->407. First follow-up window18..40, second
- 24..42 native clock units. These reach each non-finisher's end to make the
-  follow-up less easy to miss. Native event payloads/counts/pointers remain.
-- Guard400 still plays fully forward then reverse at source30fps (2.6s).
-  A wider body-centered capsule (radius50, centers35/85 units above the actor)
-  supplies native guard contacts around Sora, including behind him. It uses
-  the native constructor, contact mask, collision/deflection and retirement.
-  Native Guard must be equipped and selected. This is a timed defense:
-  release adds up to12 native ticks (~0.2s); parry6E/6F retains up to12 ticks.
-  New attacks, magic, movement, damage, scripts, menus or ability changes cancel
-  the extra shield. Recycled pool slots are not retired by this controller.
-- Airborne Circle tap starts504 with captured movement direction and slight
-  lift for39 units. Release Circle after takeoff, then tap. Releasing input
-  does not shorten travel. Native collision/landing/interruptions still apply.
-  Normal AND Superglide share the blocked constructor while MAIN is selected,
-  including during binding recovery. air_dodge=0 restores native air behavior.
-- A temporary residency/save-readiness interruption no longer forces an
-  already-correct Aqua bank to wait for idle. It can be fully revalidated
-  without body writes while moving. Failed full admissions retry every8
-  frames. Reset/suspension messages identify the path in kh1-aqua.log.
-  Guard angle checks skip unrelated clash pairs before querying Sora.
+AERIAL DODGE
+Tap Circle airborne after releasing it following takeoff.504 and its movement
+run at1.5x the previous rate:26 native ticks instead of39 (two-thirds the time).
+The complete unobstructed burst still requests546 horizontal units and29.25
+units of lift. Direction stays locked to the tap's movement direction, with
+the prior neutral momentum/facing fallback. Collision, ceilings, landing and
+native interruptions still apply. Native fall handoff speed matches v20 to
+avoid adding extra drift after the faster burst.
 
-NUMBERED TEST ABILITIES RETAINED
+ONE DODGE PER AIRTIME. Completing504, releasing/repressing Circle, changing
+Aqua abilities, recovering animation bindings or using Superglide do not grant
+another dodge. Land to rearm. A new actor identity starts a new budget.
+
+SUPERGLIDE
+Native Superglide is usable again with its own normal button/ability checks.
+Only ordinary Glide is replaced by tap504. A successful native Superglide can
+interrupt504; a rejected Superglide does not cancel the dodge. It does not
+reset the dodge's spent use. Native Glide/Superglide animation records remain
+original. air_dodge=0 restores native air controls; the jump boost remains.
+The1.5x dodge rate requires the verified actor-motion hook. If that hook cannot
+be admitted, the controller logs and keeps the old matched movement/visual
+rate rather than accelerating movement alone.
+
+JUMP HEIGHT
+Normal and High Jump receive25 percent more native launch height in MAIN.
+The native launch runs first. Only its private arc height and ascent duration
+are scaled (1.25 and sqrt1.25), leaving launch origin, global gravity, stats,
+actor positions, native collision and ceiling handling untouched.
+
+COMBOS
+Ground remains300 ->301 ->366.
+-301 retains source0..30, trimming7 more end frames compared with v20.
+- Both second-attack variants enable the finisher at24 real native ticks
+  instead of30. Their completed-pose recovery advances twice as fast.
+-366 retains source15..47, removing3 more opening frames compared with v20.
+  Its native hit/effect timing and playback duration follow that trim.
+- First ground attack and its contact timing remain unchanged.
+Air is now305 ->407 ->353. Native contact windows follow the swapped poses.
+The first/second follow-up windows run18..40 and22..42 native clock units.
+Native event counts, payloads, pointers, headers and allocation sizes remain.
+
+RETAINED
+Main Guard400 full forward/reverse at source30fps, wider native body capsule
+and12-tick grace; combat-idle skull tilt right20 degrees; aerial Fire/Blizzard
+right-facing head adjustment; swapped run loops; keyblade-tip magic; native
+Blizzard spell logic; original KH1 Sora damage reactions. KH2 reaction source
+assets are still pending. Installed Sora/Olympus MSETs stay original.
+
+NUMBERED TEST ABILITIES RETAIN v20/v18
  aqua1 ground371365366 / air218332393
  aqua2 ground352353407 / air351304303
  aqua3 ground300301302 / air616407351
  aqua4 ground510511512 / air504514399
-All148 active numbered records compare byte-for-byte with delivered v19.
-Their legacy v18 poses, timing and controls remain. All five ability IDs
-117..121 retain0AP and exclusive selection. Switch profiles while idle.
+All148 active numbered records match v20 byte-for-byte. Numbered jump heights,
+dodge rate/controls, casts and Guard behavior remain as before. All five
+abilities retain0AP and IDs117..121. Switch profiles while idle.
 
-RETAINED
-Original on-disk Sora/Olympus MSETs; native headers/counts/allocations/travel;
-keyblade-tip magic; native Blizzard spell logic with Fire visuals; native KH1
-Sora reactions. Default KH2 Sora reaction assets are still pending.
+IN-GAME TEST
+1. Compare jump and High Jump height with main equipped/unequipped.
+2. Tap airborne Circle and check faster504 with the same travel distance.
+3. After504, release and tap again: no second dodge until landing. Land and
+   repeat. Check that attacks, ability toggles and Superglide do not rearm it.
+4. Use native Superglide with its ability equipped, including after504.
+5. Check ground300/301/366 flow and air305/407/353 during combat.
+Return kh1-aqua.log and a short clip if a visual, timing or movement issue
+remains. The wider Guard and previous poses are unchanged in this test.
 
-TEST IN GAME
-1. Check combat-idle right tilt and ground300/301/366 flow in both banks.
-2. Repeat air305/353/407 during combat, including rapid and late follow-ups.
-3. Tap Circle with each direction, release input, then hold Circle after504.
-   Check that Glide does not return after combat, damage or a map transition.
-4. Guard attacks from behind and either side, then repeat after a parry.
-5. Check performance around the earlier Glide fallback situation. Return the
-   resulting kh1-aqua.log and, if a visual/timing issue remains, a short clip.
-
-VALIDATION AND LIMITS
-98 actual-PE runtime tests and29 serialized-pose tests pass offline. Native
-hook anchors match the supplied Steam executable. No live Windows/KH1 playtest
-or rendered-mesh check was performed. Native callbacks are mocked in the PE
-host; full combat behavior and visual feel need the in-game tests above.
-In the offline lost-binding scenario, memory queries over120 moving frames
-fell from33960 (v19) to1241 (v20). This is not a game-FPS measurement or proof
-of the original slowdown's complete cause. Reports and rebuild sources are
-included in source/. See source/REBUILD_V20.txt.
+VALIDATION
+110 actual-PE runtime tests and29 serialized-pose tests pass offline. Jump
+checks execute the supplied game's actual launch and arc code in the mock
+host. Faster-dodge distance is checked with both callback orders and several
+timesteps. Native hook anchors match the supplied Steam executable. No live
+Windows/KH1 playtest or rendered-mesh check was performed. Native collision,
+allocation and input calls are mocked; in-game feel still needs testing.
+Source, fixtures, reports and REBUILD_V21.txt are included in source/.
 
 ROLLBACK / REMOVE
-To roll back, close KH1, disable v20, enable the previous package and rebuild.
+Close KH1, disable v21, enable the previous package and rebuild to roll back.
 For complete ability removal, use REMOVE_AQUA_kh1-aqua.ini as kh1-aqua.ini next
 to the game EXE, load a save and save again, then remove the config/mod.

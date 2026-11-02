@@ -1,186 +1,186 @@
-﻿Ability,Ability id,Action,Native request,Normal slot,Olympus slot,Aqua clip,Source bank,Source frame range,Native frames,Pose loop,Head yaw degrees,Head roll right degrees,Runtime rate,Native hold frame,Source timing
-aqua,117,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear
-aqua,117,combat idle,0x0,1,1,002,base,full,170,True,0,20.0,1,,linear
-aqua,117,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear
-aqua,117,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear
-aqua,117,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear
-aqua,117,run,0x2,5,5,013,base,full,36,True,0,0,1,,linear
-aqua,117,run,0x2,6,6,013,base,full,36,True,0,0,1,,linear
-aqua,117,combat run,0x2,7,7,004,base,full,36,True,0,0,1,,linear
-aqua,117,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear
-aqua,117,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear
-aqua,117,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear
-aqua,117,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear
-aqua,117,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear
-aqua,117,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear
-aqua,117,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear
-aqua,117,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear
-aqua,117,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear
-aqua,117,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear
-aqua,117,Fire cast release,0x36,54,17,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear
-aqua,117,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear
-aqua,117,Cure casting family,0x39,56,19,427,p02ex_154.arc,full,68,False,0,0,1,,linear
-aqua,117,Fire cast recovery,0x3d,57,20,391,p02ex_153.arc,"[31, 48]",60,False,0,0,1,,linear
-aqua,117,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear
-aqua,117,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear
-aqua,117,air Fire cast release,0x83,79,41,316,p02ex_151.arc,"[0, 20]",28,False,-20.0,0,1,,linear
-aqua,117,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear
-aqua,117,air Cure casting family,0x86,81,43,318,p02ex_152.arc,full,68,False,0,0,1,,linear
-aqua,117,air Fire cast recovery,0x8a,82,44,316,p02ex_151.arc,"[20, 30]",52,False,-20.0,0,1,,linear
-aqua,117,ground first,0xc8,98,60,300,base,full,48,False,0,0,1,,linear
-aqua,117,ground second,0xc9,99,61,301,base,"[0, 37]",48,False,0,0,1.0,30.0,combo_finish_hold
-aqua,117,ground alternate,0xca,100,62,301,base,"[0, 37]",64,False,0,0,1.4,42.0,combo_finish_hold
-aqua,117,ground finisher,0xcb,101,63,366,p02ex_128.arc,"[12, 47]",80,False,0,0,1.3428571428571427,,linear
-aqua,117,air first,0xcc,102,64,305,base,full,40,False,0,0,1,,linear
-aqua,117,air second,0xcd,103,65,353,p02ex_352.arc,full,42,False,0,0,1,,linear
-aqua,117,air finisher,0xce,104,66,407,p02ex_624.arc,full,56,False,0,0,1,,linear
-aqua,117,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,0.33974358974358976,,guard_forward_hold_reverse
-aqua,117,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear
-aqua 1,118,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear
-aqua 1,118,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear
-aqua 1,118,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear
-aqua 1,118,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear
-aqua 1,118,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear
-aqua 1,118,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear
-aqua 1,118,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear
-aqua 1,118,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear
-aqua 1,118,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear
-aqua 1,118,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear
-aqua 1,118,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear
-aqua 1,118,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear
-aqua 1,118,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear
-aqua 1,118,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear
-aqua 1,118,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear
-aqua 1,118,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear
-aqua 1,118,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear
-aqua 1,118,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear
-aqua 1,118,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear
-aqua 1,118,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear
-aqua 1,118,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear
-aqua 1,118,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear
-aqua 1,118,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear
-aqua 1,118,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear
-aqua 1,118,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear
-aqua 1,118,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear
-aqua 1,118,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear
-aqua 1,118,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear
-aqua 1,118,ground first,0xc8,98,60,371,p02ex_133.arc,full,48,False,0,0,1,,linear
-aqua 1,118,ground second,0xc9,99,61,365,p02ex_123.arc,full,48,False,0,0,1,,linear
-aqua 1,118,ground alternate,0xca,100,62,365,p02ex_123.arc,full,64,False,0,0,1,,linear
-aqua 1,118,ground finisher,0xcb,101,63,366,p02ex_128.arc,full,80,False,0,0,1,,linear
-aqua 1,118,air first,0xcc,102,64,218,p02ex_009.arc,full,40,False,0,0,1,,linear
-aqua 1,118,air second,0xcd,103,65,332,p02ex_101.arc,full,42,False,0,0,1,,linear
-aqua 1,118,air finisher,0xce,104,66,393,p02ex_155.arc,full,56,False,0,0,1,,linear
-aqua 1,118,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse
-aqua 1,118,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear
-aqua 2,119,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear
-aqua 2,119,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear
-aqua 2,119,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear
-aqua 2,119,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear
-aqua 2,119,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear
-aqua 2,119,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear
-aqua 2,119,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear
-aqua 2,119,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear
-aqua 2,119,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear
-aqua 2,119,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear
-aqua 2,119,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear
-aqua 2,119,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear
-aqua 2,119,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear
-aqua 2,119,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear
-aqua 2,119,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear
-aqua 2,119,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear
-aqua 2,119,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear
-aqua 2,119,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear
-aqua 2,119,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear
-aqua 2,119,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear
-aqua 2,119,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear
-aqua 2,119,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear
-aqua 2,119,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear
-aqua 2,119,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear
-aqua 2,119,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear
-aqua 2,119,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear
-aqua 2,119,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear
-aqua 2,119,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear
-aqua 2,119,ground first,0xc8,98,60,352,p02ex_352.arc,full,48,False,0,0,1,,linear
-aqua 2,119,ground second,0xc9,99,61,353,p02ex_352.arc,full,48,False,0,0,1,,linear
-aqua 2,119,ground alternate,0xca,100,62,353,p02ex_352.arc,full,64,False,0,0,1,,linear
-aqua 2,119,ground finisher,0xcb,101,63,407,p02ex_624.arc,full,80,False,0,0,1,,linear
-aqua 2,119,air first,0xcc,102,64,351,p02ex_710.arc,full,40,False,0,0,1,,linear
-aqua 2,119,air second,0xcd,103,65,304,base,full,42,False,0,0,1,,linear
-aqua 2,119,air finisher,0xce,104,66,303,base,full,56,False,0,0,1,,linear
-aqua 2,119,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse
-aqua 2,119,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear
-aqua 3,120,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear
-aqua 3,120,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear
-aqua 3,120,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear
-aqua 3,120,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear
-aqua 3,120,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear
-aqua 3,120,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear
-aqua 3,120,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear
-aqua 3,120,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear
-aqua 3,120,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear
-aqua 3,120,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear
-aqua 3,120,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear
-aqua 3,120,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear
-aqua 3,120,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear
-aqua 3,120,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear
-aqua 3,120,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear
-aqua 3,120,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear
-aqua 3,120,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear
-aqua 3,120,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear
-aqua 3,120,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear
-aqua 3,120,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear
-aqua 3,120,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear
-aqua 3,120,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear
-aqua 3,120,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear
-aqua 3,120,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear
-aqua 3,120,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear
-aqua 3,120,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear
-aqua 3,120,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear
-aqua 3,120,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear
-aqua 3,120,ground first,0xc8,98,60,300,base,full,48,False,0,0,1,,linear
-aqua 3,120,ground second,0xc9,99,61,301,base,full,48,False,0,0,1,,linear
-aqua 3,120,ground alternate,0xca,100,62,301,base,full,64,False,0,0,1,,linear
-aqua 3,120,ground finisher,0xcb,101,63,302,base,full,80,False,0,0,1,,linear
-aqua 3,120,air first,0xcc,102,64,616,p02ex_605.arc,full,40,False,0,0,1,,linear
-aqua 3,120,air second,0xcd,103,65,407,p02ex_624.arc,full,42,False,0,0,1,,linear
-aqua 3,120,air finisher,0xce,104,66,351,p02ex_710.arc,full,56,False,0,0,1,,linear
-aqua 3,120,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse
-aqua 3,120,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear
-aqua 4,121,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear
-aqua 4,121,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear
-aqua 4,121,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear
-aqua 4,121,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear
-aqua 4,121,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear
-aqua 4,121,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear
-aqua 4,121,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear
-aqua 4,121,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear
-aqua 4,121,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear
-aqua 4,121,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear
-aqua 4,121,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear
-aqua 4,121,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear
-aqua 4,121,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear
-aqua 4,121,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear
-aqua 4,121,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear
-aqua 4,121,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear
-aqua 4,121,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear
-aqua 4,121,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear
-aqua 4,121,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear
-aqua 4,121,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear
-aqua 4,121,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear
-aqua 4,121,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear
-aqua 4,121,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear
-aqua 4,121,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear
-aqua 4,121,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear
-aqua 4,121,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear
-aqua 4,121,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear
-aqua 4,121,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear
-aqua 4,121,ground first,0xc8,98,60,510,p02ex_501.arc,full,48,False,0,0,1,,linear
-aqua 4,121,ground second,0xc9,99,61,511,p02ex_501.arc,full,48,False,0,0,1,,linear
-aqua 4,121,ground alternate,0xca,100,62,511,p02ex_501.arc,full,64,False,0,0,1,,linear
-aqua 4,121,ground finisher,0xcb,101,63,512,p02ex_501.arc,full,80,False,0,0,1,,linear
-aqua 4,121,air first,0xcc,102,64,504,p02ex_157.arc,full,40,False,0,0,1,,linear
-aqua 4,121,air second,0xcd,103,65,514,p02ex_157.arc,full,42,False,0,0,1,,linear
-aqua 4,121,air finisher,0xce,104,66,399,p02ex_346.arc,full,56,False,0,0,1,,linear
-aqua 4,121,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse
-aqua 4,121,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear
+﻿Ability,Ability id,Action,Native request,Normal slot,Olympus slot,Aqua clip,Source bank,Source frame range,Native frames,Pose loop,Head yaw degrees,Head roll right degrees,Runtime rate,Native hold frame,Source timing,Recovery tail rate
+aqua,117,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear,1.0
+aqua,117,combat idle,0x0,1,1,002,base,full,170,True,0,20.0,1,,linear,1.0
+aqua,117,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear,1.0
+aqua,117,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear,1.0
+aqua,117,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear,1.0
+aqua,117,run,0x2,5,5,013,base,full,36,True,0,0,1,,linear,1.0
+aqua,117,run,0x2,6,6,013,base,full,36,True,0,0,1,,linear,1.0
+aqua,117,combat run,0x2,7,7,004,base,full,36,True,0,0,1,,linear,1.0
+aqua,117,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear,1.0
+aqua,117,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear,1.0
+aqua,117,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear,1.0
+aqua,117,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear,1.0
+aqua,117,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear,1.0
+aqua,117,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear,1.0
+aqua,117,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear,1.0
+aqua,117,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear,1.0
+aqua,117,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear,1.0
+aqua,117,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear,1.0
+aqua,117,Fire cast release,0x36,54,17,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear,1.0
+aqua,117,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear,1.0
+aqua,117,Cure casting family,0x39,56,19,427,p02ex_154.arc,full,68,False,0,0,1,,linear,1.0
+aqua,117,Fire cast recovery,0x3d,57,20,391,p02ex_153.arc,"[31, 48]",60,False,0,0,1,,linear,1.0
+aqua,117,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear,1.0
+aqua,117,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear,1.0
+aqua,117,air Fire cast release,0x83,79,41,316,p02ex_151.arc,"[0, 20]",28,False,-20.0,0,1,,linear,1.0
+aqua,117,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear,1.0
+aqua,117,air Cure casting family,0x86,81,43,318,p02ex_152.arc,full,68,False,0,0,1,,linear,1.0
+aqua,117,air Fire cast recovery,0x8a,82,44,316,p02ex_151.arc,"[20, 30]",52,False,-20.0,0,1,,linear,1.0
+aqua,117,ground first,0xc8,98,60,300,base,full,48,False,0,0,1,,linear,1.0
+aqua,117,ground second,0xc9,99,61,301,base,"[0, 30]",48,False,0,0,1.0,24.0,combo_finish_hold,2.0
+aqua,117,ground alternate,0xca,100,62,301,base,"[0, 30]",64,False,0,0,1.4,33.6,combo_finish_hold,2.0
+aqua,117,ground finisher,0xcb,101,63,366,p02ex_128.arc,"[15, 47]",80,False,0,0,1.46875,,linear,1.0
+aqua,117,air first,0xcc,102,64,305,base,full,40,False,0,0,1,,linear,1.0
+aqua,117,air second,0xcd,103,65,407,p02ex_624.arc,full,42,False,0,0,1,,linear,1.0
+aqua,117,air finisher,0xce,104,66,353,p02ex_352.arc,full,56,False,0,0,1,,linear,1.0
+aqua,117,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,0.33974358974358976,,guard_forward_hold_reverse,1.0
+aqua,117,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear,1.0
+aqua 1,118,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear,1.0
+aqua 1,118,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear,1.0
+aqua 1,118,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 1,118,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 1,118,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear,1.0
+aqua 1,118,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 1,118,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 1,118,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear,1.0
+aqua 1,118,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear,1.0
+aqua 1,118,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear,1.0
+aqua 1,118,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear,1.0
+aqua 1,118,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear,1.0
+aqua 1,118,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear,1.0
+aqua 1,118,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear,1.0
+aqua 1,118,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear,1.0
+aqua 1,118,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear,1.0
+aqua 1,118,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear,1.0
+aqua 1,118,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear,1.0
+aqua 1,118,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear,1.0
+aqua 1,118,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear,1.0
+aqua 1,118,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear,1.0
+aqua 1,118,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear,1.0
+aqua 1,118,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear,1.0
+aqua 1,118,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear,1.0
+aqua 1,118,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear,1.0
+aqua 1,118,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear,1.0
+aqua 1,118,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear,1.0
+aqua 1,118,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear,1.0
+aqua 1,118,ground first,0xc8,98,60,371,p02ex_133.arc,full,48,False,0,0,1,,linear,1.0
+aqua 1,118,ground second,0xc9,99,61,365,p02ex_123.arc,full,48,False,0,0,1,,linear,1.0
+aqua 1,118,ground alternate,0xca,100,62,365,p02ex_123.arc,full,64,False,0,0,1,,linear,1.0
+aqua 1,118,ground finisher,0xcb,101,63,366,p02ex_128.arc,full,80,False,0,0,1,,linear,1.0
+aqua 1,118,air first,0xcc,102,64,218,p02ex_009.arc,full,40,False,0,0,1,,linear,1.0
+aqua 1,118,air second,0xcd,103,65,332,p02ex_101.arc,full,42,False,0,0,1,,linear,1.0
+aqua 1,118,air finisher,0xce,104,66,393,p02ex_155.arc,full,56,False,0,0,1,,linear,1.0
+aqua 1,118,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse,1.0
+aqua 1,118,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear,1.0
+aqua 2,119,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear,1.0
+aqua 2,119,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear,1.0
+aqua 2,119,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 2,119,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 2,119,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear,1.0
+aqua 2,119,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 2,119,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 2,119,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear,1.0
+aqua 2,119,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear,1.0
+aqua 2,119,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear,1.0
+aqua 2,119,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear,1.0
+aqua 2,119,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear,1.0
+aqua 2,119,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear,1.0
+aqua 2,119,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear,1.0
+aqua 2,119,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear,1.0
+aqua 2,119,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear,1.0
+aqua 2,119,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear,1.0
+aqua 2,119,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear,1.0
+aqua 2,119,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear,1.0
+aqua 2,119,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear,1.0
+aqua 2,119,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear,1.0
+aqua 2,119,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear,1.0
+aqua 2,119,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear,1.0
+aqua 2,119,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear,1.0
+aqua 2,119,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear,1.0
+aqua 2,119,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear,1.0
+aqua 2,119,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear,1.0
+aqua 2,119,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear,1.0
+aqua 2,119,ground first,0xc8,98,60,352,p02ex_352.arc,full,48,False,0,0,1,,linear,1.0
+aqua 2,119,ground second,0xc9,99,61,353,p02ex_352.arc,full,48,False,0,0,1,,linear,1.0
+aqua 2,119,ground alternate,0xca,100,62,353,p02ex_352.arc,full,64,False,0,0,1,,linear,1.0
+aqua 2,119,ground finisher,0xcb,101,63,407,p02ex_624.arc,full,80,False,0,0,1,,linear,1.0
+aqua 2,119,air first,0xcc,102,64,351,p02ex_710.arc,full,40,False,0,0,1,,linear,1.0
+aqua 2,119,air second,0xcd,103,65,304,base,full,42,False,0,0,1,,linear,1.0
+aqua 2,119,air finisher,0xce,104,66,303,base,full,56,False,0,0,1,,linear,1.0
+aqua 2,119,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse,1.0
+aqua 2,119,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear,1.0
+aqua 3,120,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear,1.0
+aqua 3,120,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear,1.0
+aqua 3,120,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 3,120,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 3,120,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear,1.0
+aqua 3,120,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 3,120,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 3,120,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear,1.0
+aqua 3,120,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear,1.0
+aqua 3,120,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear,1.0
+aqua 3,120,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear,1.0
+aqua 3,120,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear,1.0
+aqua 3,120,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear,1.0
+aqua 3,120,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear,1.0
+aqua 3,120,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear,1.0
+aqua 3,120,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear,1.0
+aqua 3,120,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear,1.0
+aqua 3,120,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear,1.0
+aqua 3,120,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear,1.0
+aqua 3,120,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear,1.0
+aqua 3,120,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear,1.0
+aqua 3,120,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear,1.0
+aqua 3,120,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear,1.0
+aqua 3,120,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear,1.0
+aqua 3,120,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear,1.0
+aqua 3,120,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear,1.0
+aqua 3,120,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear,1.0
+aqua 3,120,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear,1.0
+aqua 3,120,ground first,0xc8,98,60,300,base,full,48,False,0,0,1,,linear,1.0
+aqua 3,120,ground second,0xc9,99,61,301,base,full,48,False,0,0,1,,linear,1.0
+aqua 3,120,ground alternate,0xca,100,62,301,base,full,64,False,0,0,1,,linear,1.0
+aqua 3,120,ground finisher,0xcb,101,63,302,base,full,80,False,0,0,1,,linear,1.0
+aqua 3,120,air first,0xcc,102,64,616,p02ex_605.arc,full,40,False,0,0,1,,linear,1.0
+aqua 3,120,air second,0xcd,103,65,407,p02ex_624.arc,full,42,False,0,0,1,,linear,1.0
+aqua 3,120,air finisher,0xce,104,66,351,p02ex_710.arc,full,56,False,0,0,1,,linear,1.0
+aqua 3,120,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse,1.0
+aqua 3,120,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear,1.0
+aqua 4,121,idle,0x0,0,0,001,base,full,120,True,0,0,1,,linear,1.0
+aqua 4,121,combat idle,0x0,1,1,002,base,full,170,True,0,0,1,,linear,1.0
+aqua 4,121,walk,0x1,2,2,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 4,121,walk,0x1,3,3,003,base,full,60,True,0,0,1,,linear,1.0
+aqua 4,121,combat walk,0x1,4,4,012,base,full,48,True,0,0,1,,linear,1.0
+aqua 4,121,run,0x2,5,5,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 4,121,run,0x2,6,6,004,base,full,36,True,0,0,1,,linear,1.0
+aqua 4,121,combat run,0x2,7,7,013,base,full,36,True,0,0,1,,linear,1.0
+aqua 4,121,jump takeoff,0x4,8,8,005,base,"[0, 9]",26,False,0,0,1,,linear,1.0
+aqua 4,121,jump rise,0x5,9,9,005,base,"[9, 12]",14,False,0,0,1,,linear,1.0
+aqua 4,121,fall,0x6,10,10,506,p02ex_150.arc,full,40,True,0,0,1,,linear,1.0
+aqua 4,121,landing,0x7,11,11,007,base,full,28,False,0,0,1,,linear,1.0
+aqua 4,121,high jump takeoff,0x9,12,12,014,base,"[0, 16]",34,False,0,0,1,,linear,1.0
+aqua 4,121,high jump rise,0xa,13,13,014,base,"[16, 31]",26,False,0,0,1,,linear,1.0
+aqua 4,121,ledge hang,0xd,14,14,020,base,"[55, 94]",120,True,0,0,1,,linear,1.0
+aqua 4,121,ledge climb start,0xe,15,15,021,base,"[0, 4]",68,False,0,0,1,,linear,1.0
+aqua 4,121,ledge climb finish,0xf,16,16,021,base,"[4, 13]",28,False,0,0,1,,linear,1.0
+aqua 4,121,ledge landing recovery,0x10,17,4294967295,007,base,full,40,False,0,0,1,,linear,1.0
+aqua 4,121,Fire cast release,0x36,54,17,316,p02ex_151.arc,"[0, 20]",28,False,0,0,1,,linear,1.0
+aqua 4,121,Thunder casting family,0x38,55,18,317,p02ex_152.arc,full,86,False,0,0,1,,linear,1.0
+aqua 4,121,Cure casting family,0x39,56,19,318,p02ex_152.arc,full,68,False,0,0,1,,linear,1.0
+aqua 4,121,Fire cast recovery,0x3d,57,20,316,p02ex_151.arc,"[20, 30]",60,False,0,0,1,,linear,1.0
+aqua 4,121,ground item use,0x3e,58,21,395,p02ex_200.arc,full,82,False,0,0,1,,linear,1.0
+aqua 4,121,air item use,0x3f,59,22,395,p02ex_200.arc,full,72,False,0,0,1,,linear,1.0
+aqua 4,121,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",28,False,0,0,1,,linear,1.0
+aqua 4,121,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,78,False,0,0,1,,linear,1.0
+aqua 4,121,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,68,False,0,0,1,,linear,1.0
+aqua 4,121,air Fire cast recovery,0x8a,82,44,391,p02ex_153.arc,"[31, 48]",52,False,0,0,1,,linear,1.0
+aqua 4,121,ground first,0xc8,98,60,510,p02ex_501.arc,full,48,False,0,0,1,,linear,1.0
+aqua 4,121,ground second,0xc9,99,61,511,p02ex_501.arc,full,48,False,0,0,1,,linear,1.0
+aqua 4,121,ground alternate,0xca,100,62,511,p02ex_501.arc,full,64,False,0,0,1,,linear,1.0
+aqua 4,121,ground finisher,0xcb,101,63,512,p02ex_501.arc,full,80,False,0,0,1,,linear,1.0
+aqua 4,121,air first,0xcc,102,64,504,p02ex_157.arc,full,40,False,0,0,1,,linear,1.0
+aqua 4,121,air second,0xcd,103,65,514,p02ex_157.arc,full,42,False,0,0,1,,linear,1.0
+aqua 4,121,air finisher,0xce,104,66,399,p02ex_346.arc,full,56,False,0,0,1,,linear,1.0
+aqua 4,121,Guard / Barrier pose,0xd4,110,72,400,base,full,54,False,0,0,1,,guard_forward_hold_reverse,1.0
+aqua 4,121,Dodge Roll / Cartwheel pose,0xdc,117,79,009,base,full,38,False,0,0,1,,linear,1.0

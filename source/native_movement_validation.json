@@ -1,16 +1,20 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "main tap504 replaces both native Glide constructors",
+  "scope": "main Aqua only",
   "source_animation": "504",
-  "duration_native_units": 39.0,
-  "horizontal_speed": 14.0,
-  "upward_speed": 0.75,
+  "rate": 1.5,
+  "horizontal_speed": 21.0,
+  "upward_speed": 1.125,
+  "duration_native_units": 26.0,
   "horizontal_requested_distance": 546.0,
   "requested_lift": 29.25,
-  "direction": "locked tap direction, momentum/facing fallback",
-  "binding_recovery": "Glide blocking uses selected main intent; action execution requires full admitted binding",
+  "distance_matches_v20": true,
+  "animation_clock_rate": 1.5,
+  "end_pose_held_until_final_displacement": true,
+  "fall_handoff_horizontal_speed": 14.0,
   "actor_position_written": false,
-  "native_collision_callbacks_retained": true
+  "collision_callbacks_retained": true,
+  "motion_rate_hook_failure": "falls back to prior39-unit rate rather than desynchronizing movement and animation"
 }

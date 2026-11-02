@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
   "executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
@@ -20,13 +20,15 @@
     "0x2b3560": "4883ec2883b9b400000000",
     "0x2b3760": "8b15aa3fb00233c9",
     "0x2b4762": "f30f104b640f2fc87604",
-    "0x29f2a2": "f3440f598f84020000"
+    "0x29f2a2": "f3440f598f84020000",
+    "0x2afda0": "4889742410574883ec30f30f1081b0030000"
   },
   "guard_row": "0x2A3980 row3D witness; other callbacks preserve the witness until action/queue validation",
   "motion_clock": "0x29F0A0 actor-motion delta only; headers and counts stay native",
   "guard_pool": "0x2B47A0 pre-collection refresh; native0x2B3270 constructor,0x2B3760 contact mask and0x2B3560 retirement",
   "guard_angle": "0x2B4640; unrelated pairs skip memory queries; only witnessed Sora-owned native Guard classes bypass facing",
   "guard_data": "private copy of a witnessed live native Guard row, full-angle cosine; original shared row untouched",
-  "glide": "both0x2B26C0 normal and0x2B2750 Superglide call0x2B2D30; shared admission is hooked",
-  "direct_actor_position_animation_clock_or_hp_writes": false
+  "glide": "ordinary Glide is blocked; native Superglide caller2B275E passes original eligibility and constructor",
+  "direct_actor_position_animation_clock_or_hp_writes": false,
+  "jump": "native launch callback2AFDA0; post-launch height3BC *=1.25 and duration3B8 *=sqrt1.25; origin and gravity unchanged"
 }

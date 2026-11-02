@@ -1,7 +1,7 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
-  "baseline": "delivered v19, numbered v18 behavior",
+  "baseline": "delivered v20, numbered v18 behavior",
   "compared_active_records": 148,
   "records": [
     {

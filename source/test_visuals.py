@@ -47,7 +47,7 @@ def capsule_overlap(points,pair,radius):
 
 class VisualTests(unittest.TestCase):
     def test_second_swing_reaches_the_end_before_a_useful_chain_window(self):
-        for slot,finish in [(99,30),(100,42)]:
+        for slot,finish in [(99,24),(100,33.6)]:
             m=converted[slot];last=pose(model,m,float(m.frames-1));last[:,:3,3]-=helper_pose(m,m.frames-1)[-1,:3,3]
             for f in [float(finish),float(finish+4),float(m.frames-1)]:
                 at=pose(model,m,f);at[:,:3,3]-=helper_pose(m,f)[-1,:3,3]
@@ -84,16 +84,16 @@ class VisualTests(unittest.TestCase):
                 np.testing.assert_allclose(rotation(b[150]),expected,atol=.035,rtol=0)
             if slot==1:
                 for profile in range(1,5):self.assertEqual(all_converted[(profile,slot)].raw,old.raw)
-    def test_main_finisher_starts_at_source_twelve_and_shortens_real_duration(self):
-        row=by_slot[101];self.assertEqual(row['source_range'],[12,47]);self.assertAlmostEqual(row['runtime_playback_rate'],47./35.)
+    def test_main_finisher_starts_at_source_fifteen_and_shortens_real_duration(self):
+        row=by_slot[101];self.assertEqual(row['source_range'],[15,47]);self.assertAlmostEqual(row['runtime_playback_rate'],47./32.)
         old=parse_motion((ROOT/'fixtures/v18_reference_s101.bin').read_bytes());new=converted[101]
-        a=pose(model,old,79.*12./47.);b=pose(model,new,0.)
+        a=pose(model,old,79.*15./47.);b=pose(model,new,0.)
         a[:,:3,3]-=a[0,:3,3];b[:,:3,3]-=b[0,:3,3]
         for joint in [100,205,150,19,45]:self.assertLess(float(np.linalg.norm(a[joint,:3,3]-b[joint,:3,3])),4.)
         self.assertLess(row['duration_seconds'],(old.frames-1)/old.fps)
     def test_301_strike_phase_and_completed_second_swing_agree_between_both_native_variants(self):
         for phase in [0.,.2,.5,1.]:
-            a=pose(model,converted[99],phase*30.);b=pose(model,converted[100],phase*42.)
+            a=pose(model,converted[99],phase*24.);b=pose(model,converted[100],phase*33.6)
             a[:,:3,3]-=a[0,:3,3];b[:,:3,3]-=b[0,:3,3]
             for joint in [100,205,19,45]:self.assertLess(float(np.linalg.norm(a[joint,:3,3]-b[joint,:3,3])),3.5)
     def test_idle_front_hair_connected_chain_keeps_the_models_own_rest_pose(self):
@@ -197,7 +197,7 @@ class VisualTests(unittest.TestCase):
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
     def test_requested_action_clips_and_test_4_combos_match_serialized_reports(self):
-        actions={99:'301',100:'301',101:'366',102:'305',103:'353',104:'407',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
+        actions={99:'301',100:'301',101:'366',102:'305',103:'407',104:'353',58:'395',59:'395',10:'506',54:'391',57:'391',55:'317',56:'427',79:'316',82:'316',80:'390',81:'318'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
@@ -212,7 +212,7 @@ class VisualTests(unittest.TestCase):
     def test_second_ground_event_edits_change_only_existing_time_values(self):
         import struct
         from aqua_event_timing_v18 import tracks
-        for slot,contact,finish in [(98,12.,22.),(99,30.*8./37.,30.),(100,42.*8./37.,42.)]:
+        for slot,contact,finish in [(98,12.,22.),(99,6.4,24.),(100,8.96,33.6)]:
             before=original[slot].raw;after=converted[slot].raw
             self.assertEqual(tracks(before),tracks(after))
             allowed=set();active=[]
@@ -223,7 +223,7 @@ class VisualTests(unittest.TestCase):
                     self.assertEqual(before[at+4:at+16],after[at+4:at+16])
                     if kind==4 and struct.unpack_from('<H',after,at+6)[0]==0x16:active.append(times[-1])
                 self.assertEqual(times,sorted(times))
-                if kind==5:self.assertEqual(times,[finish,40. if slot==98 else float(original[slot].frames)])
+                if kind==5:np.testing.assert_allclose(times,[finish,40. if slot==98 else float(original[slot].frames)],atol=1e-4,rtol=0)
                 if kind in [6,7]:self.assertEqual(before[keys:keys+count*16],after[keys:keys+count*16])
             self.assertAlmostEqual(min(active),contact,places=5)
             start=struct.unpack_from('<I',before,60)[0]
@@ -236,9 +236,9 @@ class VisualTests(unittest.TestCase):
             rows={r['normal_slot']:r for r in data['motions']}
             for slot,(clip,cut) in expected.items():
                 self.assertEqual((rows[slot]['donor'],rows[slot]['source_range']),(clip,cut))
-    def test_main301_ground_second_and305_353_407_air_clips_are_serialized(self):
-        for slot,clip in [(99,'301'),(100,'301'),(102,'305'),(103,'353'),(104,'407')]:
-            self.assertEqual(by_slot[slot]['donor'],clip);self.assertEqual(by_slot[slot]['source_range'],[0,37] if slot in [99,100] else None)
+    def test_main301_ground_second_and305_407_353_air_clips_are_serialized(self):
+        for slot,clip in [(99,'301'),(100,'301'),(102,'305'),(103,'407'),(104,'353')]:
+            self.assertEqual(by_slot[slot]['donor'],clip);self.assertEqual(by_slot[slot]['source_range'],[0,30] if slot in [99,100] else None)
         self.assertEqual(by_slot[99]['source_bank'],'base');self.assertEqual(by_slot[100]['source_bank'],'base')
     def test_item_007_395_uses_the_requested_shared_payload_in_both_native_item_actions(self):
         for slot in [58,59]:
@@ -263,22 +263,22 @@ class VisualTests(unittest.TestCase):
             for f in np.linspace(0,m.frames-1,11):
                 np.testing.assert_allclose(helper_pose(m,float(f))[-1],helper_pose(original[slot],float(f))[-1],atol=1e-7,rtol=0)
 
-    def test_second_recovery_trim_removes_three_low_motion_source_frames(self):
+    def test_second_recovery_trim_ends_source_at_thirty(self):
         study=json.loads((ROOT/'combo_recovery_analysis.json').read_text())
         row=next(r for r in study['analysis'] if r['source']=='301')
-        self.assertEqual(row['removed_tail_frames'],[38,39,40])
-        self.assertLess(row['removed_tail_fraction_of_peak'],.05)
-        self.assertEqual([by_slot[s]['source_range'] for s in [99,100]],[[0,37],[0,37]])
+        self.assertEqual(row['removed_tail_frames'],list(range(31,41)))
+        self.assertLess(row['removed_tail_fraction_of_peak'],.2)
+        self.assertEqual([by_slot[s]['source_range'] for s in [99,100]],[[0,30],[0,30]])
     def test_air_event_changes_preserve_counts_payloads_and_descriptors(self):
         import struct
         from aqua_event_timing_v20 import tracks
-        for slot in [102,103]:
+        for slot in [102,103,104]:
             before=original[slot].raw;after=converted[slot].raw;allowed=set()
             self.assertEqual(tracks(before),tracks(after))
             for _,kind,count,keys in tracks(before):
                 for i in range(count):
                     at=keys+i*16
-                    if kind==5 or (slot==103 and kind==1):allowed.update(range(at,at+4))
+                    if kind==5 or (slot in [103,104] and kind==1):allowed.update(range(at,at+4))
                     self.assertEqual(before[at+4:at+16],after[at+4:at+16])
             start=struct.unpack_from('<I',before,60)[0]
             self.assertTrue(all(before[i]==after[i] or i in allowed for i in range(start,len(before))))

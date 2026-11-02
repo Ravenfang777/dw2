@@ -44,7 +44,7 @@ for r in report['motions']:
             n=before[at+i*6+3];first=struct.unpack_from('<H',before,at+i*6+4)[0];body_keys.append(first+n)
     segments=[(20,u32(before,16)*4),(28,u32(before,24)*6),(40,max(body_keys)*16),(56,u32(before,52)*8),(36,u32(before,32)*6)]
     event_count=0;event_schema='0'
-    if r['normal_slot'] in [98,99,100,101,102,103,110]:
+    if r['normal_slot'] in [98,99,100,101,102,103,104,110]:
         at=u32(before,60);schema=[]
         while u32(before,at+len(schema)*4)!=0xffffffff:
             schema.extend(struct.unpack_from('<III',before,at+len(schema)*4))

@@ -1,12 +1,17 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
-  "main": "finite504, held normal/Superglide blocked through binding recovery",
+  "main": "once per airtime, faster504; ordinary Glide replaced; native Superglide usable",
+  "reset": "only actual grounded state0 and height<=1, or a new actor identity",
+  "does_not_reset_on": [
+    "button release",
+    "504 completion",
+    "native Superglide",
+    "ability toggle",
+    "bank/binding readmission"
+  ],
+  "repeat_requires_landing": true,
   "direction_locked_for_full_animation": true,
-  "release_shortens_dodge": false,
-  "repeat_requires_new_press": true,
-  "numbered_profiles": "prior v19/v18 controls; normal Glide suppressed during active dodge, Superglide behavior retained",
-  "full_bank_admission_retry_frames": 8,
-  "already_applied_payloads_can_readmit_while_moving": true
+  "numbered_profiles": "unchanged v20/v18 controls and serialized poses"
 }

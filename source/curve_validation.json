@@ -1,7 +1,7 @@
 {
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "Aqua v20 main: right skull roll20,301 tail trim and matching alternate timing, longer air chain windows, wider native body Guard and grace, tap504 Glide replacement with bounded readmission",
+  "scope": "Aqua v21 main: dodge1.5x same distance once per airtime, native Superglide, native jump height1.25, air305/407/353,301 range0..30 with shorter pose hold,366 range15..47",
   "file_growth": 0,
   "headers_counts_helper_hierarchy_and_travel_tracks_unchanged": true,
   "per_record_native_events_and_defense_windows_unchanged": false,
@@ -1036,7 +1036,7 @@
       "donor": "301",
       "source_range": [
         0,
-        37
+        30
       ],
       "loop": false,
       "grounded": true,
@@ -1052,8 +1052,8 @@
               32.0
             ],
             "after_frames": [
-              5.486486486486487,
-              30.0
+              5.4,
+              24.0
             ]
           },
           {
@@ -1064,7 +1064,7 @@
               42.0
             ],
             "after_frames": [
-              30.0,
+              24.0,
               48.0
             ]
           },
@@ -1090,9 +1090,9 @@
               48.0
             ],
             "after_frames": [
-              5.486486486486487,
-              5.986486486486487,
-              6.486486486486487,
+              5.4,
+              5.9,
+              6.4,
               48.0
             ]
           },
@@ -1106,8 +1106,8 @@
               48.0
             ],
             "after_frames": [
-              5.486486486486487,
-              6.486486486486487,
+              5.4,
+              6.4,
               24.0,
               48.0
             ]
@@ -1130,35 +1130,38 @@
         "counts_pointers_and_payloads_preserved": true,
         "source_range": [
           0,
-          37
+          30
         ],
-        "chain_opens": 30.0,
-        "chain_closes": 48
+        "chain_opens": 24.0,
+        "chain_closes": 48,
+        "real_chain_opens_ticks": 24.0,
+        "recovery_tail_rate_multiplier": 2.0
       },
       "source_timing": "combo_finish_hold",
-      "native_hold_frame": 30.0,
+      "native_hold_frame": 24.0,
       "runtime_playback_rate": 1.0,
+      "recovery_tail_rate_multiplier": 2.0,
       "fixture_stem": "s099",
       "olympus_slot": 61,
       "native_frames": 48,
       "motion_bytes": 27088,
-      "changed_bytes": 20922,
+      "changed_bytes": 19583,
       "dynamic_body_curves": 65,
       "static_body_curves": 0,
       "original_body_channel_capacity": 230,
-      "body_keys_used": 1372,
+      "body_keys_used": 1280,
       "reusable_key_capacity": 1380,
-      "max_normalized_curve_error": 1.4015397101327784,
-      "max_pose_position_error": 1.110430857795109,
-      "max_pose_basis_error": 0.025959870656565708,
-      "max_segment_length_error": 4.078515303262975e-12,
-      "max_quarter_frame_bone_step": 56.11735588822254,
+      "max_normalized_curve_error": 0.9970706765501713,
+      "max_pose_position_error": 0.9343035663564233,
+      "max_pose_basis_error": 0.01938602637015401,
+      "max_segment_length_error": 3.680611371237319e-12,
+      "max_quarter_frame_bone_step": 58.256413919759005,
       "root_helper_error": 0.0,
       "validated_pose_samples": 189,
       "max_non_root_attachment_translation_error": 0.0,
       "max_scale_error": 0.0,
       "native_fps": 60.0,
-      "duration_seconds": 0.7833333333333333,
+      "duration_seconds": 0.5916666666666667,
       "headers_unchanged": true
     },
     {
@@ -1168,7 +1171,7 @@
       "donor": "301",
       "source_range": [
         0,
-        37
+        30
       ],
       "loop": false,
       "grounded": true,
@@ -1184,8 +1187,8 @@
               30.0
             ],
             "after_frames": [
-              8.08108108108108,
-              42.0
+              7.960000000000001,
+              33.6
             ]
           },
           {
@@ -1196,7 +1199,7 @@
               54.0
             ],
             "after_frames": [
-              42.0,
+              33.6,
               64.0
             ]
           },
@@ -1223,11 +1226,11 @@
               30.0
             ],
             "after_frames": [
-              8.08108108108108,
-              9.08108108108108,
-              9.58108108108108,
-              10.08108108108108,
-              10.58108108108108
+              7.960000000000001,
+              8.96,
+              9.46,
+              9.96,
+              10.46
             ]
           },
           {
@@ -1241,11 +1244,11 @@
               30.0
             ],
             "after_frames": [
-              8.08108108108108,
-              8.33108108108108,
-              8.58108108108108,
-              8.83108108108108,
-              9.08108108108108
+              7.960000000000001,
+              8.21,
+              8.46,
+              8.71,
+              8.96
             ]
           },
           {
@@ -1266,36 +1269,40 @@
         "counts_pointers_and_payloads_preserved": true,
         "source_range": [
           0,
-          37
+          30
         ],
-        "chain_opens": 42.0,
-        "chain_closes": 64
+        "chain_opens": 33.6,
+        "chain_closes": 64,
+        "real_chain_opens_ticks": 24.0,
+        "recovery_tail_rate_multiplier": 2.0
       },
       "source_timing": "combo_finish_hold",
-      "native_hold_frame": 42.0,
+      "native_hold_frame": 33.6,
       "runtime_playback_rate": 1.4,
+      "recovery_tail_rate_multiplier": 2.0,
       "fixture_stem": "s100",
       "olympus_slot": 62,
       "native_frames": 64,
       "motion_bytes": 32400,
-      "changed_bytes": 22904,
+      "changed_bytes": 20004,
       "dynamic_body_curves": 65,
       "static_body_curves": 0,
       "original_body_channel_capacity": 208,
-      "body_keys_used": 1518,
+      "body_keys_used": 1300,
       "reusable_key_capacity": 1702,
-      "max_normalized_curve_error": 0.9985898216471852,
-      "max_pose_position_error": 0.8074441642807207,
-      "max_pose_basis_error": 0.01946184949547239,
-      "max_segment_length_error": 5.6061821851471905e-12,
-      "max_quarter_frame_bone_step": 42.21134554525414,
+      "max_normalized_curve_error": 0.9983891773877929,
+      "max_pose_position_error": 0.8559064650725399,
+      "max_pose_basis_error": 0.017604642045858085,
+      "max_segment_length_error": 4.583000645652646e-12,
+      "max_quarter_frame_bone_step": 41.966732311854926,
       "root_helper_error": 0.0,
       "validated_pose_samples": 253,
       "max_non_root_attachment_translation_error": 0.0,
       "max_scale_error": 0.0,
       "native_fps": 60.0,
-      "duration_seconds": 0.75,
-      "headers_unchanged": true
+      "duration_seconds": 0.575,
+      "headers_unchanged": true,
+      "serialized_hold_frame": 33.59765625
     },
     {
       "normal_slot": 101,
@@ -1303,7 +1310,7 @@
       "action": "ground finisher",
       "donor": "366",
       "source_range": [
-        12,
+        15,
         47
       ],
       "loop": false,
@@ -1311,6 +1318,7 @@
       "root": "travel",
       "source_bank": "p02ex_128.arc",
       "source_sha256": "0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea",
+      "runtime_playback_rate": 1.46875,
       "event_timing": {
         "tracks": [
           {
@@ -1321,8 +1329,8 @@
               38.0
             ],
             "after_frames": [
-              7.8285714285714265,
-              23.942857142857143
+              1.1562499999999991,
+              18.78125
             ]
           },
           {
@@ -1334,7 +1342,7 @@
             ],
             "after_frames": [
               0.0,
-              23.942857142857143
+              18.78125
             ]
           },
           {
@@ -1347,7 +1355,7 @@
             ],
             "after_frames": [
               0.0,
-              10.514285714285712,
+              4.093749999999999,
               80.0
             ]
           },
@@ -1361,7 +1369,7 @@
             ],
             "after_frames": [
               0.0,
-              10.514285714285712,
+              4.093749999999999,
               80.0
             ]
           },
@@ -1377,37 +1385,36 @@
             "after_frames": [
               0.0,
               0.0,
-              10.551885550362721,
+              4.134874820709228,
               80.0
             ]
           }
         ],
         "counts_pointers_and_payloads_preserved": true,
-        "source_first_frame": 12,
-        "guard_window_frames": null
+        "source_first_frame": 15,
+        "source_last_frame": 47
       },
       "fixture_stem": "s101",
       "olympus_slot": 63,
       "native_frames": 80,
       "motion_bytes": 23936,
-      "changed_bytes": 18248,
+      "changed_bytes": 17515,
       "dynamic_body_curves": 62,
       "static_body_curves": 0,
       "original_body_channel_capacity": 180,
-      "body_keys_used": 1179,
+      "body_keys_used": 1126,
       "reusable_key_capacity": 1187,
-      "max_normalized_curve_error": 1.3062145579408955,
-      "max_pose_position_error": 1.2662953662103027,
-      "max_pose_basis_error": 0.020791998939956254,
-      "max_segment_length_error": 4.0891734442993766e-12,
-      "max_quarter_frame_bone_step": 13.179625834274304,
+      "max_normalized_curve_error": 0.9994914894587389,
+      "max_pose_position_error": 1.0276126895601365,
+      "max_pose_basis_error": 0.016732755640684972,
+      "max_segment_length_error": 4.0820680169417756e-12,
+      "max_quarter_frame_bone_step": 11.549953406469069,
       "root_helper_error": 0.0,
       "validated_pose_samples": 317,
       "max_non_root_attachment_translation_error": 0.0,
       "max_scale_error": 0.0,
-      "duration_seconds": 0.9804964539007093,
-      "runtime_playback_rate": 1.3428571428571427,
       "native_fps": 60.0,
+      "duration_seconds": 0.8964539007092198,
       "headers_unchanged": true
     },
     {
@@ -1498,13 +1505,13 @@
       "normal_slot": 103,
       "request": 205,
       "action": "air second",
-      "donor": "353",
+      "donor": "407",
       "source_range": null,
       "loop": false,
       "grounded": false,
       "root": "travel",
-      "source_bank": "p02ex_352.arc",
-      "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e",
+      "source_bank": "p02ex_624.arc",
+      "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9",
       "event_timing": {
         "tracks": [
           {
@@ -1515,8 +1522,8 @@
               20.0
             ],
             "after_frames": [
-              12.0,
-              25.0
+              7.0,
+              22.0
             ]
           },
           {
@@ -1527,7 +1534,7 @@
               32.0
             ],
             "after_frames": [
-              24.0,
+              22.0,
               42.0
             ]
           },
@@ -1555,25 +1562,25 @@
           }
         ],
         "counts_pointers_and_payloads_preserved": true,
-        "source_range": null,
-        "chain_opens": 24.0,
-        "chain_closes": 42
+        "chain_opens": 22.0,
+        "chain_closes": 42,
+        "donor": "407"
       },
       "fixture_stem": "s103",
       "olympus_slot": 65,
       "native_frames": 42,
       "motion_bytes": 28368,
-      "changed_bytes": 13366,
-      "dynamic_body_curves": 58,
+      "changed_bytes": 15008,
+      "dynamic_body_curves": 64,
       "static_body_curves": 0,
       "original_body_channel_capacity": 203,
-      "body_keys_used": 822,
+      "body_keys_used": 949,
       "reusable_key_capacity": 1484,
-      "max_normalized_curve_error": 0.9993889018348412,
-      "max_pose_position_error": 0.8779553885665536,
-      "max_pose_basis_error": 0.019185267554706786,
-      "max_segment_length_error": 1.5448975432263978e-11,
-      "max_quarter_frame_bone_step": 26.988638364665828,
+      "max_normalized_curve_error": 0.9981561145647966,
+      "max_pose_position_error": 1.3857512964688061,
+      "max_pose_basis_error": 0.022088401246962094,
+      "max_segment_length_error": 4.0820680169417756e-12,
+      "max_quarter_frame_bone_step": 30.29612607287975,
       "root_helper_error": 0.0,
       "validated_pose_samples": 165,
       "max_non_root_attachment_translation_error": 0.0,
@@ -1583,28 +1590,68 @@
       "normal_slot": 104,
       "request": 206,
       "action": "air finisher",
-      "donor": "407",
+      "donor": "353",
       "source_range": null,
       "loop": false,
       "grounded": false,
       "root": "travel",
-      "source_bank": "p02ex_624.arc",
-      "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9",
+      "source_bank": "p02ex_352.arc",
+      "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e",
+      "event_timing": {
+        "tracks": [
+          {
+            "track": 0,
+            "kind": 1,
+            "before_frames": [
+              12.0,
+              38.0
+            ],
+            "after_frames": [
+              16.0,
+              32.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 7,
+            "before_frames": [
+              6.0,
+              38.0
+            ],
+            "after_frames": [
+              6.0,
+              38.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 6,
+            "before_frames": [
+              0.0
+            ],
+            "after_frames": [
+              0.0
+            ]
+          }
+        ],
+        "counts_pointers_and_payloads_preserved": true,
+        "donor": "353"
+      },
       "fixture_stem": "s104",
       "olympus_slot": 66,
       "native_frames": 56,
       "motion_bytes": 24016,
-      "changed_bytes": 14581,
-      "dynamic_body_curves": 64,
+      "changed_bytes": 13102,
+      "dynamic_body_curves": 58,
       "static_body_curves": 0,
       "original_body_channel_capacity": 215,
-      "body_keys_used": 931,
+      "body_keys_used": 810,
       "reusable_key_capacity": 1220,
-      "max_normalized_curve_error": 0.9992806041922838,
-      "max_pose_position_error": 1.084882272608411,
-      "max_pose_basis_error": 0.020515574225994006,
-      "max_segment_length_error": 3.7054803669889225e-12,
-      "max_quarter_frame_bone_step": 22.431377185363957,
+      "max_normalized_curve_error": 0.9990098402969494,
+      "max_pose_position_error": 0.8852213507832999,
+      "max_pose_basis_error": 0.017938858318977388,
+      "max_segment_length_error": 1.1301182212264393e-11,
+      "max_quarter_frame_bone_step": 20.210835593632723,
       "root_helper_error": 0.0,
       "validated_pose_samples": 221,
       "max_non_root_attachment_translation_error": 0.0,

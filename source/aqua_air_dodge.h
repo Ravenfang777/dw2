@@ -1,4 +1,4 @@
-/* Checked native control for Aqua's airborne Circle. Main replaces both Glides.
+/* Checked native control for Aqua's airborne Circle. Main replaces regular Glide and retains Superglide.
  * Sustained slight lift and live stick travel enter the native fall displacement
  * callback BEFORE KH1 collision. No actor-position writes or defense grants.
  */
@@ -6,7 +6,9 @@ typedef void (ABI *AirControlFn)(uptr,uptr);
 typedef void (ABI *AirQueueFn)(uptr,u32,float);
 static AirControlFn air_original;
 static int air_attempted,air_ready,air_disabled,air_armed,air_used,air_pending,air_requested_choice;
-static int air_control_seen;
+static int air_control_seen,air_main_used;
+static uptr air_budget_actor;
+static float air_rate=1.f;
 static uptr air_actor,air_array;
 /* Native clock units, not rendered frames. Full-stick path is 546 horizontal
  * units with 29.25 units of lift over 39 units. The latest request supersedes
@@ -14,6 +16,8 @@ static uptr air_actor,air_array;
 #define AIR_BASE_SPEED 14.f
 #define AIR_LIFT_SPEED .75f
 #define AIR_DURATION 39.f
+#define AIR_MAIN_RATE 1.5f
+static float air_duration(void){return AIR_DURATION/air_rate;}
 static float air_last_clock,air_elapsed,air_vx,air_vz,air_vy;
 static u32 air_move_notes;
 typedef float (ABI *AirMoveFn)(uptr,uptr);
@@ -29,7 +33,16 @@ static int air_finite(float x){u32 b;copy(&b,&x,4);return (b&0x7f800000u)!=0x7f8
 static void air_write_float(uptr p,float x){copy((void*)p,&x,4);}
 static void air_dodge_clear(void){
     air_dodge_active=air_armed=air_used=air_pending=0;
-    air_actor=air_array=0;air_wait=0;air_last_clock=air_elapsed=air_vx=air_vz=air_vy=0;
+    air_actor=air_array=0;air_wait=0;air_last_clock=air_elapsed=air_vx=air_vz=air_vy=0;air_rate=1.f;
+}
+/* Main's spent-use latch belongs to the actor's airtime, not the motion cache.
+ * Profile changes, Superglide and bank readmission cannot replenish it. */
+static void air_budget_tick(uptr actor){
+    if(actor!=r64(base+SORA_RVA))return;
+    if(air_budget_actor!=actor){air_budget_actor=actor;air_main_used=0;}
+    if(!air_main_used||!memory(actor,0x3d8,0)||(r32(actor+0x374)&3u)!=1u)return;
+    float height=air_float(actor+0x3d4);
+    if(r32(actor+0x70)==0u&&air_finite(height)&&height<=1.f)air_main_used=0;
 }
 static int movement_scope(uptr actor){
     return air_ready&&!magic_conflict&&!remove_mode&&air_requested_choice>0&&cache_choice>0&&actor==cache_actor
@@ -90,14 +103,23 @@ static void air_motion_start(uptr actor,float x,float z,float tilt){
         else{x=0.f;z=1.f;}
     }
     if(main_aqua_air())tilt=1.f;
-    air_steer(x,z,tilt);air_vy=AIR_LIFT_SPEED;air_elapsed=0.f;
+    air_rate=main_aqua_air()&&motion_rate_ready?AIR_MAIN_RATE:1.f;
+    air_steer(x,z,tilt);air_vx*=air_rate;air_vz*=air_rate;air_vy=AIR_LIFT_SPEED*air_rate;air_elapsed=0.f;
     typedef u32 (ABI *StateFn)(uptr,u32);
     ((StateFn)(base+0x2b1960u))(actor,2u);
     air_arc_reset(actor);
-    if(air_notes<32u)log_text("AQUA STEERED DODGE: speed14 lift0.75 per native tick; main captures movement direction for full504, numbered tests steer; release does not shorten it; native collision");
+    if(air_notes<32u)log_text(air_rate>1.f?"AQUA MAIN DODGE: rate1.5 speed21 lift1.125 duration26; same546 distance and29.25 lift; one use until landing":"AQUA DODGE: base rate, speed14 lift0.75 duration39; numbered controls or unavailable motion-rate hook");
 }
 static void air_end(void){
     if(!air_dodge_active)return;
+    if(air_rate>1.f&&air_actor==cache_actor&&movement_scope(air_actor)
+        &&memory(air_actor+0x3c0,16,1)&&r32(air_actor+0x70)==2u&&(r32(air_actor+0x164)&0xffffu)==6u){
+        /* Match the former fall handoff velocity, so faster travel does not
+         * add extra post-dodge drift. Native Superglide/damage state is excluded. */
+        air_write_float(air_actor+0x3c0,air_float(air_actor+0x3c0)/air_rate);
+        air_write_float(air_actor+0x3c8,air_float(air_actor+0x3c8)/air_rate);
+        air_write_float(air_actor+0x3cc,air_float(air_actor+0x3cc)/air_rate);
+    }
     if(air_dodge_active)air_arc_reset(air_actor);
     if(!air_pose(0))log_text("AQUA AIR ACTION END: changed/unloaded record retained without stale writes");
     air_dodge_active=air_pending=0;air_wait=0;air_elapsed=air_vx=air_vz=air_vy=0.f;
@@ -142,8 +164,9 @@ static void air_input_log(uptr actor,u32 reasons){
 static void ABI air_control(uptr actor,uptr dir){
     uptr pad=base+0x298ca90u;
     int local=actor==r64(base+SORA_RVA)&&memory(actor,0x448,0)&&memory(pad,0x18,1);
+    if(local)air_budget_tick(actor);
     if(local&&!air_control_seen){
-        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v20");
+        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v21");
         log_number("AQUA CONTROL actor=",actor);
     }
     if(local&&cache_choice<0&&main_glide_scope(actor))motion_gate(actor,air_requested_choice);
@@ -154,11 +177,11 @@ static void ABI air_control(uptr actor,uptr dir){
         if(state==0u&&air_finite(height)&&height<=1.f){air_end();air_used=0;air_armed=!down;}
         else if(!down)air_armed=1;
         air_tick(actor,cache_choice);
-        if(air_dodge_active&&!main_aqua_air())air_steer(air_float(dir),air_float(dir+8),air_float(dir+12));
+        if(air_dodge_active&&air_rate==1.f&&!main_aqua_air())air_steer(air_float(dir),air_float(dir+8),air_float(dir+12));
         if(press&&!air_disabled){
             float x=air_float(dir),z=air_float(dir+8),tilt=air_float(dir+12);
             u32 request=r32(actor+0x164)&0xffffu,count=r32(actor+0x178),reasons=0;
-            if((air_used&&!main_aqua_air())||air_dodge_active)reasons|=2u;
+            if((main_aqua_air()?air_main_used:air_used)||air_dodge_active)reasons|=2u;
             if(!air_armed)reasons|=4u;
             if(state!=1u&&state!=2u)reasons|=8u;
             if(!air_finite(height)||height<=1.f)reasons|=16u;
@@ -177,7 +200,7 @@ static void ABI air_control(uptr actor,uptr dir){
                 if(!((CanFn)(base+0x297870u))(actor))reasons|=1024u;
                 else if(!memory(actor+0x160,0x2c,1)||!memory(actor+0x3b0,0x28,1)||!air_pose(1))reasons|=2048u;
                 else{
-                    air_motion_start(actor,x,z,tilt);air_start(actor);air_used=1;air_armed=0;
+                    air_motion_start(actor,x,z,tilt);air_start(actor);air_used=1;if(main_aqua_air())air_main_used=1;air_armed=0;
                     if(air_notes++<32u)log_text("AQUA AIR DODGE504: fresh airborne Circle; queued native restart even when already falling");
                 }
             }
@@ -212,7 +235,7 @@ static float ABI air_move(uptr actor,uptr out){
     if(air_elapsed==0.f&&air_move_notes++<24u)log_text("AQUA DODGE MOVEMENT ACTIVE: native state2 displacement supplied before collision");
     float dt=air_float(base+0x233fbdcu);
     if(!air_finite(dt)||dt<=0.f||dt>4.f){air_end();return air_move_original(actor,out);}
-    float remaining=AIR_DURATION-air_elapsed;
+    float remaining=air_duration()-air_elapsed;
     if(dt>remaining)dt=remaining;
     if(dt<=0.f){air_end();return air_move_original(actor,out);}
     /* The native ceiling contact bit clips a rising request. KH1 retains all
@@ -223,7 +246,7 @@ static float ABI air_move(uptr actor,uptr out){
     copy((void*)out,move,16);
     float velocity[4]={air_vx,dy/dt,air_vz,move[3]/dt};copy((void*)(actor+0x3c0),velocity,16);
     air_arc_reset(actor);air_elapsed+=dt;
-    if(air_elapsed>=AIR_DURATION)air_end();
+    if(air_elapsed>=air_duration())air_end();
     return air_float(actor+0x124);
 }
 typedef int (ABI *GlideFn)(uptr);
@@ -231,18 +254,27 @@ static GlideFn regular_glide_original;
 static u32 glide_block_notes;
 static const u8 regular_glide_prefix[15]={0x40,0x53,0x48,0x83,0xec,0x20,0x48,0x8b,0xd9,0x8b,0x89,0x48,0x01,0,0};
 static int ABI regular_glide(uptr actor){
-    if(main_glide_scope(actor)){
-        if(glide_block_notes++<16u)log_text("AQUA MAIN GLIDE REPLACED: normal and Superglide shared constructor blocked, including binding recovery");
+    uptr caller=(uptr)__builtin_return_address(0);
+    int main=main_glide_scope(actor);
+    /* Native Superglide enters the shared helper from2B275E; preserve its
+     * own ability/button eligibility. Ordinary/deferred Glide stays blocked. */
+    if(main&&caller!=base+0x2b275eu){
+        if(glide_block_notes++<16u)log_text("AQUA MAIN GLIDE REPLACED: ordinary Glide suppressed; native Superglide remains usable");
         return 0;
     }
-    if(air_dodge_active&&air_actor==actor&&movement_scope(actor)
-        &&(uptr)__builtin_return_address(0)==base+0x2b26ceu)return 0;
-    return regular_glide_original(actor);
+    if(air_dodge_active&&air_actor==actor&&movement_scope(actor)&&caller==base+0x2b26ceu)return 0;
+    int result=regular_glide_original(actor);
+    if(main&&result&&air_dodge_active&&air_actor==actor&&r32(actor+0x70)==21u)air_end();
+    return result;
 }
 static void air_install(void){
     if(air_attempted||remove_mode)return;air_attempted=1;
     uptr a=base+0x2a6220u,g=base+0x2b2d30u,m=base+0x2af6a0u;
-    if(!memory(m,16,0)||!equal((void*)m,air_move_prefix,16)
+    static const u8 normal_ctor[14]={0x40,0x53,0x48,0x83,0xec,0x20,0x48,0x8b,0xd9,0xe8,0x62,0x06,0,0};
+    static const u8 super_ctor[14]={0x40,0x53,0x48,0x83,0xec,0x20,0x48,0x8b,0xd9,0xe8,0xd2,0x05,0,0};
+    if(!memory(base+0x2b26c0u,14,0)||!equal((void*)(base+0x2b26c0u),normal_ctor,14)
+        ||!memory(base+0x2b2750u,14,0)||!equal((void*)(base+0x2b2750u),super_ctor,14)
+        ||!memory(m,16,0)||!equal((void*)m,air_move_prefix,16)
         ||!memory(base+0x2b1960u,14,0)||!equal((void*)(base+0x2b1960u),air_state_prefix,14)
         ||!memory(base+0x233fbdcu,4,0)
         ||!memory(a,17,0)||!equal((void*)a,air_prefix,17)
@@ -280,5 +312,5 @@ static void air_install(void){
     air_original=(AirControlFn)(uptr)page;u8 patch[17];for(unsigned i=0;i<17;i++)patch[i]=0x90;
     magic_jump(patch,(uptr)air_control);copy((void*)a,patch,17);
     kFlushInstructionCache((uptr)-1,(void*)a,17);kVirtualProtect((void*)a,17,old_code,&unused);
-    air_ready=1;log_text("AQUA AIR DODGE READY: v20 main tap replaces normal and Superglide even during binding recovery, locked movement direction and slight lift through504; numbered profiles keep v18 controls");
+    air_ready=1;log_text("AQUA AIR DODGE READY: v21 main tap504 once per airtime, rate1.5 with motion hook, same distance; ordinary Glide replaced, native Superglide retained; numbered controls retained");
 }

@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
   "skinned_skull_joint": 150,
@@ -17,5 +17,6 @@
   "main_combat_run_source": "004",
   "both_run_loops_retained": true,
   "bind_hair_corrections_retained": true,
-  "game_rendering_pending": true
+  "game_rendering_pending": true,
+  "retained_from_v20": true
 }

@@ -129,8 +129,24 @@ static uptr ABI guard_motion(uptr actor,float delta){
             if(request==0x6eu||request==0x6fu)guard_parry_elapsed+=delta;
         }
         if((guard_live(actor)&&request==0xd4u)||(guard_actor==actor&&!guard_seen&&r32(actor+0x178)==1u&&(r32(actor+0x17c)&0xffffu)==0xd4u))delta*=53.f/156.f;
-        else if(request==0xcau)delta*=1.4f;
-        else if(request==0xcbu)delta*=47.f/35.f;
+        else if(air_dodge_active&&!air_pending&&air_actor==actor&&request==6u&&r32(actor+0x70)==2u){
+            float clock=air_float(actor+0x16c);delta*=air_rate;
+            /* Keep the final pose until the collision callback has supplied
+             * its last bounded displacement, independent of callback order. */
+            if(air_rate>1.f&&air_finite(clock)&&air_elapsed<air_duration()&&clock+delta>=39.f){
+                float room=38.999f-clock;delta=room>0.f?room:0.f;
+            }
+        }
+        else if(request==0xc9u||request==0xcau){
+            float clock=air_float(actor+0x16c),rate=request==0xc9u?1.f:1.4f;
+            float finish=request==0xc9u?24.f:33.6f;
+            if(air_finite(clock)&&clock>=0.f){
+                if(clock>=finish)delta*=rate*2.f;
+                else if(clock+delta*rate>finish)delta=(finish-clock)+(delta-(finish-clock)/rate)*rate*2.f;
+                else delta*=rate;
+            }
+        }
+        else if(request==0xcbu)delta*=47.f/32.f;
     }
     return guard_motion_original(actor,delta);
 }
@@ -179,5 +195,5 @@ static void guard_install(void){
         u8 code[15];code[14]=0x90;magic_jump(code,callbacks[i]);copy((void*)addresses[i],code,15);
         kFlushInstructionCache((uptr)-1,(void*)addresses[i],15);kVirtualProtect((void*)addresses[i],15,old[i],&unused);
     }
-    guard_ready=1;log_text("AQUA MAIN GUARD READY: native pool body shield, all angles, bounded parry/release grace, source30fps motion rate");
+    guard_ready=motion_rate_ready=1;log_text("AQUA MAIN GUARD READY: native pool body shield, all angles, bounded parry/release grace, source30fps motion rate");
 }

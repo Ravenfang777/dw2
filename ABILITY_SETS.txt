@@ -1,7 +1,6 @@
-aqua / id117 /0AP / ground 300 301 366 / air305 353 407
-aqua 1 / id118 /0AP / ground 371 365 366 / air218 332 393
-aqua 2 / id119 /0AP / ground 352 353 407 / air351 304 303
-aqua 3 / id120 /0AP / ground 300 301 302 / air616 407 351
-aqua 4 / id121 /0AP / ground 510 511 512 / air504 514 399
-
-v19: select one while idle. See README_FIRST.txt for current changes and test order.
+MAIN aqua (117,0AP): Ground300/301/366; Air305/407/353; Dodge504 once per airtime at1.5x rate; native Superglide; jump height1.25
+Aqua1 (118): Ground371/365/366 Air218/332/393
+Aqua2 (119): Ground352/353/407 Air351/304/303
+Aqua3 (120): Ground300/301/302 Air616/407/351
+Aqua4 (121): Ground510/511/512 Air504/514/399
+Numbered tests retain v20/v18.

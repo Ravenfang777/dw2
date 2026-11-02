@@ -166,7 +166,7 @@
     "ground": "0x2A3E7C",
     "air": "0x2A419B"
   },
-  "version": 20,
+  "version": 21,
   "main_profile_only_stop_aero_rerouting": true,
   "main_stop_aero_ground_target": 55,
   "main_stop_aero_air_target": 80,
@@ -214,5 +214,7 @@
   "additional_main_requests": [],
   "native_spell_queue_append": null,
   "blizzard_native_events_and_request_flags_unchanged": true,
-  "blizzard_visual_only_variant": true
+  "blizzard_visual_only_variant": true,
+  "game_runtime_tested": false,
+  "retained_from_v20": true
 }

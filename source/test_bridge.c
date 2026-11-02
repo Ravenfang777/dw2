@@ -4,17 +4,19 @@
 #include <stddef.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <math.h>
 #define ABI __attribute__((ms_abi))
 typedef struct {uintptr_t base,allocation;uint32_t allocation_protect;uint16_t partition,pad;size_t size;uint32_t state,protect,type,pad2;} MemInfo;
 static struct {uintptr_t start;size_t size;uint32_t protect;} ranges[128];
 static unsigned nranges,queries,protect_calls;
 static uintptr_t game_base;
 static int remove_mode,conflict;
+static int glide_eligible=1;
 static int hand_magic=1,air_enabled=1,alloc_failure,protect_failure;
 static unsigned control_calls,control_words[4],control_mode,queue_calls,native_glide_calls;
 static unsigned matrix_code,point_code;static float point_fraction;
 static char output[131072];static size_t used;
-void bridge_reset(uintptr_t game){game_base=game;nranges=queries=protect_calls=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=queue_calls=native_glide_calls=0;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
+void bridge_reset(uintptr_t game){game_base=game;nranges=queries=protect_calls=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=queue_calls=native_glide_calls=0;glide_eligible=1;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
 void bridge_magic_modes(int enabled,int noalloc,int noprotect){hand_magic=enabled;alloc_failure=noalloc;protect_failure=noprotect;}
 void bridge_range(uintptr_t start,size_t size,uint32_t protect){ranges[nranges].start=start;ranges[nranges].size=size;ranges[nranges].protect=protect;nranges++;}
 void bridge_modes(int remove,int other){remove_mode=remove;conflict=other;}
@@ -45,6 +47,7 @@ void bridge_control(uintptr_t f,uintptr_t actor,uintptr_t dir){
     ((void(ABI*)(uintptr_t,uintptr_t))f)(actor,dir);
     if(control_mode==5&&(*(uint32_t*)(game_base+0x2d5ec10)&0x80u))((void(ABI*)(uintptr_t))(game_base+0x2b26c0))(actor);
 }
+void bridge_glide_eligible(int enabled){glide_eligible=enabled;}
 unsigned bridge_native_glide_calls(void){return native_glide_calls;}
 void bridge_glide(uintptr_t f,uintptr_t actor){((void(ABI*)(uintptr_t))f)(actor);}
 uintptr_t bridge_event(uintptr_t f,uintptr_t motion,uint32_t track,float frame){return ((uintptr_t(ABI*)(uintptr_t,uint32_t,float))f)(motion,track,frame);}
@@ -53,7 +56,7 @@ static uintptr_t ABI native_decode(uint32_t h){
     return *(uintptr_t*)(game_base+0x2ee3980+((h&0x7fffffffu)>>25)*8)+(h&0x1ffffffu);
 }
 static int ABI native_glide_common(uintptr_t actor){
-    native_glide_calls++;*(uint32_t*)(actor+0x70)=21;*(uint32_t*)(actor+0x164)=0x71;*(uint32_t*)(actor+0x178)=0;return 1;
+    native_glide_calls++;if(!glide_eligible)return 0;*(uint32_t*)(actor+0x70)=21;*(uint32_t*)(actor+0x164)=0x71;*(uint32_t*)(actor+0x178)=0;return 1;
 }
 static uintptr_t ABI native_append(uintptr_t actor,uint32_t request,float frame){
     uint32_t count=*(uint32_t*)(actor+0x178);uintptr_t p=actor+0x17c+count*16;
@@ -134,7 +137,9 @@ static uint32_t ABI native_set_state(uintptr_t actor,uint32_t state){
 }
 float bridge_move(uintptr_t f,uintptr_t actor,float*out){return ((float(ABI*)(uintptr_t,float*))f)(actor,out);}
 unsigned bridge_move_calls(void){return move_calls;}
+static float ABI native_sinf(float x){return sinf(x);}
 uintptr_t bridge_symbol(const char*n){
+    if(!strcmp(n,"NativeSinf"))return (uintptr_t)native_sinf;
     if(!strcmp(n,"NativeGuardCreate"))return (uintptr_t)native_guard_create;
     if(!strcmp(n,"NativeGuardMask"))return (uintptr_t)native_guard_mask;
     if(!strcmp(n,"NativeGuardFree"))return (uintptr_t)native_guard_free;

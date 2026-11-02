@@ -1,7 +1,65 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
+  "main_ground_combo": [
+    "300",
+    "301",
+    "366"
+  ],
+  "main_air_combo": [
+    "305",
+    "407",
+    "353"
+  ],
+  "second_source_range": [
+    0,
+    30
+  ],
+  "additional_second_frames_trimmed_since_v20": [
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ],
+  "second_chain_opens_native": [
+    24.0,
+    33.6
+  ],
+  "second_base_rates": [
+    1.0,
+    1.4
+  ],
+  "second_chain_opens_real_ticks": [
+    24.0,
+    24.0
+  ],
+  "v20_second_chain_open_real_ticks": 30.0,
+  "second_pose_hold_rate_multiplier": 2.0,
+  "finisher_source_range": [
+    15,
+    47
+  ],
+  "additional_finisher_start_frames_trimmed_since_v20": [
+    12,
+    13,
+    14
+  ],
+  "finisher_delta_factor": 1.46875,
+  "native_event_payloads_counts_pointers_and_headers_preserved": true,
+  "air_chain_windows": {
+    "102": [
+      18,
+      40
+    ],
+    "103": [
+      22,
+      42
+    ]
+  },
   "variants": {
     "98": {
       "contact_after": 12,
@@ -99,8 +157,8 @@
             32.0
           ],
           "after_frames": [
-            5.486486486486487,
-            30.0
+            5.4,
+            24.0
           ]
         },
         {
@@ -111,7 +169,7 @@
             42.0
           ],
           "after_frames": [
-            30.0,
+            24.0,
             48.0
           ]
         },
@@ -137,9 +195,9 @@
             48.0
           ],
           "after_frames": [
-            5.486486486486487,
-            5.986486486486487,
-            6.486486486486487,
+            5.4,
+            5.9,
+            6.4,
             48.0
           ]
         },
@@ -153,8 +211,8 @@
             48.0
           ],
           "after_frames": [
-            5.486486486486487,
-            6.486486486486487,
+            5.4,
+            6.4,
             24.0,
             48.0
           ]
@@ -177,10 +235,12 @@
       "counts_pointers_and_payloads_preserved": true,
       "source_range": [
         0,
-        37
+        30
       ],
-      "chain_opens": 30.0,
-      "chain_closes": 48
+      "chain_opens": 24.0,
+      "chain_closes": 48,
+      "real_chain_opens_ticks": 24.0,
+      "recovery_tail_rate_multiplier": 2.0
     },
     "100": {
       "tracks": [
@@ -192,8 +252,8 @@
             30.0
           ],
           "after_frames": [
-            8.08108108108108,
-            42.0
+            7.960000000000001,
+            33.6
           ]
         },
         {
@@ -204,7 +264,7 @@
             54.0
           ],
           "after_frames": [
-            42.0,
+            33.6,
             64.0
           ]
         },
@@ -231,11 +291,11 @@
             30.0
           ],
           "after_frames": [
-            8.08108108108108,
-            9.08108108108108,
-            9.58108108108108,
-            10.08108108108108,
-            10.58108108108108
+            7.960000000000001,
+            8.96,
+            9.46,
+            9.96,
+            10.46
           ]
         },
         {
@@ -249,11 +309,11 @@
             30.0
           ],
           "after_frames": [
-            8.08108108108108,
-            8.33108108108108,
-            8.58108108108108,
-            8.83108108108108,
-            9.08108108108108
+            7.960000000000001,
+            8.21,
+            8.46,
+            8.71,
+            8.96
           ]
         },
         {
@@ -274,10 +334,12 @@
       "counts_pointers_and_payloads_preserved": true,
       "source_range": [
         0,
-        37
+        30
       ],
-      "chain_opens": 42.0,
-      "chain_closes": 64
+      "chain_opens": 33.6,
+      "chain_closes": 64,
+      "real_chain_opens_ticks": 24.0,
+      "recovery_tail_rate_multiplier": 2.0
     },
     "101": {
       "tracks": [
@@ -289,8 +351,8 @@
             38.0
           ],
           "after_frames": [
-            7.8285714285714265,
-            23.942857142857143
+            1.1562499999999991,
+            18.78125
           ]
         },
         {
@@ -302,7 +364,7 @@
           ],
           "after_frames": [
             0.0,
-            23.942857142857143
+            18.78125
           ]
         },
         {
@@ -315,7 +377,7 @@
           ],
           "after_frames": [
             0.0,
-            10.514285714285712,
+            4.093749999999999,
             80.0
           ]
         },
@@ -329,7 +391,7 @@
           ],
           "after_frames": [
             0.0,
-            10.514285714285712,
+            4.093749999999999,
             80.0
           ]
         },
@@ -345,14 +407,14 @@
           "after_frames": [
             0.0,
             0.0,
-            10.551885550362721,
+            4.134874820709228,
             80.0
           ]
         }
       ],
       "counts_pointers_and_payloads_preserved": true,
-      "source_first_frame": 12,
-      "guard_window_frames": null
+      "source_first_frame": 15,
+      "source_last_frame": 47
     },
     "102": {
       "tracks": [
@@ -418,8 +480,8 @@
             20.0
           ],
           "after_frames": [
-            12.0,
-            25.0
+            7.0,
+            22.0
           ]
         },
         {
@@ -430,7 +492,7 @@
             32.0
           ],
           "after_frames": [
-            24.0,
+            22.0,
             42.0
           ]
         },
@@ -458,9 +520,49 @@
         }
       ],
       "counts_pointers_and_payloads_preserved": true,
-      "source_range": null,
-      "chain_opens": 24.0,
-      "chain_closes": 42
+      "chain_opens": 22.0,
+      "chain_closes": 42,
+      "donor": "407"
+    },
+    "104": {
+      "tracks": [
+        {
+          "track": 0,
+          "kind": 1,
+          "before_frames": [
+            12.0,
+            38.0
+          ],
+          "after_frames": [
+            16.0,
+            32.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 7,
+          "before_frames": [
+            6.0,
+            38.0
+          ],
+          "after_frames": [
+            6.0,
+            38.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 6,
+          "before_frames": [
+            0.0
+          ],
+          "after_frames": [
+            0.0
+          ]
+        }
+      ],
+      "counts_pointers_and_payloads_preserved": true,
+      "donor": "353"
     },
     "110": {
       "tracks": [
@@ -504,54 +606,5 @@
         54
       ]
     }
-  },
-  "main_ground_combo": [
-    "300",
-    "301",
-    "366"
-  ],
-  "main_air_combo": [
-    "305",
-    "353",
-    "407"
-  ],
-  "main_second_source_range": [
-    0,
-    37
-  ],
-  "main_second_discarded_source_frames": [
-    38,
-    39,
-    40
-  ],
-  "main_second_native_chain_open": [
-    30,
-    42
-  ],
-  "main_second_native_delta_factors": [
-    1.0,
-    1.4
-  ],
-  "main_second_real_chain_open_ticks": [
-    30,
-    30
-  ],
-  "first_contact_and_chain_timing_unchanged": true,
-  "main_finisher_source_range": [
-    12,
-    47
-  ],
-  "finisher_native_delta_factor": 1.3428571428571427,
-  "main_air_chain_windows": {
-    "102": [
-      18,
-      40
-    ],
-    "103": [
-      24,
-      42
-    ]
-  },
-  "event_counts_payloads_pointers_and_native_headers_preserved": true,
-  "numbered_profiles": "v19/v18 bytes preserved"
+  }
 }

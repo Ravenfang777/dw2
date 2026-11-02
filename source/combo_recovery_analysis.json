@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "passed": true,
   "game_runtime_tested": false,
   "main_only": true,
@@ -110,42 +110,59 @@
       "peak_rms_joint_step": 54.47551905139964,
       "retained_source_range": [
         0,
-        37
+        30
       ],
       "removed_tail_frames": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
         38,
         39,
         40
       ],
-      "removed_tail_mean_rms_joint_step": 1.6711914102667687,
-      "removed_tail_fraction_of_peak": 0.030677842806599763
+      "removed_tail_mean_rms_joint_step": 7.514785021030174,
+      "removed_tail_fraction_of_peak": 0.13794792875566178
     }
   ],
-  "second_swing_chain_real_native_ticks": 30.0,
-  "second_swing_contact_real_native_ticks": 6.486486486486487,
+  "second_swing_chain_real_native_ticks": 24.0,
+  "second_swing_contact_real_native_ticks": 6.4,
   "second_swing_native_hold_frames": {
-    "99": 30.0,
-    "100": 42.0
+    "99": 24.0,
+    "100": 33.6
   },
   "second_swing_native_delta_factors": {
     "99": 1.0,
     "100": 1.4
   },
-  "finisher": "366 range12..47 and prior real playback rate retained; no additional quiet leading frames were assumed",
+  "finisher": "366 retains source15..47; additional3 leading frames removed after v20; native events and duration retimed",
   "air_chain_windows": {
     "102": [
       18.0,
       40.0
     ],
     "103": [
-      24.0,
+      22.0,
       42.0
     ]
   },
   "air_sequence": [
     "305",
-    "353",
-    "407"
+    "407",
+    "353"
   ],
-  "numbered_profile_changes": false
+  "numbered_profile_changes": false,
+  "second_recovery_tail_rate_multiplier": 2.0,
+  "additional_second_trim_after_v20": [
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ]
 }

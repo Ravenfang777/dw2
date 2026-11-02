@@ -1,11 +1,11 @@
-title: KH1FM Aqua Animation Test v20
+title: KH1FM Aqua Animation Test v21
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Main Aqua v20: right20 skull tilt,301 recovery trim, wider air followups,
-  wider native all-angle body Guard and12-tick grace, tap504 replaces both
-  Glides through bounded binding recovery. Numbered tests retain v19/v18.
-  Original MSETs. Steam Global/Panacea.
+  Main Aqua v21: tap504 at1.5x speed with the same distance, once per airtime;
+  native Superglide retained; jump height+25 percent; air305/407/353;
+  shorter301 recovery and366 opening. Numbered tests retained. Original MSETs.
+  Steam Global/Panacea.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy

@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "profiles": {
     "0": [
       {
@@ -384,16 +384,17 @@
         "donor": "301",
         "source_range": [
           0,
-          37
+          30
         ],
         "loop": false,
         "grounded": true,
         "root": "travel",
         "source_bank": "base",
-        "event_timing": "trim_second_recovery",
+        "event_timing": "shorter_second_recovery",
         "source_timing": "combo_finish_hold",
-        "native_hold_frame": 30.0,
-        "runtime_playback_rate": 1.0
+        "native_hold_frame": 24.0,
+        "runtime_playback_rate": 1.0,
+        "recovery_tail_rate_multiplier": 2.0
       },
       {
         "normal_slot": 100,
@@ -402,16 +403,17 @@
         "donor": "301",
         "source_range": [
           0,
-          37
+          30
         ],
         "loop": false,
         "grounded": true,
         "root": "travel",
         "source_bank": "base",
-        "event_timing": "trim_second_recovery",
+        "event_timing": "shorter_second_recovery",
         "source_timing": "combo_finish_hold",
-        "native_hold_frame": 42.0,
-        "runtime_playback_rate": 1.4
+        "native_hold_frame": 33.6,
+        "runtime_playback_rate": 1.4,
+        "recovery_tail_rate_multiplier": 2.0
       },
       {
         "normal_slot": 101,
@@ -419,7 +421,7 @@
         "action": "ground finisher",
         "donor": "366",
         "source_range": [
-          12,
+          15,
           47
         ],
         "loop": false,
@@ -427,8 +429,8 @@
         "root": "travel",
         "source_bank": "p02ex_128.arc",
         "source_sha256": "0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea",
-        "runtime_playback_rate": 1.3428571428571427,
-        "event_timing": "trim_finisher_source12"
+        "runtime_playback_rate": 1.46875,
+        "event_timing": "trim_finisher_source15"
       },
       {
         "normal_slot": 102,
@@ -446,6 +448,19 @@
         "normal_slot": 103,
         "request": 205,
         "action": "air second",
+        "donor": "407",
+        "source_range": null,
+        "loop": false,
+        "grounded": false,
+        "root": "travel",
+        "source_bank": "p02ex_624.arc",
+        "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9",
+        "event_timing": "swapped_air_contacts"
+      },
+      {
+        "normal_slot": 104,
+        "request": 206,
+        "action": "air finisher",
         "donor": "353",
         "source_range": null,
         "loop": false,
@@ -453,19 +468,7 @@
         "root": "travel",
         "source_bank": "p02ex_352.arc",
         "source_sha256": "df1e0c88c1c9e4e4fe8f5208004e8f145e4691fbe5852829dfb86fd880bdf06e",
-        "event_timing": "air_followup_window"
-      },
-      {
-        "normal_slot": 104,
-        "request": 206,
-        "action": "air finisher",
-        "donor": "407",
-        "source_range": null,
-        "loop": false,
-        "grounded": false,
-        "root": "travel",
-        "source_bank": "p02ex_624.arc",
-        "source_sha256": "662e052148203ad2d71697d92290e336c89d167cd36af840a69ba6a639786ef9"
+        "event_timing": "swapped_air_contacts"
       },
       {
         "normal_slot": 110,
