@@ -1,6 +1,6 @@
 {
-  "version": 11,
-  "test_round": 3,
+  "version": 12,
+  "test_round": 4,
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -18,65 +18,75 @@
     121
   ],
   "main_ground_finisher": "411",
-  "neutral_air_dodge": "504",
+  "main_air_combo": [
+    "407",
+    "352",
+    "353"
+  ],
+  "air_dodge": "504",
   "normal_falling": "506",
-  "test_3_combos": [
+  "test_4_combos": [
     [
       [
-        "516",
-        "518",
-        "519"
+        "622",
+        "623",
+        "045"
       ],
       [
-        "607",
-        "608",
-        "609"
+        "220",
+        "221",
+        "351"
       ]
     ],
     [
       [
-        "610",
-        "611",
-        "612"
+        "353",
+        "399",
+        "411"
       ],
       [
-        "616",
-        "618",
-        "619"
+        "413",
+        "710",
+        "711"
       ]
     ],
     [
       [
-        "613",
-        "602",
-        "603"
+        "060",
+        "022",
+        "023"
       ],
       [
-        "604",
-        "605",
-        "606"
+        "025",
+        "026",
+        "052"
       ]
     ],
     [
       [
-        "617",
-        "405",
-        "406"
+        "701",
+        "700",
+        "708"
       ],
       [
-        "407",
-        "452",
-        "621"
+        "395",
+        "051",
+        "505"
       ]
     ]
   ],
+  "air_aliases": {
+    "395": "007 / 395",
+    "051": "008 / 051",
+    "505": "060 / 505"
+  },
   "normal_motion_records_per_profile": 47,
   "olympus_motion_records_per_profile": 46,
   "unique_generated_pose_variants": 76,
-  "actual_pe_mock_tests": 49,
-  "geometry_assignment_tests": 13,
+  "actual_pe_mock_tests": 50,
+  "geometry_assignment_tests": 14,
   "pose_samples": 16548,
-  "max_pose_position_fit_error": 4.98903332659248,
+  "max_pose_position_fit_error": 4.978390892545143,
   "max_non_root_attachment_translation_error": 0.0,
   "max_scale_error": 0.0,
   "native_travel_error": 0.0,
@@ -84,11 +94,13 @@
   "helper_slots": 11,
   "left_palm_magic": 206,
   "air_dodge_one_per_airtime": true,
+  "air_dodge_directional_input_allowed": true,
+  "air_dodge_neutral_stick_required": false,
   "air_dodge_extra_invulnerability": false,
-  "dll_sha256": "e6321ac38a5477c6d35bb4b68f891b458c7078cd675f3aa281bf7fb0b5955cd0",
+  "dll_sha256": "e33032b5cdfebb59ac0aa51f55aa191b34cc63a790a03c9098b75cc01ba04e92",
   "limitations": [
     "Windows/KH1 execution and rendered appearance pending",
-    "New input detour and airborne transition require in-game testing",
+    "Directional airborne Circle and new clips require in-game testing",
     "504 uses native fall gravity and40-frame timing; no added BBS travel or invulnerability",
     "Thunder retains v10 alternate casting duration86/78"
   ]

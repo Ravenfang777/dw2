@@ -1,6 +1,6 @@
-﻿Ability,Ability id,Action,Aqua clip,Trigger,Normal slot,Olympus slot,Native frames,Normal falling clip,Input restored after control,Native gravity and velocity
-aqua,117,Neutral aerial dodge,504,Fresh airborne Jump/Circle after release; neutral left stick; once per airtime,10,10,40,506,True,True
-aqua 1,118,Neutral aerial dodge,504,Fresh airborne Jump/Circle after release; neutral left stick; once per airtime,10,10,40,506,True,True
-aqua 2,119,Neutral aerial dodge,504,Fresh airborne Jump/Circle after release; neutral left stick; once per airtime,10,10,40,506,True,True
-aqua 3,120,Neutral aerial dodge,504,Fresh airborne Jump/Circle after release; neutral left stick; once per airtime,10,10,40,506,True,True
-aqua 4,121,Neutral aerial dodge,504,Fresh airborne Jump/Circle after release; neutral left stick; once per airtime,10,10,40,506,True,True
+﻿Ability,Ability id,Action,Aqua clip,Trigger,Normal slot,Olympus slot,Native frames,Directional input allowed,Neutral stick required,Normal falling clip,Input restored after control,Native gravity and velocity
+aqua,117,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,False,506,True,True
+aqua 1,118,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,False,506,True,True
+aqua 2,119,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,False,506,True,True
+aqua 3,120,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,False,506,True,True
+aqua 4,121,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,False,506,True,True

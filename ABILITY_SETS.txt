@@ -1,7 +1,7 @@
-Ability aqua / id117 / 0 AP / main finisher411; air dodge504
-Ability aqua 1 / id118 / 0 AP / ground 516 518 519 / air 607 608 609
-Ability aqua 2 / id119 / 0 AP / ground 610 611 612 / air 616 618 619
-Ability aqua 3 / id120 / 0 AP / ground 613 602 603 / air 604 605 606
-Ability aqua 4 / id121 / 0 AP / ground 617 405 406 / air 407 452 621
+Ability aqua / id117 / 0 AP / main air407 352 353; ground finisher411; airborne dodge504
+Ability aqua 1 / id118 / 0 AP / ground 622 623 045 / air 220 221 351
+Ability aqua 2 / id119 / 0 AP / ground 353 399 411 / air 413 710 711
+Ability aqua 3 / id120 / 0 AP / ground 060 022 023 / air 025 026 052
+Ability aqua 4 / id121 / 0 AP / ground 701 700 708 / air 395 051 505
 
-Select one while idle. Neutral-air504 is shared by all five.
+Select one while idle. Airborne504 accepts neutral or directional input in all five. Aqua4 air aliases:007/395,008/051,060/505.

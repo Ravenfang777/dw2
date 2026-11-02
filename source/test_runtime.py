@@ -176,14 +176,23 @@ class RuntimeTests(unittest.TestCase):
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,state=1,request=5)
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x164),6)
         self.assertEqual(r32(h.actor+0x70),1);self.assertEqual(r32(h.actor+0x178),0)
-    def test_aerial_dodge_does_not_trigger_from_held_takeoff_or_directional_air_circle(self):
+    def test_aerial_dodge_requires_release_after_held_takeoff_then_accepts_directional_circle(self):
         h=Host(air=True);h.frame();h.equip(True);h.frame()
         h.control(down=6,pressed=6,state=0,request=4,height=0)
         h.control(down=6,pressed=0,state=1,request=5)
         self.assertEqual(h.body(10),h.expected(10,1))
         h.control();h.control(down=6,pressed=6,tilt=.8,x=.8)
-        self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(bridge.bridge_control_word(0)&6,6)
-        h.control();h.control(down=6,pressed=6);self.assertEqual(h.body(10),h.dodge_body())
+        self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(bridge.bridge_control_word(0)&6,0)
+    def test_airborne_circle_accepts_all_stick_directions_in_both_banks_without_rewriting_direction(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,air=True,encoded_fields=True);h.frame();h.equip(True);h.frame()
+            for x,z,tilt in [(0,0,0),(1,0,1),(-1,0,1),(0,1,1),(0,-1,1),(.7,.7,1),(-.7,-.7,1)]:
+                h.control(state=0,request=0,height=0);h.control()
+                h.control(down=6,pressed=6,x=x,z=z,tilt=tilt)
+                self.assertEqual(h.body(10),h.dodge_body(),(bank,x,z))
+                self.assertEqual(C.string_at(h.dir,16),struct.pack('<4f',x,0,z,tilt))
+                self.assertEqual([bridge.bridge_control_word(i)&6 for i in range(4)],[0]*4)
+                self.assertEqual(r32(h.game+0x298ca94)&6,6)
     def test_aerial_dodge_finishes_into_506_and_requires_a_landing_before_repeating(self):
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6)
         put(h.actor+0x16c,struct.pack('<f',39));h.frame();h.assert_all(self,1)
@@ -212,7 +221,7 @@ class RuntimeTests(unittest.TestCase):
             for slot in range(98,105):self.assertEqual(h.body(slot),h.expected(slot,profile+1))
             h.control(state=0,request=0,height=0);h.assert_all(self,profile+1)
     def test_air_dodge_excludes_unbound_other_actor_events_scripts_busy_commands_and_invalid_stick(self):
-        for reason in ['off','other','event','menu','script','scriptflag','actionflag','cast','attack','reaction','shortcut','command','queued','queued_ledge','nan','moving','near_ground']:
+        for reason in ['off','other','event','menu','script','scriptflag','actionflag','cast','attack','reaction','shortcut','command','queued','queued_ledge','nan','negative_tilt','near_ground']:
             h=Host(air=True);h.arm_air();kwargs={}
             if reason=='off':h.equip(False);w32(h.actor+0x164,0);h.frame()
             elif reason=='other':kwargs['actor']=h.buffer(bytes(0x800))
@@ -228,7 +237,7 @@ class RuntimeTests(unittest.TestCase):
             elif reason=='command':w32(h.game+0x2d53a40,2)
             elif reason in ['queued','queued_ledge']:w32(h.actor+0x178,1);w32(h.actor+0x17c,0xc8 if reason=='queued' else 0xd)
             elif reason=='nan':kwargs['tilt']=float('nan')
-            elif reason=='moving':kwargs.update(tilt=.5,x=.5)
+            elif reason=='negative_tilt':kwargs['tilt']=-.1
             else:kwargs['height']=1
             before=h.body(10);h.control(pressed=6,**({'down':6}|kwargs))
             self.assertEqual(h.body(10),before,reason)

@@ -76,6 +76,6 @@ lines+=['typedef struct { unsigned int bytes; const unsigned char *before,*after
         'static const AquaRequestTable aqua_requests[2]={'+','.join(request_rows)+'};']
 (ROOT/'aqua_data.h').write_text('\n'.join(lines)+'\n')
 (ROOT/'data_validation.json').write_text(json.dumps({'passed':True,'motions':len(descriptors),'profiles':5,
-    'all_headers_and_motion_sizes_identical':True,'all_changes_inside_existing_body_and_helper_tables':True,'neutral_air_dodge_extra_pose':True,
+    'all_headers_and_motion_sizes_identical':True,'all_changes_inside_existing_body_and_helper_tables':True,'air_dodge_extra_pose':True,
     'unique_data_blocks':len(arrays)},indent=2)+'\n')
 print('Generated',len(descriptors),'motions and 5 profiles;',len(arrays),'unique blocks')

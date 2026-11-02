@@ -1,4 +1,4 @@
-AQUA V11 TEST 3 SOURCE
+AQUA V12 TEST 4 SOURCE
 
 Normal installation requires OpenKH/Panacea; these are development files.
 
@@ -13,12 +13,12 @@ and attachment detours against Win64 ABI mocks, not Windows or KH1.
 
 REBUILD POSES (optional; NumPy, SciPy, Pillow)
 From this source directory:
-  python3 retargeting/tools/build_aqua_complete_v11.py --profile 0 --output .
-  python3 retargeting/tools/build_aqua_complete_v11.py --profile 1 --output sets/p1
-  python3 retargeting/tools/build_aqua_complete_v11.py --profile 2 --output sets/p2
-  python3 retargeting/tools/build_aqua_complete_v11.py --profile 3 --output sets/p3
-  python3 retargeting/tools/build_aqua_complete_v11.py --profile 4 --output sets/p4
-  python3 retargeting/tools/build_aqua_complete_v11.py --profile 5 --output dodge
+  python3 retargeting/tools/build_aqua_complete_v12.py --profile 0 --output .
+  python3 retargeting/tools/build_aqua_complete_v12.py --profile 1 --output sets/p1
+  python3 retargeting/tools/build_aqua_complete_v12.py --profile 2 --output sets/p2
+  python3 retargeting/tools/build_aqua_complete_v12.py --profile 3 --output sets/p3
+  python3 retargeting/tools/build_aqua_complete_v12.py --profile 4 --output sets/p4
+  python3 retargeting/tools/build_aqua_complete_v12.py --profile 5 --output dodge
   python3 generate_data.py
   python3 build.py
   python3 test_runtime.py
@@ -37,7 +37,7 @@ uses the normal correction envelope; the old304 finisher is no longer selected. 
 offsets/scales retain their bind values. The V8 reference contains 41 samples
 of ten joints per original converted motion; it supports an independent
 bounded-displacement checks for unchanged source actions only. New casts,
-falling and the changed411 finisher are excluded from that historical comparison. It is not mesh
+falling, finisher411 and the407/352/353 main air combo are excluded from that historical comparison. It is not mesh
 collision detection. Hair155..193 retains the v8 bind-rest correction.
 
 FIVE PROFILE GATE
@@ -49,7 +49,7 @@ only other Aqua entries are turned off. Missing entries are granted only if
 all fit with a terminator in the original 48-byte list. Native entries are
 not evicted. Uninstall removes only ids117..121.
 
-NEUTRAL AERIAL DODGE
+AIRBORNE AERIAL DODGE
 The main plan remains47 normal /46 Olympus records. Profile5 of the retargeting
 builder is a single non-looped504 variant of the existing fall record10.
 generate_data.py stores this as AquaPart.dodge; admission accepts it and the
@@ -59,7 +59,7 @@ trampoline copies the first10 bytes and rewrites the RIP-relative security-
 cookie load as mov rax, imm64; mov rax,[rax], targeting original0x554A88.
 The original control, can-act0x297870 and queued-motion0x29F980 bytes are
 verified before installation. The last two functions are called, not hooked.
-Fresh merged logical Jump/Circle bits6, neutral tilt<=.15, free air1/2,
+Fresh merged logical Jump/Circle bits6, any valid stick direction, free air1/2,
 height>1, an admitted body bank and no busy/native queued action authorize504.
 One use per airtime, armed after button release. Beginning from fall6 resets
 only actor+16C to zero; beginning from rise queues native fall6. Native state,
@@ -102,10 +102,19 @@ No motion/header/table expansion is used. The cast lookup copy has the original
 352 request words; only Thunder entries0x38/0x85 change their physical slot. The original eleven helpers and
 native travel remain. Four sets change seven physical combo records each:
 C8 first, C9/CA second, CB finisher, CC first air, CD second air, CE finisher.
-The donor selection is in aqua_v11_plan.py. Numeric IDs retain their exact
+The donor selection is in aqua_v12_plan.py. Numeric IDs retain their exact
 source bank/hash in TEST_CLIP_SOURCES.csv; no command names are inferred.
 The source inventory files under ../inventory retain v8's source metadata.
 Current ability mappings are ../ANIMATION_MAP.csv.
 
 Existing upstream licenses and notices are retained in licenses.
 Format reference: https://openkh.dev/bbs/file/type/pam.html
+
+TEST4 SOURCE VARIANTS
+New requests carry source_sha256 and validate the exact selected PAM payload
+before fitting. The sampling-cache name includes this identity. Aliases395,
+051 and505 use the shared007/395,008/051 and060/505 inventory rows. Plain060
+uses the separate40-frame p02ex_711.arc payload;052 uses the20-frame gameplay
+clip. Prefer dedicated gameplay variants for045,353,399 and411. Required ARC
+files, including xaa*.arc banks, are in retargeting/core_source. Exact choices
+are source_selections.json; current assignments are the root mapping CSVs.

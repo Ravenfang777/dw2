@@ -1,7 +1,7 @@
 {
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "Aqua v11 / Test 3; main finisher411; temporary neutral-air504; V10 casts/fall retained",
+  "scope": "Aqua v12 / Test 4 aerial dodge504; any valid stick direction",
   "file_growth": 0,
   "headers_counts_helper_hierarchy_and_travel_tracks_unchanged": true,
   "per_record_native_events_and_defense_windows_unchanged": true,
@@ -20,7 +20,7 @@
     {
       "normal_slot": 10,
       "request": 6,
-      "action": "neutral aerial dodge overlay",
+      "action": "airborne dodge overlay",
       "donor": "504",
       "source_range": null,
       "loop": false,

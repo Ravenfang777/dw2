@@ -1,4 +1,4 @@
-/* Neutral airborne logical Jump/Circle: one 504 pose per airtime.
+/* Airborne logical Jump/Circle; neutral or directional stick: one 504 pose per airtime.
  * The normal fall record is temporarily given a second fitted body pose.
  * Native state, gravity, velocity, collision and defensive flags stay native.
  * One admitted control-entry hook consumes only Jump bits during that pose.
@@ -71,7 +71,7 @@ static void ABI air_control(uptr actor,uptr dir){
         int free_request=air_free_request(request);
         if(!air_dodge_active&&!air_used&&air_armed&&down&&press&&(state==1u||state==2u)
             &&air_finite(height)&&height>1.f&&air_finite(x)&&air_finite(z)&&air_finite(tilt)
-            &&tilt>=0&&tilt<=.15f&&x*x+z*z<=.0225f&&free_request
+            &&tilt>=0&&free_request
             &&!(r32(pad+4)&0x00140000u)&&!(r32(base+0x2d53a40u)&0xffu)
             &&(!r32(actor+0x178)||air_free_request(r32(actor+0x17c)&0xfffu))){
             typedef int (ABI *CanFn)(uptr);typedef void (ABI *QueueFn)(uptr,u32,float);
@@ -80,7 +80,7 @@ static void ABI air_control(uptr actor,uptr dir){
                 if(request==6u){*(volatile u32*)(actor+0x16c)=0;air_pending=0;}
                 else{((QueueFn)(base+0x29f980u))(actor,6u,0.f);air_pending=1;}
                 air_dodge_active=air_used=1;air_armed=0;air_wait=0;air_last_clock=0;
-                if(air_notes++<32)log_text("AQUA AIR DODGE 504: fresh neutral airborne Jump/Circle; one per airtime; native fall physics");
+                if(air_notes++<32)log_text("AQUA AIR DODGE 504: fresh airborne Jump/Circle; neutral or directional stick; one per airtime; native fall physics");
             }
         }
         mask=air_dodge_active;
@@ -115,5 +115,5 @@ static void air_install(void){
     air_original=(AirControlFn)(uptr)page;u8 patch[17];for(unsigned i=0;i<17;i++)patch[i]=0x90;
     magic_jump(patch,(uptr)air_control);copy((void*)a,patch,17);
     kFlushInstructionCache((uptr)-1,(void*)a,17);kVirtualProtect((void*)a,17,old_code,&unused);
-    air_ready=1;log_text("AQUA AIR DODGE READY: neutral airborne Jump/Circle uses 504; original control trampoline admitted");
+    air_ready=1;log_text("AQUA AIR DODGE READY: airborne Jump/Circle uses 504 with neutral or directional stick; original control trampoline admitted");
 }

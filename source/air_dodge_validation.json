@@ -22,7 +22,6 @@
     16,
     20
   ],
-  "neutral_threshold": 0.15,
   "one_per_airtime": true,
   "fresh_press_after_release_required": true,
   "profiles": 5,
@@ -37,5 +36,8 @@
   "motion_header_or_table_expansion": false,
   "fall_body_restored_on_end_interrupt_and_off": true,
   "original_input_restored_after_control": true,
-  "optional_ini": "air_dodge=0"
+  "optional_ini": "air_dodge=0",
+  "directional_input_allowed": true,
+  "neutral_stick_required": false,
+  "version": 12
 }

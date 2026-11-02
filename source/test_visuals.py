@@ -1,4 +1,4 @@
-"""Independent checks of serialized V11 base, aerial dodge and four Test 3 profiles."""
+"""Independent checks of serialized V12 base, aerial dodge and four Test 4 profiles."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
@@ -45,9 +45,9 @@ class VisualTests(unittest.TestCase):
     def test_limb_clearance_keeps_wrist_and_ankle_displacements_bounded(self):
         before,after=clearance_samples()
         # The frozen V8 positions only compare the same source actions; V10's
-        # newly assigned casts and falling intentionally have different poses.
+        # newly assigned casts, fall, finisher and air combo have different poses.
         slots=np.load(ROOT/'fixtures/v8_arm_reference.npz')['slots']
-        same_source=~np.isin(slots,[10,54,55,56,57,79,80,81,82,101])
+        same_source=~np.isin(slots,[10,54,55,56,57,79,80,81,82,101,102,103,104])
         before=before[same_source];after=after[same_source]
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[4,7],:]-before[:,:,[4,7],:],axis=3))),23.)
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[8,9],:]-before[:,:,[8,9],:],axis=3))),2.)
@@ -109,19 +109,31 @@ class VisualTests(unittest.TestCase):
             pa[:,:3,3]-=helper_pose(a,float(a.frames-1))[-1,:3,3]
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
-    def test_requested_action_clips_and_test_3_combos_match_serialized_reports(self):
-        actions={101:'411',10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
+    def test_requested_action_clips_and_test_4_combos_match_serialized_reports(self):
+        actions={101:'411',102:'407',103:'352',104:'353',10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
-        wanted=[(['516','518','519'],['607','608','609']),
-                (['610','611','612'],['616','618','619']),
-                (['613','602','603'],['604','605','606']),
-                (['617','405','406'],['407','452','621'])]
+        wanted=[(['622','623','045'],['220','221','351']),
+                (['353','399','411'],['413','710','711']),
+                (['060','022','023'],['025','026','052']),
+                (['701','700','708'],['395','051','505'])]
         for profile,(ground,air) in enumerate(wanted,1):
             rows=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())['motions']
             actual={r['normal_slot']:r['donor'] for r in rows}
             self.assertEqual(actual,dict(zip(range(98,105),[ground[0],ground[1],ground[1],ground[2],*air])))
+    def test_test_4_aliases_keep_the_requested_shared_payloads_and_separate_plain_060(self):
+        rows=json.loads((ROOT/'sets/p4/curve_validation.json').read_text())['motions'];by={r['normal_slot']:r for r in rows}
+        expected={102:('395','007 / 395','bb421875fd62baf56d5e0b0f19fadecca5037593ad2d257db8f66cac92ee4b96'),
+                  103:('051','008 / 051','50e65b49cf95e17b7eab8f09435ed11bb66748931a42cabaa47337d55add6e52'),
+                  104:('505','060 / 505','be0d13b489bddbfe255b4e55fc9821ed1500947396a04290e1672a312554dcd5')}
+        for slot,(clip,aliases,sha) in expected.items():
+            self.assertEqual((by[slot]['donor'],by[slot]['source_aliases'],by[slot]['source_sha256']),(clip,aliases,sha))
+        ground=json.loads((ROOT/'sets/p3/curve_validation.json').read_text())['motions']
+        first=next(r for r in ground if r['normal_slot']==98)
+        self.assertEqual(first['donor'],'060')
+        self.assertEqual(first['source_sha256'],'71d6effd143365ddd2472e79479f628b62c875083748a70e01438b7dd5fd07d9')
+        self.assertNotEqual(first['source_sha256'],by[104]['source_sha256'])
     def test_supported_idle_stances_allow_room_for_soras_boots(self):
         minimum=float(np.linalg.norm(model.bind[43,:3,3]-model.bind[17,:3,3])*1.35)
         for slot in [0,1]:

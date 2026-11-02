@@ -48,10 +48,10 @@ static int slots_reported;
 static const char *profile_names[AQUA_ABILITIES]={"aqua","aqua 1","aqua 2","aqua 3","aqua 4"};
 static const char *profile_help[AQUA_ABILITIES]={
     "Aqua movement attacks guard dodge magic and reactions",
-    "Test 3 Ground 516 518 519 Air 607 608 609",
-    "Test 3 Ground 610 611 612 Air 616 618 619",
-    "Test 3 Ground 613 602 603 Air 604 605 606",
-    "Test 3 Ground 617 405 406 Air 407 452 621"};
+    "Test 4 Ground 622 623 045 Air 220 221 351",
+    "Test 4 Ground 353 399 411 Air 413 710 711",
+    "Test 4 Ground 060 022 023 Air 025 026 052",
+    "Test 4 Ground 701 700 708 Air 395 051 505"};
 static int table_reported;
 static w16 log_path[1024],ini_path[1024];
 /* A real DIR64 relocation keeps the PE image independently relocatable. */
@@ -319,7 +319,7 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v11 Test 3 loaded by Panacea; aqua and aqua 1..4; finisher411, neutral-air dodge504, fall506 and LEFT-hand magic");
+    log_text("KH1FM AQUA ANIMATION TEST v12 Test 4 loaded by Panacea; aqua and aqua 1..4; finisher411, air407/352/353, airborne dodge504, fall506 and LEFT-hand magic");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }
