@@ -1,122 +1,121 @@
-KH1FM AQUA ANIMATION TEST v14
+KH1FM AQUA ANIMATION TEST v15
 Steam Global / OpenKH Panacea
 
-MAIN AQUA CHANGES
-Fire: ground391; air316
-Cure: ground427; air318
-Stop / Aero: ground317; air390 (current Gravity animations)
-Ground combo:300,365,366
-Air combo:351,371,393
-Both native second-ground variants use365. Each combo is first, second, finisher.
-Fire retains its split release/recovery structure using the swapped source clip.
-Stop/Aero share Gravity's existing86-ground/78-air-frame casting records;
-previously they shared Cure's68/68-frame records. Native spell behavior remains.
+MAIN AQUA
+Ground combo:300 ->365 ->366.
+Air combo:351 ->352 ->393 (second air hit changed to352).
+Blizzard/Blizzara/Blizzaga now use Fire's current animation:391 ground,316 air,
+including Fire's recovery phase. The spell remains Blizzard: native MP,
+element, projectiles, target and spell logic are retained.
+Fire391/316, Cure427/318 and Stop/Aero317/390 retain v14's assignments.
 
-AERIAL DODGE504 REPAIR
-Your v13 log recorded five airborne presses rejected only by mask0x100:
-state2, request0xA, one allowed air motion queued, held/pressed6, input record
-0x03000000. V13 misread bit24 as a busy command. The supplied executable skips
-command dispatch when that bit is set; when it is clear, a nonzero low command
-byte dispatches a native command. V14 follows that native branch condition.
-The logged input now plays504 in the actual-DLL mock host for all five profiles
-and both banks. Actual post-fix KH1 verification is still needed.
+MAGIC ORIGIN / EFFECTS
+All Aqua profiles use native keyblade-tip spell origins and effect matrices.
+No palm-redirection hooks are installed. Older hand_magic INI settings are
+ignored in this build. Item007/395, falling506 and other spell logic remain.
 
-Release Circle after takeoff, then press it again airborne. Neutral and
-directional stick input are supported. It is once per airtime; landing rearms.
-The checked native queue always restarts the fall animation, including from
-an existing fall. Pending native commits, timeouts and interruptions are handled.
-It remains an animation test: no added invulnerability, height or BBS dash travel.
+GLIDE
+Keep Aqua350 opening source0..20 during the first40 native frames. At frame40,
+restore all four ORIGINAL Sora Glide motion bodies and resume their original
+clock, steering and looping. Native release into fall6 retains Aqua350's
+closing source20..40, then returns to506. Glide's normal ability, held-input,
+state, movement, descent and collision requirements remain; it is not granted.
 
-TEST4 NUMBERED PROFILES - ANIMATIONS RETAINED FROM v13
-aqua   : ground300 365 366 ; air351 371 393 (new main profile)
+AERIAL DODGE504
+The v14 log shows504 being accepted, followed immediately by native Glide71.
+Native movement can enter Glide later using cached selection flags after the
+input callback returns, beyond the scope of its temporary pad mask.
+V15 adds a checked hook at the native regular-Glide constructor. While504 owns
+the fall pose, that deferred Glide entry is suppressed for the verified Sora
+actor. After504 ends, native Glide passes through normally. Both the control
+and Glide entries verify before either is patched; failed admission retains
+native controls. Tests exercise the deferred call after control returns.
+
+Jump, release Circle, then press it again airborne. Neutral and directional
+stick input are allowed. One504 per airtime; land to rearm. The native fall
+queue restarts the40-frame animation and returns to506. No extra height,
+invulnerability or BBS dash travel is added. Post-fix KH1 testing is still needed.
+
+GROUND COMBO2 TIMING - MAIN AQUA ONLY
+Both native variants keep source365 and their original lengths/counts.
+C9/normal99 (Olympus61),48 native frames: first contact8 ->35; follow-up47.
+CA/normal100 (Olympus62),64 native frames: first contact24 ->47; follow-up63.
+All frame numbers are zero based at60fps. The follow-up window opens at the
+final animation frame. Existing contact, trail/sound and state-event timestamps
+are delayed together; the original event payloads, counts, descriptor pointers,
+hitboxes and damage values remain. Native commands that use this same cancel
+window also become available later. Check the hit/chain feel in-game.
+
+NUMBERED TEST4 COMBO / SPELL POSES RETAINED
 aqua 1 : ground316 317 318 ; air391 390 427
 aqua 2 : ground315 371 366 ; air365 218 332
 aqua 3 : ground393 411 352 ; air616 407 351
 aqua 4 : ground510 511 512 ; air504 514 399
-
-The Fire/Cure swaps and Stop/Aero routing edits apply only to main aqua.
-Numbered entries keep v13 Fire316/391, Cure318/427 and Stop/Aero318/427.
-Thunder, Blizzard and Gravity use317/390 in every profile. LEFT-hand spell
-origins/glow, item007/395, falling506, Guard, Cartwheel, reactions and movement
-remain. All five entries share the corrected504 input handling.
-Ability ids117..121 and0AP remain. Select one while idle; other Aqua entries
-turn off. Saved selections are respected. Native abilities are never evicted.
+The352 air second, Fire-style Blizzard and365 event retiming apply to main aqua.
+The native-tip magic, original Glide middle and504 guard apply to all five.
+Numbered spell poses retain their previous assignments. Select one while idle;
+zero-AP ids117..121 and saved selections remain. Native abilities are not evicted.
 
 INSTALL
 1. Fully close KH1.
-2. Disable Aqua v13 and all older Aqua packages, Sora Restore Check and
+2. Disable Aqua v14 and all older Aqua packages, Sora Restore Check and
    Nine Styles / Dual Wield. Keep other Sora model/moveset replacements off.
-3. Import this ZIP into OpenKH and enable Aqua Animation Test v14.
-4. Build and Run, then load your save and equip aqua while idle.
+3. Import this ZIP into OpenKH, enable Aqua Animation Test v15, Build and Run.
+4. Load your save and equip aqua while idle.
 
 TEST
-- With main aqua, test Fire and Cure on the ground and in the air.
-- Check grounded Stop/Aero against grounded Gravity, then aerial Stop/Aero
-  against aerial Gravity. They should use matching animation families.
-- Test ground300/365/366 and air351/371/393. Unequip native combo replacements
-  such as Slapshot, Vortex and Hurricane Blast for clean basic-combo testing.
-- Jump, release Circle, then press again to test504; land between attempts.
-- Check LEFT-hand effects, item use, Glide350, transitions/reloads and both saves.
-- Numbered profiles retain their v13 animations. Turning Aqua off at idle
-  restores the original bodies and original actor request-table pointer.
+- Check main ground300/365/366: late second contact, full second animation,
+  then the next attack. Test locked/unlocked attacks to cover both variants.
+- Check air351/352/393 and ground/air Blizzaga with Fire's animation.
+- Check native weapon-tip spell effects, including Fire, Cure and Stop/Aero.
+- Jump, release Circle, press again for504; land between attempts.
+- Test Glide's Aqua opening, Sora middle while steering, then Aqua closing.
+- Check both saves, room transitions/reloads and restoration with Aqua off.
+For clean basic-combo testing, unequip Slapshot, Vortex, Hurricane Blast and
+other native combo replacements; their separate actions keep their own timing.
 
-IF DODGE STILL FAILS
+IF DODGE STILL FAILS / INSTALL CHECK
 Return the new kh1-aqua.log from beside KINGDOM HEARTS FINAL MIX.exe after one
-test. Its first line must identify v14. AIR DODGE READY and CONTROL OBSERVED
-confirm hook admission and arrival. AIR INPUT records the accepted/rejected
-press, current/first queued request, held/pressed input and command flags.
-The file is replaced on each game launch; capture it before restarting.
-CHECK_AQUA_V14.cmd checks installed asset hashes and writes
-Aqua_Animation_Check_v14.txt. Drag your OpenKH folder onto it if needed.
+test. The first line must identify v15. Look for AIR DODGE READY, accepted504,
+then deferred native Glide constructor suppressed. Capture the log before
+restarting, since each launch replaces it. CHECK_AQUA_V15.cmd checks installed
+hashes and writes Aqua_Animation_Check_v15.txt. Drag your OpenKH folder onto it
+if its default path does not match.
 
-RETAINED GLIDE350
-The first40 native Glide frames play source0..20, then hold source frame20.
-Steering carries that progress into the next native Glide pose. Native release
-into fall6 plays closing source20..40 on the existing40-frame fall record,
-then returns to506. Landing/busy actions/off interrupt the closing pose.
-Normal Glide records75..78 match Olympus37..40. The original120/60/60/60-frame
-record capacities remain. Native Glide/Superglide unlock, equipped ability,
-held-input, state, velocity, descent and collision requirements remain.
-The checked control hook provides phase handling; air_dodge=0 disables only
-504, retaining native Circle/Glide input and the350 controller.
-
-CAPACITY / BEHAVIOR
-Both installed MSET files are original. All fitted records keep native headers,
-lengths, counts, table allocation, eleven helpers and helper travel. Only known
-normal Sora/Olympus motion data and request tables are admitted. No records,
-helper slots, hitboxes or new BBS command logic are added. KH1 damage, spell
-scripts, MP/targeting, native event tracks and defensive windows remain native.
-Source changes alter poses; existing native record durations govern their speed.
-Thunder retains its86/78-frame alternate casting duration. Main Stop/Aero now
-use that same Gravity family timing. Final cast timing/FX needs an in-game check.
+CAPACITY / RESTORATION
+Both installed MSET files are original. All runtime motion headers, lengths,
+table allocations, bone/helper counts, eleven helpers and native travel stay
+original. The main second-ground edits change existing event time values only;
+live encoded event descriptor pointers are retained. Unknown data blocks writes.
+Body and request-table switching/restoration waits for idle. BBS command scripts,
+MP logic or new invulnerability/hitboxes are not imported. Guard/Cartwheel motion
+records retain native defensive windows. Spell timing uses the existing target
+records, including Gravity's86/78 frames for main Stop/Aero.
 
 FILES
-ABILITY_SETS.txt lists current sequences.
-SPELL_MAPPING.csv lists all seven spells, ground/air, for all five profiles.
-ANIMATION_MAP.csv lists51 usual records per profile (50 available in Olympus).
-AIR_DODGE_MAPPING.csv and GLIDE_MAPPING.csv describe the transient actions.
-TEST_CLIP_SOURCES.csv lists selected sources, ranges, frames, FPS and hashes.
-source contains current code, fitted fixtures, test reports and rebuild inputs.
-inventory retains the existing349-clip list; current assignments are the CSVs.
-007/395 are aliases for the same item animation payload. Numeric source IDs
-are not official command names.
+ANIMATION_MAP.csv: usual motions for all five profiles.
+SPELL_MAPPING.csv: every spell, ground/air, including current Blizzard routing.
+COMBO_TIMING.csv: main second-ground contact and follow-up frames.
+AIR_DODGE_MAPPING.csv / GLIDE_MAPPING.csv: movement phases and input rule.
+TEST_CLIP_SOURCES.csv: exact source banks, cuts, frames, FPS and hashes.
+source: current code, fixtures, tests, evidence reports and rebuild inputs.
+inventory: existing349-clip inventory; current assignments are the root CSVs.
+Numeric animation IDs are source identifiers, not official command names.
 
-OPTIONAL FALLBACKS / REMOVE
-To disable Circle504, copy DISABLE_AIR_DODGE_kh1-aqua.ini beside the EXE as
-kh1-aqua.ini and restart. To retain native weapon-tip casting attachments, use
-DISABLE_HAND_MAGIC_kh1-aqua.ini. Combine air_dodge=0 and hand_magic=0 in a
-single [aqua] INI if needed. Remove the INI and restart for defaults.
-To remove all five Aqua entries, use REMOVE_AQUA_kh1-aqua.ini as kh1-aqua.ini,
-leave v14 enabled, restart and load each save to clean. Check AQUA ABILITIES
-REMOVED, then save in-game. Exit, remove the INI, disable v14 and rebuild.
-Only ids117..121 are removed; native ability order stays intact.
+OPTIONAL DISABLE / REMOVE
+To disable only airborne504, copy DISABLE_AIR_DODGE_kh1-aqua.ini beside the EXE
+as kh1-aqua.ini and restart. Native Circle/Glide and the Glide pose phases remain.
+To remove all five entries, use REMOVE_AQUA_kh1-aqua.ini as kh1-aqua.ini, leave
+v15 enabled, restart and load each save to clean. Check AQUA ABILITIES REMOVED,
+then save in-game. Exit, remove the INI, disable v15 and rebuild. Only117..121
+are removed. Remove a temporary INI and restart to use default movement settings.
 
 VALIDATION
-64 actual-PE Win64-ABI mock-host tests passed, including the logged Jump input,
-native-command exclusion, delayed commits, all five profiles/both banks,
-main-only spell lookup changes, idle switching/restoration and failure paths.
-17 geometry/assignment checks passed across105 serialized profile/transient
-assignments (86 distinct fitted records), including the new second hits,
-main-only spell swaps, Fire continuity, native capacities/travel and hair/wrists.
-All fits remain below the existing5-unit position-error limit. The checks do
-not run Windows/KH1 or render Sora's mesh; post-fix gameplay needs confirmation.
+65 actual-PE Win64-ABI runtime tests and18 geometry/assignment checks passed.
+They cover deferred Glide after control, original constructor/trampoline calls,
+native-tip casting, original Sora mid-flight bodies, Blizzard recovery queues,
+main-only timing/restoration and unknown-data rejection across both banks.
+Timing tests also execute the supplied executable's actual native event sampler.
+All105 serialized pose assignments (86 distinct fitted records) keep the existing
+capacity bounds. These checks do not run Windows/KH1 or render Sora's mesh.
+The dodge fix, transition appearance and new contact/chain feel need in-game testing.

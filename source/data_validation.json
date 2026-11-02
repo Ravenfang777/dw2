@@ -3,8 +3,10 @@
   "motions": 51,
   "profiles": 5,
   "all_headers_and_motion_sizes_identical": true,
-  "all_changes_inside_existing_body_and_helper_tables": true,
+  "all_changes_inside_existing_body_and_helper_tables": false,
   "air_dodge_extra_pose": true,
   "glide_stop_extra_pose": true,
-  "unique_data_blocks": 545
+  "unique_data_blocks": 549,
+  "all_changes_inside_existing_body_helper_and_event_key_tables": true,
+  "event_descriptor_counts_pointers_and_payloads_preserved": true
 }

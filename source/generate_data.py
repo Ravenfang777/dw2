@@ -9,10 +9,10 @@ lookup=[{r['normal_slot']:r for r in s['motions']} for s in sets]
 def u32(d,p):return struct.unpack_from('<I',d,p)[0]
 lines=['/* Generated immutable original and five Aqua profile payloads. */',
        '#define AQUA_PROFILE_COUNT 5',f'#define AQUA_MOTION_COUNT {len(report["motions"])}',
-       '#define AQUA_PART_COUNT 5',
+       '#define AQUA_PART_COUNT 6',
        f'#define AQUA_ANCHOR_INDEX {next(i for i,r in enumerate(report["motions"]) if r["normal_slot"]==98)}',
        'typedef struct { unsigned int field,size,sentinel; const unsigned char *before,*after[AQUA_PROFILE_COUNT],*dodge,*glide_stop; } AquaPart;',
-       'typedef struct { unsigned int request,normal_slot,olympus_slot,raw_bytes; unsigned int scalars[7]; AquaPart parts[AQUA_PART_COUNT]; } AquaMotion;',
+       'typedef struct { unsigned int request,normal_slot,olympus_slot,raw_bytes,part_count,event_count; const unsigned int *event_schema; unsigned int scalars[7]; AquaPart parts[AQUA_PART_COUNT]; } AquaMotion;',
        'static const unsigned int aqua_scalar_fields[7]={4,8,16,24,32,44,52};']
 arrays={}
 def array(data):
@@ -44,9 +44,18 @@ for r in report['motions']:
         for i in range(u32(before,n_at)):
             n=before[at+i*6+3];first=struct.unpack_from('<H',before,at+i*6+4)[0];body_keys.append(first+n)
     segments=[(20,u32(before,16)*4),(28,u32(before,24)*6),(40,max(body_keys)*16),(56,u32(before,52)*8),(36,u32(before,32)*6)]
+    event_count=0;event_schema='0'
+    if r['normal_slot'] in [99,100]:
+        at=u32(before,60);schema=[]
+        while u32(before,at+len(schema)*4)!=0xffffffff:
+            schema.extend(struct.unpack_from('<III',before,at+len(schema)*4))
+        event_count=len(schema)//3;first=schema[2]
+        assert all(schema[i*3+2]==first+sum(schema[j*3+1] for j in range(i))*16 for i in range(event_count))
+        name=f'events_{r["normal_slot"]}';lines.append(f'static const unsigned int {name}[]={{'+','.join(str(x)+'u' for x in schema)+'};')
+        event_schema=name;segments.append((60,sum(schema[i*3+1] for i in range(event_count))*16))
     parts=[];allowed=set()
     for field,size in segments:
-        offset=u32(before,field);blobs=[data[offset:offset+size] for data in [before,*converted]]
+        offset=schema[2] if field==60 else u32(before,field);blobs=[data[offset:offset+size] for data in [before,*converted]]
         assert all(len(b)==size for b in blobs)
         symbols=[array(b) for b in blobs];allowed.update(range(offset,offset+size))
         sentinel=max(range(0,size-3,4),key=lambda k:len({b[k:k+4] for b in blobs}))
@@ -56,7 +65,7 @@ for r in report['motions']:
         parts.append('{'+f'{field},{size},{sentinel},{symbols[0]},'+'{'+','.join(symbols[1:])+'},'+extra+','+stop+'}')
     for after in converted+([dodge,glide_stop] if dodge else []):assert all(a==b or p in allowed for p,(a,b) in enumerate(zip(before,after)))
     scalars=','.join(str(u32(before,p))+'u' for p in [4,8,16,24,32,44,52])
-    descriptors.append('{'+f'{r["request"]},{r["normal_slot"]},{r["olympus_slot"]},{len(before)},'+'{'+scalars+'},'+'{'+','.join(parts)+'}}')
+    descriptors.append('{'+f'{r["request"]},{r["normal_slot"]},{r["olympus_slot"]},{len(before)},{len(parts)},{event_count},{event_schema},'+'{'+scalars+'},'+'{'+','.join(parts)+'}}')
 lines+=['static const AquaMotion aqua_motions[AQUA_MOTION_COUNT]={',',\n'.join(descriptors),'};']
 # Main Aqua also routes Stop/Aero to the current Gravity family. Numbered
 # profiles retain the v13 Thunder-only routing. All native flags and the
@@ -74,10 +83,10 @@ for name in ['he','normal']:
         word=u32(before,request*4);assert word==0x1000|old
         struct.pack_into('<I',after,request*4,(word&~0xfff)|new)
     main=bytearray(after)
-    for request,new in [(0x3b,18 if suffix else 55),(0x3c,18 if suffix else 55),
+    for request,new in [(0x37,17 if suffix else 54),(0x84,41 if suffix else 79),(0x3b,18 if suffix else 55),(0x3c,18 if suffix else 55),
                         (0x88,42 if suffix else 80),(0x89,42 if suffix else 80)]:
         word=u32(main,request*4)
-        old=(19 if suffix else 56) if request<0x80 else (43 if suffix else 81)
+        old=((18 if suffix else 55) if request<0x80 else (42 if suffix else 80)) if request in [0x37,0x84] else ((19 if suffix else 56) if request<0x80 else (43 if suffix else 81))
         assert word==(0x1000|old)
         struct.pack_into('<I',main,request*4,(word&~0xfff)|new)
     (ROOT/f'fixtures/requests_{name}_original.bin').write_bytes(before)
@@ -88,6 +97,6 @@ lines+=['typedef struct { unsigned int bytes; const unsigned char *before,*after
         'static const AquaRequestTable aqua_requests[2]={'+','.join(request_rows)+'};']
 (ROOT/'aqua_data.h').write_text('\n'.join(lines)+'\n')
 (ROOT/'data_validation.json').write_text(json.dumps({'passed':True,'motions':len(descriptors),'profiles':5,
-    'all_headers_and_motion_sizes_identical':True,'all_changes_inside_existing_body_and_helper_tables':True,'air_dodge_extra_pose':True,'glide_stop_extra_pose':True,
+    'all_headers_and_motion_sizes_identical':True,'all_changes_inside_existing_body_and_helper_tables':False,'all_changes_inside_existing_body_helper_and_event_key_tables':True,'event_descriptor_counts_pointers_and_payloads_preserved':True,'air_dodge_extra_pose':True,'glide_stop_extra_pose':True,
     'unique_data_blocks':len(arrays)},indent=2)+'\n')
 print('Generated',len(descriptors),'motions and 5 profiles;',len(arrays),'unique blocks')

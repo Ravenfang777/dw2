@@ -60,7 +60,7 @@ typedef struct {uptr motion,parts[AQUA_PART_COUNT];u32 handle,slot,contiguous;} 
 static Binding cached[AQUA_MOTION_COUNT];
 static uptr cache_actor,cache_array,reported_wait_array,cache_low,cache_high;
 static u32 cache_array_bytes,cache_count;
-static int air_dodge_active,glide_stop_active;
+static int air_dodge_active,glide_stop_active,glide_standard_active;
 static void air_dodge_clear(void);
 static int cache_choice=-1,pending_reported,last_choice=-1;
 static u32 last_action=0xffffffffu,action_logs;
@@ -115,6 +115,24 @@ static uptr decode(u32 h){
 static uptr relative_or_handle(uptr motion,u32 value,unsigned raw_bytes){
     if(value&&value<raw_bytes)return motion+value;
     return decode(value);
+}
+/* Event key streams have a descriptor indirection. Keep every live encoded
+ * descriptor pointer untouched and verify their shape/contiguous key layout. */
+static uptr motion_part(uptr motion,const AquaMotion*d,const AquaPart*p,int group){
+    if(p->field!=60u)return relative_or_handle(motion,r32(motion+p->field),d->raw_bytes);
+    if(!d->event_count||!d->event_schema)return 0;
+    uptr descriptors=relative_or_handle(motion,r32(motion+60),d->raw_bytes);
+    usize bytes=d->event_count*12u+4u;
+    if(!(group&&descriptors>=cache_low&&descriptors+bytes<=cache_high)&&!memory(descriptors,bytes,0))return 0;
+    uptr first=0;
+    for(unsigned i=0;i<d->event_count;i++){
+        const u32*s=d->event_schema+i*3u;uptr at=descriptors+i*12u;
+        if(r32(at)!=s[0]||r32(at+4)!=s[1])return 0;
+        uptr keys=relative_or_handle(motion,r32(at+8),d->raw_bytes);
+        if(!i)first=keys;
+        if(keys!=first+s[2]-d->event_schema[2])return 0;
+    }
+    return r32(descriptors+d->event_count*12u)==0xffffffffu?first:0;
 }
 static uptr save_block(void){
     uptr p=(uptr)r64(base+SAVE_PTR_RVA);
@@ -198,8 +216,8 @@ static int valid_motion(uptr motion,const AquaMotion *d,Binding *out,int *failur
     *failure=1;if(!memory(motion,80,0))return 0;
     *failure=2;for(unsigned i=0;i<7;i++)if(r32(motion+aqua_scalar_fields[i])!=d->scalars[i])return 0;
     out->contiguous=1;
-    for(unsigned i=0;i<AQUA_PART_COUNT;i++){
-        const AquaPart *part=d->parts+i;uptr p=relative_or_handle(motion,r32(motion+part->field),d->raw_bytes);
+    for(unsigned i=0;i<d->part_count;i++){
+        const AquaPart *part=d->parts+i;uptr p=motion_part(motion,d,part,0);
         *failure=(int)(0x10u+part->field);
         if(!memory(p,part->size,1)||!part_known(p,part))return 0;
         out->parts[i]=p;
@@ -221,9 +239,10 @@ static int fast_binding(uptr actor,uptr array,int choice){
         if(r32(array+b->slot*4u)!=b->handle)return 0;
         if(!group&&!memory(b->motion,b->contiguous?d->raw_bytes:80,0))return 0;
         for(unsigned k=0;k<7;k++)if(r32(b->motion+aqua_scalar_fields[k])!=d->scalars[k])return 0;
-        for(unsigned j=0;j<AQUA_PART_COUNT;j++){
-            const AquaPart *part=d->parts+j;uptr p=relative_or_handle(b->motion,r32(b->motion+part->field),d->raw_bytes);
+        for(unsigned j=0;j<aqua_motions[i].part_count;j++){
+            const AquaPart *part=d->parts+j;uptr p=motion_part(b->motion,d,part,group);
             const u8 *expected=part_data(part,choice);
+            if(glide_standard_active&&d->normal_slot>=75u&&d->normal_slot<=78u)expected=part->before;
             if(d->normal_slot==10){
                 if(air_dodge_active&&part->dodge)expected=part->dodge;
                 else if(glide_stop_active&&part->glide_stop)expected=part->glide_stop;
@@ -279,16 +298,16 @@ static void motion_gate(uptr actor,int choice){
         if(!found[i].motion)continue;
         Binding again;int reason;
         if(r32(array+found[i].slot*4u)!=found[i].handle||!valid_motion(found[i].motion,aqua_motions+i,&again,&reason))return;
-        for(unsigned j=0;j<AQUA_PART_COUNT;j++)if(again.parts[j]!=found[i].parts[j])return;
+        for(unsigned j=0;j<aqua_motions[i].part_count;j++)if(again.parts[j]!=found[i].parts[j])return;
     }
     CastBinding cast_again;
     if(r32(actor+0x1d8)!=cast_found.current||!cast_admit(actor,array,bank,choice,&cast_again)
         ||cast_again.original!=cast_found.original||cast_again.next!=cast_found.next)return;
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<aqua_motions[i].part_count;j++){
         const AquaPart *part=aqua_motions[i].parts+j;const u8 *desired=part_data(part,choice);
         if(!equal((void*)found[i].parts[j],desired,part->size))copy((void*)found[i].parts[j],desired,part->size);
     }
-    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<aqua_motions[i].part_count;j++){
         const AquaPart *part=aqua_motions[i].parts+j;
         if(!equal((void*)found[i].parts[j],part_data(part,choice),part->size)){clear_binding();return;}
     }
@@ -298,11 +317,12 @@ static void motion_gate(uptr actor,int choice){
         if(found[i].motion<cache_low)cache_low=found[i].motion;
         if(found[i].motion+80>cache_high)cache_high=found[i].motion+80;
         if((found[i].slot+1)*4u>cache_array_bytes)cache_array_bytes=(found[i].slot+1)*4u;
-        for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+        for(unsigned j=0;j<aqua_motions[i].part_count;j++){
             uptr p=found[i].parts[j],end=p+aqua_motions[i].parts[j].size;
             if(p<cache_low)cache_low=p;if(end>cache_high)cache_high=end;
         }
     }
+    glide_standard_active=0;
     cast_publish(actor,array,&cast_found);
     copy(cached,found,sizeof(cached));cache_actor=actor;cache_array=array;cache_choice=choice;pending_reported=0;reported_wait_array=0;
     log_text(choice?"AQUA MOTIONS ENABLED: Aqua common body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all mapped original Sora records restored");
@@ -320,11 +340,11 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    static const w16 magic_key[]={'h','a','n','d','_','m','a','g','i','c',0};
-    magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
+    magic_disabled=1; /* Native keyblade-tip casting is required for v15. */
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v14 loaded by Panacea; main ground300/365/366 air351/371/393; Fire391/316 Cure427/318 Stop/Aero317/390; Jump-flag dodge504 fix; LEFT-hand magic");
+    log_text("KH1FM AQUA ANIMATION TEST v15 loaded by Panacea; main ground300/365/366 air351/352/393; Blizzard uses Fire poses; native keyblade-tip magic; native Glide middle; late ground-second timing; dodge504 Glide guard");
+    if(magic_disabled)log_text("AQUA MAGIC: native keyblade-tip origins and effect matrices; palm redirection disabled by default");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }
@@ -352,6 +372,7 @@ EXPORT void ABI OnFrame(void){
     else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("AQUA WAITING: ability list full or not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"AQUA UNEQUIPPED");last_choice=choice;}
     air_requested_choice=choice;
+    cast_followup(actor);
     air_tick(actor,choice);
     glide_tick(actor,choice);
     motion_gate(actor,choice);

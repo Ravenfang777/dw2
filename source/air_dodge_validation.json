@@ -39,7 +39,7 @@
   "optional_ini": "air_dodge=0",
   "directional_input_allowed": true,
   "neutral_stick_required": false,
-  "version": 14,
+  "version": 15,
   "always_uses_native_queued_restart": true,
   "already_falling_clock_is_not_manually_reset": true,
   "native_commit_wait_ticks": 16,
@@ -48,8 +48,8 @@
   "native_control_observed_diagnostic": true,
   "normal_jump_flags": "0x03000000",
   "native_command_dispatch_predicate": "(command & 0xFF) != 0 && (command & 0x01000000) == 0",
-  "user_log_name": "kh1-aqua(3).log",
-  "user_log_sha256": "fc5ff70bdfca44645920c710c4e73e80c40beaeba15bcf010c94211b1dd188bb",
+  "user_log_name": "kh1-aqua(4).log",
+  "user_log_sha256": "7d94ec5d9008b5a203e05dd95cbaa2c01649254f235ffba4b21b18c29ecc953b",
   "user_log_airborne_press_rejections_due_only_to_command_flag": 5,
   "user_log_accepted_504_actions": 0,
   "v13_exact_log_shaped_reproduction_rejected": true,
@@ -59,5 +59,15 @@
     "0x2A62F8": "cmp byte [command],0; zero type skips native command handler",
     "0x2A6307": "call0x2A7510 only for nonzero command type without Jump handling bit"
   },
-  "real_native_command_id_remains_excluded": true
+  "real_native_command_id_remains_excluded": true,
+  "observed_v14_problem": "accepted504 immediately followed by native Glide state21/request71",
+  "deferred_glide_constructor_guard": {
+    "rva": "0x2B26C0",
+    "stolen_bytes": "40534883ec20488bd9e862060000",
+    "relocated_call_target": "0x2B2D30",
+    "native_original_resumes_at": "0x2B26CE",
+    "suppression_scope": "same verified Sora actor while504 active"
+  },
+  "native_cached_glide_selection_evidence": "0x2AFD79 tests0x2D5EC10 bit0x80;0x2AFD82 calls0x2B26C0 independently of pad mask",
+  "postfix_game_verified": false
 }

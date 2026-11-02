@@ -1,7 +1,7 @@
-Ability aqua / id117 / 0 AP / ground300 365 366 / air351 371 393
+Ability aqua / id117 / 0 AP / ground300 365 366 / air351 352 393
 Ability aqua 1 / id118 / 0 AP / ground 316 317 318 / air 391 390 427
 Ability aqua 2 / id119 / 0 AP / ground 315 371 366 / air 365 218 332
 Ability aqua 3 / id120 / 0 AP / ground 393 411 352 / air 616 407 351
 Ability aqua 4 / id121 / 0 AP / ground 510 511 512 / air 504 514 399
 
-Revised Test4 / v14. Select one while idle. Main-only casting edits; numbered casts retained. Common: corrected dodge504, glide350, item007/395, fall506 and LEFT-hand magic.
+Revised Test4 / v15. Select one while idle. Main changes: air second352, Fire-style Blizzard and late ground-second timing. Common: guarded dodge504, Aqua350 opening/end with native Sora Glide middle, keyblade-tip magic.

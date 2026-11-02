@@ -43,9 +43,9 @@
     0,
     40
   ],
-  "held_source_frame": 20,
-  "native_clock_and_queued_frame_cap": 40,
-  "direction_changes_keep_progress": true,
+  "held_source_frame": null,
+  "native_clock_and_queued_frame_cap": "only opening0..40; no cap after native middle handoff",
+  "direction_changes_keep_progress": "only during Aqua opening",
   "closing_source_range": [
     20,
     40
@@ -56,5 +56,14 @@
   "native_movement_state_and_physics_preserved": true,
   "native_glide_unlock_and_input_requirements_preserved": true,
   "requires_admitted_control_hook_for_phase_control": true,
-  "header_motion_table_or_allocation_expansion": false
+  "header_motion_table_or_allocation_expansion": false,
+  "version": 15,
+  "middle": "exact original Sora motion bodies and native frame clock",
+  "phase_handoff_native_frame": 40,
+  "original_sora_middle_slots": [
+    75,
+    76,
+    77,
+    78
+  ]
 }

@@ -150,9 +150,10 @@
   },
   "shared_poses": {
     "main": {
-      "Blizzard/Thunder/Gravity/Stop/Aero": "317 ground; 390 air",
       "Cure": "427 ground; 318 air",
-      "Fire": "391 ground; 316 air"
+      "Fire": "391 ground; 316 air",
+      "Blizzard": "391 ground;316 air; Fire release/recovery",
+      "Thunder/Gravity/Stop/Aero": "317 ground;390 air"
     },
     "numbered_profiles": {
       "Blizzard/Thunder/Gravity": "317 ground; 390 air",
@@ -165,7 +166,7 @@
     "ground": "0x2A3E7C",
     "air": "0x2A419B"
   },
-  "version": 14,
+  "version": 15,
   "main_profile_only_stop_aero_rerouting": true,
   "main_stop_aero_ground_target": 55,
   "main_stop_aero_air_target": 80,
@@ -195,5 +196,27 @@
     "air": 78,
     "prior_ground": 68,
     "prior_air": 68
-  }
+  },
+  "main_blizzard_ground_air": [
+    "391",
+    "316"
+  ],
+  "main_blizzard_release_slots": [
+    54,
+    79
+  ],
+  "main_blizzard_recovery_requests": [
+    "0x3D",
+    "0x8A"
+  ],
+  "main_blizzard_original_logical_requests_preserved": [
+    "0x37",
+    "0x84"
+  ],
+  "main_blizzard_original_terminal_queue_record_preserved": true,
+  "additional_main_requests": [
+    "0x37",
+    "0x84"
+  ],
+  "native_spell_queue_append": "0x29FA30 checked13-byte prefix; existing terminal preserved; no extra MP/spell call"
 }

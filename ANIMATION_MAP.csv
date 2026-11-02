@@ -46,7 +46,7 @@ aqua,117,ground second,0xC9,99,61,365,,p02ex_123.arc,full,False,48,linear,,trave
 aqua,117,ground alternate,0xCA,100,62,365,,p02ex_123.arc,full,False,64,linear,,travel
 aqua,117,ground finisher,0xCB,101,63,366,,p02ex_128.arc,full,False,80,linear,,travel
 aqua,117,air first,0xCC,102,64,351,,p02ex_710.arc,full,False,40,linear,,travel
-aqua,117,air second,0xCD,103,65,371,,p02ex_133.arc,full,False,42,linear,,travel
+aqua,117,air second,0xCD,103,65,352,,p02ex_352.arc,full,False,42,linear,,travel
 aqua,117,air finisher,0xCE,104,66,393,,p02ex_155.arc,full,False,56,linear,,travel
 aqua,117,Guard / Barrier pose,0xD4,110,72,400,,base,full,False,54,linear,,travel
 aqua,117,Dodge Roll / Cartwheel pose,0xDC,117,79,009,,base,full,False,38,linear,,travel

@@ -1,5 +1,5 @@
 {
-  "version": 14,
+  "version": 15,
   "test_round": 4,
   "test_round_label": "revised Test4",
   "offline_checks_passed": true,
@@ -25,7 +25,7 @@
   ],
   "main_air_combo": [
     "351",
-    "371",
+    "352",
     "393"
   ],
   "main_fire_ground_air": [
@@ -40,7 +40,13 @@
     "317",
     "390"
   ],
-  "numbered_profile_animations_preserved_from_v13": true,
+  "numbered_combo_and_spell_poses_preserved_from_v14": true,
+  "main_blizzard_ground_air": [
+    "391",
+    "316"
+  ],
+  "keyblade_tip_magic": true,
+  "deferred_native_glide_guard": true,
   "item_use": "395",
   "item_source_aliases": "007 / 395",
   "glide": "350",
@@ -48,7 +54,8 @@
     0,
     20
   ],
-  "glide_held_source_frame": 20,
+  "glide_held_source_frame": null,
+  "glide_middle": "original Sora bodies and clock",
   "glide_closing_source_range": [
     20,
     40
@@ -109,8 +116,8 @@
   "olympus_motion_records_per_profile": 50,
   "unique_generated_pose_variants": 86,
   "serialized_profile_transient_assignments": 105,
-  "actual_pe_mock_tests": 64,
-  "geometry_assignment_tests": 17,
+  "actual_pe_mock_tests": 65,
+  "geometry_assignment_tests": 18,
   "pose_samples": 18774,
   "max_pose_position_fit_error": 4.98903332659248,
   "max_non_root_attachment_translation_error": 0.0,
@@ -118,19 +125,28 @@
   "native_travel_error": 0.0,
   "original_motion_lengths_headers_counts_and_msets_preserved": true,
   "helper_slots": 11,
-  "left_palm_magic": 206,
+  "native_magic_attachment": "0x30",
+  "palm_attachment_hooks": 0,
+  "ground_second_contact_frames": [
+    35,
+    47
+  ],
+  "ground_second_chain_frames": [
+    47,
+    63
+  ],
   "air_dodge_always_native_queued_restart": true,
   "air_dodge_one_per_airtime": true,
   "air_dodge_directional_input_allowed": true,
   "air_dodge_input_diagnostics": true,
   "glide_native_unlock_required": true,
   "glide_direction_changes_keep_pose_progress": true,
-  "dll_sha256": "dd45cc4ed9d44cb9b2f30b069c3d2c73c558656160a83a899c1839fbdb3cab3c",
+  "dll_sha256": "2894dfe56f0cc426110d4bbb32c86690f72420c18633ee9723d0a95cb87aa0d3",
   "limitations": [
     "Windows/KH1 execution and rendered appearance pending",
-    "Logged Jump-flag rejection reproduced and corrected offline; post-fix KH1 verification pending",
-    "Native Glide unlock/input/physics remain;350 phase transitions need in-game testing",
+    "Deferred native Glide takeover reproduced after control and guarded offline; post-fix KH1 verification pending",
+    "Aqua opening/end handoffs to native Sora middle need in-game visual testing",
     "504 retains native fall gravity and40-frame timing with no extra invulnerability",
-    "Main Stop/Aero now share Gravity86/78 timing instead of Cure68/68; Thunder86/78 retained"
+    "Main ground-second cancel/follow-up timing now waits for the final frame; check feel in-game"
   ]
 }

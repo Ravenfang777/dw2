@@ -1,16 +1,16 @@
 ﻿Ability,Ability id,Phase,Aqua clip,Source frames,Native frame timing,Normal slots,Olympus slots,Trigger,Restored falling clip
 aqua,117,start,350,0..20,0..40,"75,76,77,78","37,38,39,40",Native Glide state21 requests71..74 or76..79,506
-aqua,117,held flight,350,20,40 held,"75,76,77,78","37,38,39,40",Continue native Glide; preserve phase through steering,506
+aqua,117,native flight,native Sora,original Sora,original native clock,"75,76,77,78","37,38,39,40",After frame40 restore all original Sora Glide body parts; native steering and looping,506
 aqua,117,stop,350,20..40,0..39,10,10,Native Glide ends into fall request6; interrupt on landing/busy action,506
 aqua 1,118,start,350,0..20,0..40,"75,76,77,78","37,38,39,40",Native Glide state21 requests71..74 or76..79,506
-aqua 1,118,held flight,350,20,40 held,"75,76,77,78","37,38,39,40",Continue native Glide; preserve phase through steering,506
+aqua 1,118,native flight,native Sora,original Sora,original native clock,"75,76,77,78","37,38,39,40",After frame40 restore all original Sora Glide body parts; native steering and looping,506
 aqua 1,118,stop,350,20..40,0..39,10,10,Native Glide ends into fall request6; interrupt on landing/busy action,506
 aqua 2,119,start,350,0..20,0..40,"75,76,77,78","37,38,39,40",Native Glide state21 requests71..74 or76..79,506
-aqua 2,119,held flight,350,20,40 held,"75,76,77,78","37,38,39,40",Continue native Glide; preserve phase through steering,506
+aqua 2,119,native flight,native Sora,original Sora,original native clock,"75,76,77,78","37,38,39,40",After frame40 restore all original Sora Glide body parts; native steering and looping,506
 aqua 2,119,stop,350,20..40,0..39,10,10,Native Glide ends into fall request6; interrupt on landing/busy action,506
 aqua 3,120,start,350,0..20,0..40,"75,76,77,78","37,38,39,40",Native Glide state21 requests71..74 or76..79,506
-aqua 3,120,held flight,350,20,40 held,"75,76,77,78","37,38,39,40",Continue native Glide; preserve phase through steering,506
+aqua 3,120,native flight,native Sora,original Sora,original native clock,"75,76,77,78","37,38,39,40",After frame40 restore all original Sora Glide body parts; native steering and looping,506
 aqua 3,120,stop,350,20..40,0..39,10,10,Native Glide ends into fall request6; interrupt on landing/busy action,506
 aqua 4,121,start,350,0..20,0..40,"75,76,77,78","37,38,39,40",Native Glide state21 requests71..74 or76..79,506
-aqua 4,121,held flight,350,20,40 held,"75,76,77,78","37,38,39,40",Continue native Glide; preserve phase through steering,506
+aqua 4,121,native flight,native Sora,original Sora,original native clock,"75,76,77,78","37,38,39,40",After frame40 restore all original Sora Glide body parts; native steering and looping,506
 aqua 4,121,stop,350,20..40,0..39,10,10,Native Glide ends into fall request6; interrupt on landing/busy action,506

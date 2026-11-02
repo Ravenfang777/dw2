@@ -1,10 +1,10 @@
 {
   "passed": true,
   "game_runtime_tested": false,
-  "scope": "Aqua v14; main-only Fire/Cure swaps, Stop/Aero request routing, second hits365/371 and logged Jump-flag repair",
+  "scope": "Aqua v15; air second352, Fire-style Blizzard, keyblade-tip magic, native Glide middle and ground-second event retiming",
   "file_growth": 0,
   "headers_counts_helper_hierarchy_and_travel_tracks_unchanged": true,
-  "per_record_native_events_and_defense_windows_unchanged": true,
+  "per_record_native_events_and_defense_windows_unchanged": false,
   "native_spell_logic_unchanged": true,
   "thunder_request_routing_changed": true,
   "thunder_cast_frames": {
@@ -1407,7 +1407,99 @@
       "root_helper_error": 0.0,
       "validated_pose_samples": 189,
       "max_non_root_attachment_translation_error": 0.0,
-      "max_scale_error": 0.0
+      "max_scale_error": 0.0,
+      "event_timing": {
+        "contact_before": 8.0,
+        "contact_after": 35.0,
+        "chain_opens": 47,
+        "chain_closes": 48,
+        "tracks": [
+          {
+            "track": 0,
+            "kind": 1,
+            "before_frames": [
+              18.0,
+              32.0
+            ],
+            "after_frames": [
+              38.25,
+              42.8
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 5,
+            "before_frames": [
+              26.0,
+              42.0
+            ],
+            "after_frames": [
+              47.0,
+              48.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 7,
+            "before_frames": [
+              12.0,
+              32.0
+            ],
+            "after_frames": [
+              36.3,
+              42.8
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 4,
+            "before_frames": [
+              6.0,
+              8.0,
+              24.0,
+              48.0
+            ],
+            "after_frames": [
+              26.25,
+              35.0,
+              40.2,
+              48.0
+            ]
+          },
+          {
+            "track": 1,
+            "kind": 4,
+            "before_frames": [
+              6.0,
+              8.0,
+              24.0,
+              48.0
+            ],
+            "after_frames": [
+              26.25,
+              35.0,
+              40.2,
+              48.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 6,
+            "before_frames": [
+              0.0,
+              24.513999938964844,
+              47.36199951171875
+            ],
+            "after_frames": [
+              0.0,
+              40.36704998016357,
+              47.792649841308595
+            ]
+          }
+        ],
+        "changed_bytes": 38,
+        "counts_pointers_and_payloads_preserved": true
+      }
     },
     {
       "normal_slot": 100,
@@ -1438,7 +1530,103 @@
       "root_helper_error": 0.0,
       "validated_pose_samples": 253,
       "max_non_root_attachment_translation_error": 0.0,
-      "max_scale_error": 0.0
+      "max_scale_error": 0.0,
+      "event_timing": {
+        "contact_before": 24.0,
+        "contact_after": 47.0,
+        "chain_opens": 63,
+        "chain_closes": 64,
+        "tracks": [
+          {
+            "track": 0,
+            "kind": 1,
+            "before_frames": [
+              18.0,
+              30.0
+            ],
+            "after_frames": [
+              35.25,
+              49.55
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 5,
+            "before_frames": [
+              26.0,
+              54.0
+            ],
+            "after_frames": [
+              63.0,
+              64.0
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 7,
+            "before_frames": [
+              18.0,
+              30.0
+            ],
+            "after_frames": [
+              35.25,
+              49.55
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 4,
+            "before_frames": [
+              22.0,
+              24.0,
+              26.0,
+              28.0,
+              30.0
+            ],
+            "after_frames": [
+              43.083333333333336,
+              47.0,
+              47.85,
+              48.7,
+              49.55
+            ]
+          },
+          {
+            "track": 1,
+            "kind": 4,
+            "before_frames": [
+              22.0,
+              24.0,
+              26.0,
+              28.0,
+              30.0
+            ],
+            "after_frames": [
+              43.083333333333336,
+              47.0,
+              47.85,
+              48.7,
+              49.55
+            ]
+          },
+          {
+            "track": 0,
+            "kind": 6,
+            "before_frames": [
+              0.0,
+              19.937999725341797,
+              57.52799987792969
+            ],
+            "after_frames": [
+              0.0,
+              39.045249462127686,
+              61.249399948120114
+            ]
+          }
+        ],
+        "changed_bytes": 58,
+        "counts_pointers_and_payloads_preserved": true
+      }
     },
     {
       "normal_slot": 101,
@@ -1506,28 +1694,28 @@
       "normal_slot": 103,
       "request": 205,
       "action": "air second",
-      "donor": "371",
+      "donor": "352",
       "source_range": null,
       "loop": false,
       "grounded": false,
       "root": "travel",
-      "source_bank": "p02ex_133.arc",
-      "source_sha256": "bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42",
+      "source_bank": "p02ex_352.arc",
+      "source_sha256": "43d1c61af26e5eef072d6d0c7445314f27c7dd114c5877a8e5eb731d1a0db2d2",
       "fixture_stem": "s103",
       "olympus_slot": 65,
       "native_frames": 42,
       "motion_bytes": 28368,
-      "changed_bytes": 22371,
-      "dynamic_body_curves": 61,
+      "changed_bytes": 13843,
+      "dynamic_body_curves": 58,
       "static_body_curves": 0,
       "original_body_channel_capacity": 203,
-      "body_keys_used": 1476,
+      "body_keys_used": 857,
       "reusable_key_capacity": 1484,
-      "max_normalized_curve_error": 1.298350689384679,
-      "max_pose_position_error": 1.1719158074539426,
-      "max_pose_basis_error": 0.027537670092210476,
-      "max_segment_length_error": 3.3928415632544784e-12,
-      "max_quarter_frame_bone_step": 46.02240583839938,
+      "max_normalized_curve_error": 0.9995058069050055,
+      "max_pose_position_error": 0.8172788693455768,
+      "max_pose_basis_error": 0.018762108530369775,
+      "max_segment_length_error": 1.3709922086491133e-11,
+      "max_quarter_frame_bone_step": 20.84030990336666,
       "root_helper_error": 0.0,
       "validated_pose_samples": 165,
       "max_non_root_attachment_translation_error": 0.0,
@@ -1624,5 +1812,6 @@
       "max_non_root_attachment_translation_error": 0.0,
       "max_scale_error": 0.0
     }
-  ]
+  ],
+  "main_second_ground_event_times_retimed_only": true
 }

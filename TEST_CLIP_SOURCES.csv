@@ -17,7 +17,7 @@ aqua,ground second,99,365,,p02ex_123.arc,p02ex_123.pam,48,30,full,45a86f1750d49d
 aqua,ground alternate,100,365,,p02ex_123.arc,p02ex_123.pam,48,30,full,45a86f1750d49d462413414fb896b52ed9dce25e01309d2fa8667815acc27dda,64,60,linear
 aqua,ground finisher,101,366,,p02ex_128.arc,p02ex_128.pam,48,30,full,0d3350fe53541d3fc27c31c40b4440f5cf1a3ae4b5edc1f2f1f32245d32e61ea,80,60,linear
 aqua,air first,102,351,,p02ex_710.arc,p02ex_710.pam,34,30,full,2a327b45efc71baebaea8944c57984cd8d5abeee0778ba4e4eb56d8bcbffdcff,40,60,linear
-aqua,air second,103,371,,p02ex_133.arc,p02ex_133.pam,64,30,full,bfb83cf6e8a7fccdd6d4d5ecc4a99f3f51b69be016f2119e33ef3de98b9c3a42,42,60,linear
+aqua,air second,103,352,,p02ex_352.arc,p02ex_352.pam,36,30,full,43d1c61af26e5eef072d6d0c7445314f27c7dd114c5877a8e5eb731d1a0db2d2,42,60,linear
 aqua,air finisher,104,393,,p02ex_155.arc,p02ex_155.pam,37,30,full,7e20e587e15a632a08a4b59b2cb5de26df120099245de9aeccdac0f1a70d75e8,56,60,linear
 aqua 1,Fire cast release,54,316,,p02ex_151.arc,p02ex_151.pam,31,30,"[0, 20]",85456301633453d5641aaef7eb6b4c9e2d3b186947384622cef38925d340e9f4,28,60,linear
 aqua 1,Cure casting family,56,318,,p02ex_152.arc,p02ex_152.pam,29,30,full,3a5fde1719dfa05d13db602d0dec080d0a74f8a2403ec81f4def00e34083686d,68,60,linear

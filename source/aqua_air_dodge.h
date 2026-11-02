@@ -17,7 +17,7 @@ static float air_float(uptr p){float x;u32 bits=r32(p);copy(&x,&bits,4);return x
 static int air_finite(float x){u32 b;copy(&b,&x,4);return (b&0x7f800000u)!=0x7f800000u;}
 static void air_write_float(uptr p,float x){copy((void*)p,&x,4);}
 static void air_dodge_clear(void){
-    air_dodge_active=glide_stop_active=air_armed=air_used=air_pending=glide_active=0;
+    air_dodge_active=glide_stop_active=air_armed=air_used=air_pending=glide_active=glide_standard_active=0;
     air_actor=air_array=glide_actor=glide_array=0;air_wait=0;air_last_clock=glide_progress=0;
 }
 static int movement_scope(uptr actor){
@@ -36,8 +36,8 @@ static int air_pose(int mode){
         const AquaMotion*d=aqua_motions+i;Binding*b=cached+i,again;int failure;
         if(!b->motion||!memory(cache_array+b->slot*4u,4,0)||r32(cache_array+b->slot*4u)!=b->handle
             ||!valid_motion(b->motion,d,&again,&failure))return 0;
-        for(unsigned j=0;j<AQUA_PART_COUNT;j++)if(again.parts[j]!=b->parts[j]||!d->parts[j].dodge||!d->parts[j].glide_stop)return 0;
-        for(unsigned j=0;j<AQUA_PART_COUNT;j++){
+        for(unsigned j=0;j<d->part_count;j++)if(again.parts[j]!=b->parts[j]||!d->parts[j].dodge||!d->parts[j].glide_stop)return 0;
+        for(unsigned j=0;j<d->part_count;j++){
             const AquaPart*p=d->parts+j;const u8*desired=mode==1?p->dodge:mode==2?p->glide_stop:part_data(p,cache_choice);
             copy((void*)b->parts[j],desired,p->size);
         }
@@ -76,8 +76,8 @@ static int glide_record_valid(u32 request){
         const AquaMotion*d=aqua_motions+i;Binding*b=cached+i,again;int failure;
         if(!b->motion||!memory(cache_array+b->slot*4u,4,0)||r32(cache_array+b->slot*4u)!=b->handle
             ||!valid_motion(b->motion,d,&again,&failure))return 0;
-        for(unsigned j=0;j<AQUA_PART_COUNT;j++)if(again.parts[j]!=b->parts[j]
-            ||!equal((void*)b->parts[j],part_data(d->parts+j,cache_choice),d->parts[j].size))return 0;
+        for(unsigned j=0;j<d->part_count;j++)if(again.parts[j]!=b->parts[j]
+            ||!equal((void*)b->parts[j],glide_standard_active?d->parts[j].before:part_data(d->parts+j,cache_choice),d->parts[j].size))return 0;
         return 1;
     }return 0;
 }
@@ -85,6 +85,23 @@ static void air_start(uptr actor,int mode){
     ((AirQueueFn)(base+0x29f980u))(actor,6u,0.f);
     air_actor=actor;air_array=cache_array;air_dodge_active=mode==1;glide_stop_active=mode==2;
     air_pending=1;air_wait=0;air_last_clock=0;
+}
+static int glide_body(int native){
+    if(!cache_actor||r64(base+SORA_RVA)!=cache_actor||!memory(cache_actor,0x378,0)
+        ||(r32(cache_actor+0x374)&3u)!=1u||decode(r32(cache_actor+0x1d4))!=cache_array)return 0;
+    unsigned found=0;
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(aqua_motions[i].normal_slot>=75u&&aqua_motions[i].normal_slot<=78u){
+        const AquaMotion*d=aqua_motions+i;Binding*b=cached+i,again;int failure;
+        if(!b->motion||!memory(cache_array+b->slot*4u,4,0)||r32(cache_array+b->slot*4u)!=b->handle||!valid_motion(b->motion,d,&again,&failure))return 0;
+        for(unsigned j=0;j<d->part_count;j++)if(again.parts[j]!=b->parts[j])return 0;
+        found++;
+    }
+    if(found!=4u)return 0;
+    for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(aqua_motions[i].normal_slot>=75u&&aqua_motions[i].normal_slot<=78u){
+        const AquaMotion*d=aqua_motions+i;
+        for(unsigned j=0;j<d->part_count;j++)copy((void*)cached[i].parts[j],native?d->parts[j].before:part_data(d->parts+j,cache_choice),d->parts[j].size);
+    }
+    glide_standard_active=native;return 1;
 }
 static void glide_tick(uptr actor,int choice){
     if(choice<1||!movement_scope(actor)){
@@ -108,13 +125,19 @@ static void glide_tick(uptr actor,int choice){
         if(glide_stop_active)air_end();
         if(!glide_active||glide_actor!=actor||glide_array!=cache_array){
             glide_actor=actor;glide_array=cache_array;glide_progress=0;glide_active=1;
-            if(glide_notes++<16u)log_text("AQUA GLIDE350: native Glide entered; opening frames0..20 then held frame20");
+            if(glide_standard_active&&!glide_body(0)){glide_active=0;return;}
+            if(glide_notes++<16u)log_text("AQUA GLIDE350: Aqua opening then original Sora mid-flight");
         }
+        if(glide_standard_active)return;
         if(glide_request(request)){
             float clock=air_float(actor+0x16c);
             if(!air_finite(clock)||clock<0||!memory(actor+0x16c,4,1)){glide_active=0;return;}
             if(clock>glide_progress)glide_progress=clock<40.f?clock:40.f;
-            /* Native direction changes and motion wraps must not replay takeoff. */
+            if(glide_progress>=40.f){
+                if(glide_body(1)&&glide_notes++<16u)log_text("AQUA GLIDE: original Sora flight bodies restored; native clock and steering resume");
+                return;
+            }
+            /* Native direction changes must not replay the Aqua opening. */
             if(clock!=glide_progress)air_write_float(actor+0x16c,glide_progress);
         }
         for(unsigned i=0;i<count;i++)if(glide_request(r32(actor+0x17c+i*16u)&0xffffu)){
@@ -126,6 +149,7 @@ static void glide_tick(uptr actor,int choice){
     int ending=(state==1u||state==2u||state==21u)&&!queued_other
         &&(request==6u||(count==1u&&(r32(actor+0x17c)&0xffffu)==6u));
     glide_active=0;glide_progress=0;
+    if(glide_standard_active&&!glide_body(0))return;
     if(ending&&!air_dodge_active&&memory(actor+0x160,0x2c,1)&&air_pose(2)){
         air_start(actor,2);
         if(glide_notes++<16u)log_text("AQUA GLIDE350: native Glide ended; closing frames20..40 then falling506");
@@ -147,7 +171,7 @@ static void ABI air_control(uptr actor,uptr dir){
     uptr pad=base+0x298ca90u;
     int local=actor==r64(base+SORA_RVA)&&memory(actor,0x448,0)&&memory(pad,0x18,1);
     if(local&&!air_control_seen){
-        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v14");
+        air_control_seen=1;log_text("AQUA CONTROL OBSERVED: native Sora input callback reached v15");
         log_number("AQUA CONTROL actor=",actor);
     }
     if(movement_scope(actor)&&memory(pad,0x18,1)&&memory(dir,16,0)){
@@ -188,7 +212,7 @@ static void ABI air_control(uptr actor,uptr dir){
         if(air_dodge_active){
             static const u32 fields[4]={4,8,16,20};u32 saved[4];
             for(unsigned i=0;i<4;i++){saved[i]=r32(pad+fields[i])&6u;*(volatile u32*)(pad+fields[i])=r32(pad+fields[i])&~6u;}
-            air_original(actor,dir);
+            air_original(actor,dir);if(movement_scope(actor))cast_followup(actor);
             for(unsigned i=0;i<4;i++)*(volatile u32*)(pad+fields[i])=(r32(pad+fields[i])&~6u)|saved[i];
             air_tick(actor,cache_choice);glide_tick(actor,cache_choice);return;
         }
@@ -196,13 +220,26 @@ static void ABI air_control(uptr actor,uptr dir){
         if(local&&air_requested_choice>0&&(r32(pad+8)&6u))air_input_log(actor,1u);
         if(actor==air_actor)air_end();
     }
-    air_original(actor,dir);
+    air_original(actor,dir);if(movement_scope(actor))cast_followup(actor);
     if(local){air_tick(actor,cache_choice);glide_tick(actor,cache_choice);}
+}
+typedef void (ABI *GlideFn)(uptr);
+static GlideFn regular_glide_original;
+static u32 glide_block_notes;
+static const u8 regular_glide_prefix[14]={0x40,0x53,0x48,0x83,0xec,0x20,0x48,0x8b,0xd9,0xe8,0x62,0x06,0,0};
+static void ABI regular_glide(uptr actor){
+    if(air_dodge_active&&air_actor==actor&&movement_scope(actor)){
+        if(glide_block_notes++<16u)log_text("AQUA DODGE504: deferred native Glide constructor suppressed while dodge owns the fall pose");
+        return;
+    }
+    regular_glide_original(actor);
 }
 static void air_install(void){
     if(air_attempted||remove_mode)return;air_attempted=1;
-    uptr a=base+0x2a6220u;
+    uptr a=base+0x2a6220u,g=base+0x2b26c0u;
     if(!memory(a,17,0)||!equal((void*)a,air_prefix,17)
+        ||!memory(g,0x24,0)||!equal((void*)g,regular_glide_prefix,14)
+        ||r32(g+0x1d)!=0x0104a083u||r32(g+0x20)!=0xfe000001u
         ||!memory(base+0x297870u,32,0)||!equal((void*)(base+0x297870u),air_can_bytes,32)
         ||!memory(base+0x29f980u,13,0)||!equal((void*)(base+0x29f980u),air_queue_prefix,13)
         ||!memory(base+0x298ca90u,0x18,1)||!memory(base+0x554a88u,8,0)){
@@ -213,12 +250,21 @@ static void air_install(void){
     /* Relocate the one RIP-relative cookie load in the 17-byte stolen span. */
     page[10]=0x48;page[11]=0xb8;uptr cookie=base+0x554a88u;copy(page+12,&cookie,8);
     page[20]=0x48;page[21]=0x8b;page[22]=0;magic_jump(page+23,a+17);
-    u32 old_page=0,old_code=0,unused=0;
+    copy(page+128,regular_glide_prefix,9);
+    page[137]=0x48;page[138]=0xb8;uptr common=base+0x2b2d30u;copy(page+139,&common,8);
+    page[147]=0xff;page[148]=0xd0;magic_jump(page+149,g+14);
+    u32 old_page=0,old_code=0,old_glide=0,unused=0;
     if(!kVirtualProtect(page,4096,0x20u,&old_page)){kVirtualFree(page,0,0x8000u);return;}
-    kFlushInstructionCache((uptr)-1,page,64);
+    kFlushInstructionCache((uptr)-1,page,192);
     if(!kVirtualProtect((void*)a,17,0x40u,&old_code)){kVirtualFree(page,0,0x8000u);return;}
+    if(!kVirtualProtect((void*)g,14,0x40u,&old_glide)){
+        kVirtualProtect((void*)a,17,old_code,&unused);kVirtualFree(page,0,0x8000u);return;
+    }
+    regular_glide_original=(GlideFn)(uptr)(page+128);
+    u8 glide_patch[14];magic_jump(glide_patch,(uptr)regular_glide);copy((void*)g,glide_patch,14);
+    kFlushInstructionCache((uptr)-1,(void*)g,14);kVirtualProtect((void*)g,14,old_glide,&unused);
     air_original=(AirControlFn)(uptr)page;u8 patch[17];for(unsigned i=0;i<17;i++)patch[i]=0x90;
     magic_jump(patch,(uptr)air_control);copy((void*)a,patch,17);
     kFlushInstructionCache((uptr)-1,(void*)a,17);kVirtualProtect((void*)a,17,old_code,&unused);
-    air_ready=1;log_text("AQUA AIR DODGE READY: v14 permits logged Jump flags0x03000000; real native command dispatch blocks dodge; Glide350 controller ready");
+    air_ready=1;log_text("AQUA AIR DODGE READY: v15 queued504 plus deferred native Glide guard ready; original Sora mid-flight with Aqua opening and closing");
 }

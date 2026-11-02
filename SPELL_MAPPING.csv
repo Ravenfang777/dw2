@@ -1,13 +1,13 @@
 ﻿Ability,Ability id,Spell,Mode,Aqua clip,Native request,Normal slot,Olympus slot,Native frames,Fire recovery normal slot
 aqua,117,Fire,ground,391,0x36,54,17,28,57
-aqua,117,Blizzard,ground,317,0x37,55,18,86,
+aqua,117,Blizzard,ground,391,0x37,54,17,28,57
 aqua,117,Thunder,ground,317,0x38,55,18,86,
 aqua,117,Cure,ground,427,0x39,56,19,68,
 aqua,117,Gravity,ground,317,0x3A,55,18,86,
 aqua,117,Stop,ground,317,0x3B,55,18,86,
 aqua,117,Aero,ground,317,0x3C,55,18,86,
 aqua,117,Fire,air,316,0x83,79,41,28,82
-aqua,117,Blizzard,air,390,0x84,80,42,78,
+aqua,117,Blizzard,air,316,0x84,79,41,28,82
 aqua,117,Thunder,air,390,0x85,80,42,78,
 aqua,117,Cure,air,318,0x86,81,43,68,
 aqua,117,Gravity,air,390,0x87,80,42,78,

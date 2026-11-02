@@ -1,8 +1,8 @@
-title: KH1FM Aqua Animation Test v14
+title: KH1FM Aqua Animation Test v15
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Revised Test4: main ground300/365/366, air351/371/393; Fire391/316, Cure427/318, Stop/Aero317/390. Fixes logged Jump-flag dodge504 rejection. Numbered Test4 animations preserved; LEFT-hand magic, Glide350 and falling506 retained. Steam Global/Panacea; disable older Aqua and Nine Styles.
+  Main air second352; Blizzard uses Fire release/recovery; native keyblade-tip magic; original Sora Glide middle with Aqua350 opening/end. Adds deferred Glide guard for504 and retimes365 ground-second contact/chain to the end. Numbered combo/spell poses retained. Steam Global/Panacea.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy

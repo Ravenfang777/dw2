@@ -7,14 +7,14 @@
 #define ABI __attribute__((ms_abi))
 typedef struct {uintptr_t base,allocation;uint32_t allocation_protect;uint16_t partition,pad;size_t size;uint32_t state,protect,type,pad2;} MemInfo;
 static struct {uintptr_t start;size_t size;uint32_t protect;} ranges[128];
-static unsigned nranges,queries;
+static unsigned nranges,queries,protect_calls;
 static uintptr_t game_base;
 static int remove_mode,conflict;
 static int hand_magic=1,air_enabled=1,alloc_failure,protect_failure;
-static unsigned control_calls,control_words[4],control_mode,queue_calls;
+static unsigned control_calls,control_words[4],control_mode,queue_calls,native_glide_calls;
 static unsigned matrix_code,point_code;static float point_fraction;
 static char output[131072];static size_t used;
-void bridge_reset(uintptr_t game){game_base=game;nranges=queries=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=queue_calls=0;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
+void bridge_reset(uintptr_t game){game_base=game;nranges=queries=protect_calls=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=queue_calls=native_glide_calls=0;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
 void bridge_magic_modes(int enabled,int noalloc,int noprotect){hand_magic=enabled;alloc_failure=noalloc;protect_failure=noprotect;}
 void bridge_range(uintptr_t start,size_t size,uint32_t protect){ranges[nranges].start=start;ranges[nranges].size=size;ranges[nranges].protect=protect;nranges++;}
 void bridge_modes(int remove,int other){remove_mode=remove;conflict=other;}
@@ -29,7 +29,7 @@ static int ABI close_file(uintptr_t f){(void)f;return 1;}
 static uint32_t ABI profile(const uint16_t*a,const uint16_t*b,int c,const uint16_t*d){(void)a;(void)c;(void)d;return b[0]=='h'?(uint32_t)hand_magic:b[0]=='a'?(uint32_t)air_enabled:(uint32_t)remove_mode;}
 static void* ABI valloc(void*p,size_t n,uint32_t kind,uint32_t protect){(void)p;(void)kind;(void)protect;if(alloc_failure)return 0;void*q=mmap(0,n,PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);if(q==MAP_FAILED)return 0;bridge_range((uintptr_t)q,n,0x40);return q;}
 static int ABI vfree(void*p,size_t n,uint32_t kind){(void)n;(void)kind;return munmap(p,4096)==0;}
-static int ABI vprotect(void*p,size_t n,uint32_t protect,uint32_t*old){(void)p;(void)n;(void)protect;if(protect_failure)return 0;*old=0x20;return 1;}
+static int ABI vprotect(void*p,size_t n,uint32_t protect,uint32_t*old){(void)p;(void)n;(void)protect;protect_calls++;if(protect_failure==1||(protect_failure>1&&protect_calls==(unsigned)protect_failure))return 0;*old=0x20;return 1;}
 static int ABI flush(uintptr_t process,const void*p,size_t n){(void)process;(void)p;(void)n;return 1;}
 static void ABI native_matrix(uintptr_t actor,uint32_t code,float*out){(void)actor;matrix_code=code;memset(out,0,16*sizeof(float));out[0]=out[5]=out[10]=out[15]=1;out[12]=code==0x20ce?-11:code==0x2065?11:100;out[13]=(code==0x20ce||code==0x2065)?22:200;out[14]=(code==0x20ce||code==0x2065)?33:300;}
 static void ABI native_point(uintptr_t actor,uint32_t code,float fraction,float*out){(void)actor;point_code=code;point_fraction=fraction;out[0]=100;out[1]=200;out[2]=300;out[3]=1;}
@@ -41,7 +41,24 @@ float bridge_point_fraction(void){return point_fraction;}
 static uint32_t ABI handle(const void*p){uintptr_t addr=(uintptr_t)p,aligned=addr&~(uintptr_t)0x1ffffff;uintptr_t*t=(uintptr_t*)(game_base+0x2ee3980);for(unsigned i=1;i<64;i++)if(t[i]==aligned)return 0x80000000u|(i<<25)|(uint32_t)(addr-aligned);for(unsigned i=1;i<64;i++)if(!t[i]){t[i]=aligned;return 0x80000000u|(i<<25)|(uint32_t)(addr-aligned);}return 0;}
 uint32_t bridge_encode(uintptr_t p){return handle((void*)p);}
 void bridge_air_modes(int enabled,unsigned mode){air_enabled=enabled;control_mode=mode;}
-void bridge_control(uintptr_t f,uintptr_t actor,uintptr_t dir){((void(ABI*)(uintptr_t,uintptr_t))f)(actor,dir);}
+void bridge_control(uintptr_t f,uintptr_t actor,uintptr_t dir){
+    ((void(ABI*)(uintptr_t,uintptr_t))f)(actor,dir);
+    if(control_mode==5&&(*(uint32_t*)(game_base+0x2d5ec10)&0x80u))((void(ABI*)(uintptr_t))(game_base+0x2b26c0))(actor);
+}
+unsigned bridge_native_glide_calls(void){return native_glide_calls;}
+void bridge_glide(uintptr_t f,uintptr_t actor){((void(ABI*)(uintptr_t))f)(actor);}
+uintptr_t bridge_event(uintptr_t f,uintptr_t motion,uint32_t track,float frame){return ((uintptr_t(ABI*)(uintptr_t,uint32_t,float))f)(motion,track,frame);}
+static uintptr_t ABI native_decode(uint32_t h){
+    if(!(h&0x80000000u))return h;
+    return *(uintptr_t*)(game_base+0x2ee3980+((h&0x7fffffffu)>>25)*8)+(h&0x1ffffffu);
+}
+static int ABI native_glide_common(uintptr_t actor){
+    native_glide_calls++;*(uint32_t*)(actor+0x70)=21;*(uint32_t*)(actor+0x164)=0x71;*(uint32_t*)(actor+0x178)=0;return 1;
+}
+static uintptr_t ABI native_append(uintptr_t actor,uint32_t request,float frame){
+    uint32_t count=*(uint32_t*)(actor+0x178);uintptr_t p=actor+0x17c+count*16;
+    memset((void*)p,0,16);*(uint32_t*)p=request;*(float*)(p+8)=frame;*(uint32_t*)(actor+0x178)=count+1;return p;
+}
 unsigned bridge_control_calls(void){return control_calls;}
 unsigned bridge_control_word(unsigned i){return i<4?control_words[i]:0;}
 unsigned bridge_queue_calls(void){return queue_calls;}
@@ -75,6 +92,9 @@ uintptr_t bridge_symbol(const char*n){
     if(!strcmp(n,"WriteFile"))return (uintptr_t)write_file;
     if(!strcmp(n,"CloseHandle"))return (uintptr_t)close_file;
     if(!strcmp(n,"GetPrivateProfileIntW"))return (uintptr_t)profile;
+    if(!strcmp(n,"NativeDecode"))return (uintptr_t)native_decode;
+    if(!strcmp(n,"NativeGlideCommon"))return (uintptr_t)native_glide_common;
+    if(!strcmp(n,"NativeAppend"))return (uintptr_t)native_append;
     if(!strcmp(n,"NativeControl"))return (uintptr_t)native_control;
     if(!strcmp(n,"NativeQueue"))return (uintptr_t)native_queue;
     if(!strcmp(n,"NativeHandle"))return (uintptr_t)handle;
