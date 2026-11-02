@@ -1,4 +1,4 @@
-AQUA V10 TEST 2 SOURCE
+AQUA V11 TEST 3 SOURCE
 
 Normal installation requires OpenKH/Panacea; these are development files.
 
@@ -13,11 +13,12 @@ and attachment detours against Win64 ABI mocks, not Windows or KH1.
 
 REBUILD POSES (optional; NumPy, SciPy, Pillow)
 From this source directory:
-  python3 retargeting/tools/build_aqua_complete_v10.py --profile 0 --output .
-  python3 retargeting/tools/build_aqua_complete_v10.py --profile 1 --output sets/p1
-  python3 retargeting/tools/build_aqua_complete_v10.py --profile 2 --output sets/p2
-  python3 retargeting/tools/build_aqua_complete_v10.py --profile 3 --output sets/p3
-  python3 retargeting/tools/build_aqua_complete_v10.py --profile 4 --output sets/p4
+  python3 retargeting/tools/build_aqua_complete_v11.py --profile 0 --output .
+  python3 retargeting/tools/build_aqua_complete_v11.py --profile 1 --output sets/p1
+  python3 retargeting/tools/build_aqua_complete_v11.py --profile 2 --output sets/p2
+  python3 retargeting/tools/build_aqua_complete_v11.py --profile 3 --output sets/p3
+  python3 retargeting/tools/build_aqua_complete_v11.py --profile 4 --output sets/p4
+  python3 retargeting/tools/build_aqua_complete_v11.py --profile 5 --output dodge
   python3 generate_data.py
   python3 build.py
   python3 test_runtime.py
@@ -31,10 +32,12 @@ ANATOMICAL WRIST PIVOTS
 aqua_refine_v9.py keeps Sora's distal forearm helper angles at bind and applies
 the hand's authored orientation at pivots100/205. Arm solves rotate the whole
 distal forearm together and preserve the hand's orientation at that pivot.
-Finisher clearance checks include interior arm samples. All local anatomical
+Arm clearance includes interior arm samples. The new main ground finisher411
+uses the normal correction envelope; the old304 finisher is no longer selected. All local anatomical
 offsets/scales retain their bind values. The V8 reference contains 41 samples
 of ten joints per original converted motion; it supports an independent
-before/after comparison of serialized forearm clearance. It is not mesh
+bounded-displacement checks for unchanged source actions only. New casts,
+falling and the changed411 finisher are excluded from that historical comparison. It is not mesh
 collision detection. Hair155..193 retains the v8 bind-rest correction.
 
 FIVE PROFILE GATE
@@ -45,6 +48,30 @@ for idle. Ability ids117..121 are 0 AP. Newly enabled Aqua entries win and
 only other Aqua entries are turned off. Missing entries are granted only if
 all fit with a terminator in the original 48-byte list. Native entries are
 not evicted. Uninstall removes only ids117..121.
+
+NEUTRAL AERIAL DODGE
+The main plan remains47 normal /46 Olympus records. Profile5 of the retargeting
+builder is a single non-looped504 variant of the existing fall record10.
+generate_data.py stores this as AquaPart.dodge; admission accepts it and the
+fast cache recognizes it only while the transient action is active.
+aqua_air_dodge.h hooks Steam control0x2A6220 after exact17-byte admission. Its
+trampoline copies the first10 bytes and rewrites the RIP-relative security-
+cookie load as mov rax, imm64; mov rax,[rax], targeting original0x554A88.
+The original control, can-act0x297870 and queued-motion0x29F980 bytes are
+verified before installation. The last two functions are called, not hooked.
+Fresh merged logical Jump/Circle bits6, neutral tilt<=.15, free air1/2,
+height>1, an admitted body bank and no busy/native queued action authorize504.
+One use per airtime, armed after button release. Beginning from fall6 resets
+only actor+16C to zero; beginning from rise queues native fall6. Native state,
+velocity/gravity, collision and defense flags stay untouched. The control
+call temporarily masks only Jump bits at pad+4/+8/+10/+14, then restores those
+bits without undoing native changes to other buttons. Clock39, looping,
+landing or interruption restores the normal506 pose. Unknown/unloaded records
+are never restored by writing stale pointers. The action adds no invulnerability.
+The native clock remains authoritative; waiting for a queued fall is bounded.
+air_dodge_validation.json records original executable evidence. The test host
+executes the real detour/trampoline and native can-act bytes; native queue and
+control bodies are mocked. Actual Windows/KH1 testing remains outstanding.
 
 ACTION CAST LOOKUP
 Native Steam command handlers dispatch ground magic with 0x36+spell and air
@@ -75,7 +102,7 @@ No motion/header/table expansion is used. The cast lookup copy has the original
 352 request words; only Thunder entries0x38/0x85 change their physical slot. The original eleven helpers and
 native travel remain. Four sets change seven physical combo records each:
 C8 first, C9/CA second, CB finisher, CC first air, CD second air, CE finisher.
-The donor selection is in aqua_v10_plan.py. Numeric IDs retain their exact
+The donor selection is in aqua_v11_plan.py. Numeric IDs retain their exact
 source bank/hash in TEST_CLIP_SOURCES.csv; no command names are inferred.
 The source inventory files under ../inventory retain v8's source metadata.
 Current ability mappings are ../ANIMATION_MAP.csv.

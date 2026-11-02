@@ -4,5 +4,6 @@
   "profiles": 5,
   "all_headers_and_motion_sizes_identical": true,
   "all_changes_inside_existing_body_and_helper_tables": true,
+  "neutral_air_dodge_extra_pose": true,
   "unique_data_blocks": 502
 }

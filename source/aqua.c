@@ -48,10 +48,10 @@ static int slots_reported;
 static const char *profile_names[AQUA_ABILITIES]={"aqua","aqua 1","aqua 2","aqua 3","aqua 4"};
 static const char *profile_help[AQUA_ABILITIES]={
     "Aqua movement attacks guard dodge magic and reactions",
-    "Test 2 Ground 392 393 428 Air 429 504 514",
-    "Test 2 Ground 515 517 550 Air 650 557 411",
-    "Test 2 Ground 399 352 353 Air 500 501 503",
-    "Test 2 Ground 510 511 512 Air 513 507 508"};
+    "Test 3 Ground 516 518 519 Air 607 608 609",
+    "Test 3 Ground 610 611 612 Air 616 618 619",
+    "Test 3 Ground 613 602 603 Air 604 605 606",
+    "Test 3 Ground 617 405 406 Air 407 452 621"};
 static int table_reported;
 static w16 log_path[1024],ini_path[1024];
 /* A real DIR64 relocation keeps the PE image independently relocatable. */
@@ -60,6 +60,8 @@ typedef struct {uptr motion,parts[AQUA_PART_COUNT];u32 handle,slot,contiguous;} 
 static Binding cached[AQUA_MOTION_COUNT];
 static uptr cache_actor,cache_array,reported_wait_array,cache_low,cache_high;
 static u32 cache_array_bytes,cache_count;
+static int air_dodge_active;
+static void air_dodge_clear(void);
 static int cache_choice=-1,pending_reported,last_choice=-1;
 static u32 last_action=0xffffffffu,action_logs;
 
@@ -101,7 +103,7 @@ static void encode(const char*text,u8*out,usize cap){
         else out[n]=1; /* The supplied helper maps a space to 01. */
     }out[n]=0;
 }
-static void clear_binding(void){cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
+static void clear_binding(void){air_dodge_clear();cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
 static uptr decode(u32 h){
     if(!h)return 0;
     if(!(h&0x80000000u))return (uptr)h;
@@ -125,6 +127,7 @@ static const u8 *part_data(const AquaPart *part,int choice){return choice>0?part
 static int part_known(uptr p,const AquaPart *part){
     if(equal((void*)p,part->before,part->size))return 1;
     for(unsigned i=0;i<AQUA_PROFILE_COUNT;i++)if(equal((void*)p,part->after[i],part->size))return 1;
+    if(part->dodge&&equal((void*)p,part->dodge,part->size))return 1;
     return 0;
 }
 static int ensure_table(void){
@@ -219,7 +222,7 @@ static int fast_binding(uptr actor,uptr array,int choice){
         for(unsigned k=0;k<7;k++)if(r32(b->motion+aqua_scalar_fields[k])!=d->scalars[k])return 0;
         for(unsigned j=0;j<AQUA_PART_COUNT;j++){
             const AquaPart *part=d->parts+j;uptr p=relative_or_handle(b->motion,r32(b->motion+part->field),d->raw_bytes);
-            const u8 *expected=part_data(part,choice);
+            const u8 *expected=air_dodge_active&&d->normal_slot==10&&part->dodge?part->dodge:part_data(part,choice);
             if(p!=b->parts[j])return 0;
             if(!group&&!b->contiguous&&!memory(p+part->sentinel,4,0))return 0;
             if(!equal((void*)(p+part->sentinel),expected+part->sentinel,4))return 0;
@@ -304,6 +307,7 @@ static void motion_gate(uptr actor,int choice){
 }
 
 #include "aqua_magic.h"
+#include "aqua_air_dodge.h"
 
 EXPORT void ABI OnInit(const w16 *mod_path){
     (void)mod_path;
@@ -313,7 +317,9 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
     static const w16 magic_key[]={'h','a','n','d','_','m','a','g','i','c',0};
     magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v10 Test 2 loaded by Panacea; aqua and aqua 1..4; action-specific cast poses, fall506 and LEFT-hand magic");
+    static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
+    air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
+    log_text("KH1FM AQUA ANIMATION TEST v11 Test 3 loaded by Panacea; aqua and aqua 1..4; finisher411, neutral-air dodge504, fall506 and LEFT-hand magic");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }
@@ -332,7 +338,7 @@ EXPORT void ABI OnFrame(void){
         if(!conflict_reported){log_text("AQUA SUSPENDED: disable Nine Styles / Dual Wield for this standalone ability test");conflict_reported=1;}
         return;
     }
-    magic_conflict=0;magic_install();
+    magic_conflict=0;magic_install();air_install();
     uptr actor=(uptr)r64(base+SORA_RVA);
     if(!memory(actor,0x378,0)||(r32(actor+0x374)&3u)!=1u){clear_binding();return;}
     uptr save=save_block();if(!save){clear_binding();return;}
@@ -340,6 +346,8 @@ EXPORT void ABI OnFrame(void){
     if(remove_mode){remove_ability(save);choice=0;}
     else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("AQUA WAITING: ability list full or not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"AQUA UNEQUIPPED");last_choice=choice;}
+    air_requested_choice=choice;
+    air_tick(actor,choice);
     motion_gate(actor,choice);
     u32 action=r32(actor+0x164)&0xfffu;
     if(choice&&action!=last_action&&action_logs<192){

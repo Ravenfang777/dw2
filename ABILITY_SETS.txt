@@ -1,7 +1,7 @@
-Ability aqua / id117 / 0 AP / main set; Fire316/391 Thunder317/390 Cure318/427 Fall506
-Ability aqua 1 / id118 / 0 AP / ground 392 393 428 / air 429 504 514
-Ability aqua 2 / id119 / 0 AP / ground 515 517 550 / air 650 557 411
-Ability aqua 3 / id120 / 0 AP / ground 399 352 353 / air 500 501 503
-Ability aqua 4 / id121 / 0 AP / ground 510 511 512 / air 513 507 508
+Ability aqua / id117 / 0 AP / main finisher411; air dodge504
+Ability aqua 1 / id118 / 0 AP / ground 516 518 519 / air 607 608 609
+Ability aqua 2 / id119 / 0 AP / ground 610 611 612 / air 616 618 619
+Ability aqua 3 / id120 / 0 AP / ground 613 602 603 / air 604 605 606
+Ability aqua 4 / id121 / 0 AP / ground 617 405 406 / air 407 452 621
 
-Select one while idle. Other Aqua entries turn off automatically.
+Select one while idle. Neutral-air504 is shared by all five.

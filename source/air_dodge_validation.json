@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "user_supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
+  "windows_or_game_executed": false,
+  "control_rva": "0x2A6220",
+  "control_stolen_bytes": "48895c2418574883ec40488b0557e82a00",
+  "whole_stolen_instructions": true,
+  "relocated_cookie_load": {
+    "source_instruction_rva": "0x2A622A",
+    "target_rva": "0x554A88",
+    "trampoline_encoding": "mov rax, imm64; mov rax, [rax]"
+  },
+  "can_act_rva": "0x297870",
+  "can_act_bytes": "f601047518f6818800000020750ff68144040000017506b801000000c333c0c3",
+  "queue_rva": "0x29F980",
+  "queue_prefix": "48895c2408574883ec20488bf9",
+  "merged_logical_jump_pad_rva": "0x298CA90",
+  "jump_mask": "0x6",
+  "pad_held_pressed_repeat_offsets": [
+    4,
+    8,
+    16,
+    20
+  ],
+  "neutral_threshold": 0.15,
+  "one_per_airtime": true,
+  "fresh_press_after_release_required": true,
+  "profiles": 5,
+  "source_clip": "504",
+  "source_frames": 23,
+  "native_record": 10,
+  "native_frames": 40,
+  "end_clock": 39,
+  "original_fall_clip": "506",
+  "actor_state_velocity_gravity_unchanged": true,
+  "extra_invulnerability_or_damage_boxes": false,
+  "motion_header_or_table_expansion": false,
+  "fall_body_restored_on_end_interrupt_and_off": true,
+  "original_input_restored_after_control": true,
+  "optional_ini": "air_dodge=0"
+}

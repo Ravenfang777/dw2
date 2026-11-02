@@ -11,7 +11,7 @@ lines=['/* Generated immutable original and five Aqua profile payloads. */',
        '#define AQUA_PROFILE_COUNT 5',f'#define AQUA_MOTION_COUNT {len(report["motions"])}',
        '#define AQUA_PART_COUNT 5',
        f'#define AQUA_ANCHOR_INDEX {next(i for i,r in enumerate(report["motions"]) if r["normal_slot"]==98)}',
-       'typedef struct { unsigned int field,size,sentinel; const unsigned char *before,*after[AQUA_PROFILE_COUNT]; } AquaPart;',
+       'typedef struct { unsigned int field,size,sentinel; const unsigned char *before,*after[AQUA_PROFILE_COUNT],*dodge; } AquaPart;',
        'typedef struct { unsigned int request,normal_slot,olympus_slot,raw_bytes; unsigned int scalars[7]; AquaPart parts[AQUA_PART_COUNT]; } AquaMotion;',
        'static const unsigned int aqua_scalar_fields[7]={4,8,16,24,32,44,52};']
 arrays={}
@@ -33,7 +33,9 @@ for r in report['motions']:
             assert (p/f'original_{sr["fixture_stem"]}.bin').read_bytes()==before
             converted.append((p/f'aqua_{sr["fixture_stem"]}.bin').read_bytes())
         else:converted.append(converted[0])
+    dodge=(ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes() if r['normal_slot']==10 else None
     assert all(len(c)==len(before) and c[:80]==before[:80] for c in converted)
+    if dodge:assert len(dodge)==len(before) and dodge[:80]==before[:80]
     body_keys=[]
     for n_at,p_at in [(24,28),(32,36)]:
         at=u32(before,p_at)
@@ -47,8 +49,9 @@ for r in report['motions']:
         symbols=[array(b) for b in blobs];allowed.update(range(offset,offset+size))
         sentinel=max(range(0,size-3,4),key=lambda k:len({b[k:k+4] for b in blobs}))
         assert len({b[sentinel:sentinel+4] for b in blobs})>1
-        parts.append('{'+f'{field},{size},{sentinel},{symbols[0]},'+'{'+','.join(symbols[1:])+'}}')
-    for after in converted:assert all(a==b or p in allowed for p,(a,b) in enumerate(zip(before,after)))
+        extra=array(dodge[offset:offset+size]) if dodge else '0'
+        parts.append('{'+f'{field},{size},{sentinel},{symbols[0]},'+'{'+','.join(symbols[1:])+'},'+extra+'}')
+    for after in converted+([dodge] if dodge else []):assert all(a==b or p in allowed for p,(a,b) in enumerate(zip(before,after)))
     scalars=','.join(str(u32(before,p))+'u' for p in [4,8,16,24,32,44,52])
     descriptors.append('{'+f'{r["request"]},{r["normal_slot"]},{r["olympus_slot"]},{len(before)},'+'{'+scalars+'},'+'{'+','.join(parts)+'}}')
 lines+=['static const AquaMotion aqua_motions[AQUA_MOTION_COUNT]={',',\n'.join(descriptors),'};']
@@ -73,6 +76,6 @@ lines+=['typedef struct { unsigned int bytes; const unsigned char *before,*after
         'static const AquaRequestTable aqua_requests[2]={'+','.join(request_rows)+'};']
 (ROOT/'aqua_data.h').write_text('\n'.join(lines)+'\n')
 (ROOT/'data_validation.json').write_text(json.dumps({'passed':True,'motions':len(descriptors),'profiles':5,
-    'all_headers_and_motion_sizes_identical':True,'all_changes_inside_existing_body_and_helper_tables':True,
+    'all_headers_and_motion_sizes_identical':True,'all_changes_inside_existing_body_and_helper_tables':True,'neutral_air_dodge_extra_pose':True,
     'unique_data_blocks':len(arrays)},indent=2)+'\n')
 print('Generated',len(descriptors),'motions and 5 profiles;',len(arrays),'unique blocks')

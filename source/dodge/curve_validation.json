@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "game_runtime_tested": false,
+  "scope": "Aqua v11 / Test 3; main finisher411; temporary neutral-air504; V10 casts/fall retained",
+  "file_growth": 0,
+  "headers_counts_helper_hierarchy_and_travel_tracks_unchanged": true,
+  "per_record_native_events_and_defense_windows_unchanged": true,
+  "native_spell_logic_unchanged": true,
+  "thunder_request_routing_changed": true,
+  "thunder_cast_frames": {
+    "ground": 86,
+    "air": 78,
+    "previous_ground": 68,
+    "previous_air": 68
+  },
+  "all_available_olympus_records_identical_to_normal": true,
+  "corrected_rest_joints": 62,
+  "max_attachment_offset_correction": 11.553747055747703,
+  "motions": [
+    {
+      "normal_slot": 10,
+      "request": 6,
+      "action": "neutral aerial dodge overlay",
+      "donor": "504",
+      "source_range": null,
+      "loop": false,
+      "grounded": false,
+      "root": "travel",
+      "source_bank": "p02ex_157.arc",
+      "fixture_stem": "s010",
+      "olympus_slot": 10,
+      "native_frames": 40,
+      "motion_bytes": 15920,
+      "changed_bytes": 11197,
+      "dynamic_body_curves": 64,
+      "static_body_curves": 0,
+      "original_body_channel_capacity": 183,
+      "body_keys_used": 668,
+      "reusable_key_capacity": 722,
+      "max_normalized_curve_error": 0.9938956186384449,
+      "max_pose_position_error": 0.9565355275224354,
+      "max_pose_basis_error": 0.019446181129540514,
+      "max_segment_length_error": 3.765876499528531e-13,
+      "max_quarter_frame_bone_step": 9.135223400718669,
+      "root_helper_error": 0.0,
+      "validated_pose_samples": 157,
+      "max_non_root_attachment_translation_error": 0.0,
+      "max_scale_error": 0.0
+    }
+  ]
+}

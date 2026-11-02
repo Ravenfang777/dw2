@@ -1,4 +1,4 @@
-"""Independent checks of serialized V10 base and four Test 2 profiles."""
+"""Independent checks of serialized V11 base, aerial dodge and four Test 3 profiles."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
@@ -22,6 +22,10 @@ for profile in range(1,5):
     for row in data['motions']:
         all_converted[(profile,row['normal_slot'])]=parse_motion((ROOT/f"sets/p{profile}/fixtures/aqua_{row['fixture_stem']}.bin").read_bytes())
 
+dodge_report=json.loads((ROOT/'dodge/curve_validation.json').read_text())
+assert len(dodge_report['motions'])==1 and dodge_report['motions'][0]['donor']=='504'
+all_converted[(5,10)]=parse_motion((ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes())
+
 @lru_cache(maxsize=1)
 def clearance_samples():
     data=np.load(ROOT/'fixtures/v8_arm_reference.npz');actual=[]
@@ -38,24 +42,12 @@ def capsule_overlap(points,pair,radius):
     return total
 
 class VisualTests(unittest.TestCase):
-    def test_original_ground_finisher_forearm_overlap_reduces_against_v8(self):
-        before,after=clearance_samples()
-        slots=np.load(ROOT/'fixtures/v8_arm_reference.npz')['slots'];i=list(slots).index(101)
-        def score(points):
-            total=0.
-            for elbow,wrist in [(3,4),(6,7)]:
-                for t in [.2,.4,.6,.8,1.]:
-                    p=points[:,elbow]*(1-t)+points[:,wrist]*t;a=points[:,0];d=points[:,1]-a
-                    u=np.clip(np.sum((p-a)*d,axis=1)/np.sum(d*d,axis=1),0,1)
-                    gap=np.linalg.norm(p-(a+d*u[:,None]),axis=1);total+=float(np.maximum(0,17-gap).sum())
-            return total
-        self.assertLess(score(after[i]),score(before[i])*.5)
     def test_limb_clearance_keeps_wrist_and_ankle_displacements_bounded(self):
         before,after=clearance_samples()
         # The frozen V8 positions only compare the same source actions; V10's
         # newly assigned casts and falling intentionally have different poses.
         slots=np.load(ROOT/'fixtures/v8_arm_reference.npz')['slots']
-        same_source=~np.isin(slots,[10,54,55,56,57,79,80,81,82])
+        same_source=~np.isin(slots,[10,54,55,56,57,79,80,81,82,101])
         before=before[same_source];after=after[same_source]
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[4,7],:]-before[:,:,[4,7],:],axis=3))),23.)
         self.assertLess(float(np.max(np.linalg.norm(after[:,:,[8,9],:]-before[:,:,[8,9],:],axis=3))),2.)
@@ -117,15 +109,15 @@ class VisualTests(unittest.TestCase):
             pa[:,:3,3]-=helper_pose(a,float(a.frames-1))[-1,:3,3]
             pb[:,:3,3]-=helper_pose(b,0)[-1,:3,3]
             np.testing.assert_allclose(pa,pb,atol=.003,rtol=0,err_msg=(release,recovery))
-    def test_requested_action_clips_and_test_2_combos_match_serialized_reports(self):
-        actions={10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
+    def test_requested_action_clips_and_test_3_combos_match_serialized_reports(self):
+        actions={101:'411',10:'506',54:'316',57:'316',55:'317',56:'318',79:'391',82:'391',80:'390',81:'427'}
         for slot,clip in actions.items():self.assertEqual(by_slot[slot]['donor'],clip)
         self.assertEqual(by_slot[54]['source_range'][1],by_slot[57]['source_range'][0])
         self.assertEqual(by_slot[79]['source_range'][1],by_slot[82]['source_range'][0])
-        wanted=[(['392','393','428'],['429','504','514']),
-                (['515','517','550'],['650','557','411']),
-                (['399','352','353'],['500','501','503']),
-                (['510','511','512'],['513','507','508'])]
+        wanted=[(['516','518','519'],['607','608','609']),
+                (['610','611','612'],['616','618','619']),
+                (['613','602','603'],['604','605','606']),
+                (['617','405','406'],['407','452','621'])]
         for profile,(ground,air) in enumerate(wanted,1):
             rows=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())['motions']
             actual={r['normal_slot']:r['donor'] for r in rows}

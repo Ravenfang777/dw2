@@ -40,7 +40,7 @@ aqua,117,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52
 aqua,117,ground first,0xC8,98,60,300,base,full,False,48,travel
 aqua,117,ground second,0xC9,99,61,301,base,full,False,48,travel
 aqua,117,ground alternate,0xCA,100,62,302,base,full,False,64,travel
-aqua,117,ground finisher,0xCB,101,63,304,base,full,False,80,travel
+aqua,117,ground finisher,0xCB,101,63,411,p02ex_313.arc,full,False,80,travel
 aqua,117,air first,0xCC,102,64,305,base,full,False,40,travel
 aqua,117,air second,0xCD,103,65,306,base,full,False,42,travel
 aqua,117,air finisher,0xCE,104,66,309,base,full,False,56,travel
@@ -84,13 +84,13 @@ aqua 1,118,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28
 aqua 1,118,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
 aqua 1,118,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
 aqua 1,118,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
-aqua 1,118,ground first,0xC8,98,60,392,p02ex_155.arc,full,False,48,travel
-aqua 1,118,ground second,0xC9,99,61,393,p02ex_155.arc,full,False,48,travel
-aqua 1,118,ground alternate,0xCA,100,62,393,p02ex_155.arc,full,False,64,travel
-aqua 1,118,ground finisher,0xCB,101,63,428,p02ex_156.arc,full,False,80,travel
-aqua 1,118,air first,0xCC,102,64,429,p02ex_156.arc,full,False,40,travel
-aqua 1,118,air second,0xCD,103,65,504,p02ex_157.arc,full,False,42,travel
-aqua 1,118,air finisher,0xCE,104,66,514,p02ex_157.arc,full,False,56,travel
+aqua 1,118,ground first,0xC8,98,60,516,p02ex_511.arc,full,False,48,travel
+aqua 1,118,ground second,0xC9,99,61,518,p02ex_511.arc,full,False,48,travel
+aqua 1,118,ground alternate,0xCA,100,62,518,p02ex_511.arc,full,False,64,travel
+aqua 1,118,ground finisher,0xCB,101,63,519,p02ex_511.arc,full,False,80,travel
+aqua 1,118,air first,0xCC,102,64,607,p02ex_601.arc,full,False,40,travel
+aqua 1,118,air second,0xCD,103,65,608,p02ex_601.arc,full,False,42,travel
+aqua 1,118,air finisher,0xCE,104,66,609,p02ex_602.arc,full,False,56,travel
 aqua 1,118,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 1,118,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel
 aqua 2,119,idle,0x00,0,0,001,base,full,True,120,travel
@@ -131,13 +131,13 @@ aqua 2,119,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28
 aqua 2,119,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
 aqua 2,119,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
 aqua 2,119,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
-aqua 2,119,ground first,0xC8,98,60,515,p02ex_204.arc,full,False,48,travel
-aqua 2,119,ground second,0xC9,99,61,517,p02ex_204.arc,full,False,48,travel
-aqua 2,119,ground alternate,0xCA,100,62,517,p02ex_204.arc,full,False,64,travel
-aqua 2,119,ground finisher,0xCB,101,63,550,p02ex_204.arc,full,False,80,travel
-aqua 2,119,air first,0xCC,102,64,650,p02ex_205.arc,full,False,40,travel
-aqua 2,119,air second,0xCD,103,65,557,p02ex_206.arc,full,False,42,travel
-aqua 2,119,air finisher,0xCE,104,66,411,p02ex_313.arc,full,False,56,travel
+aqua 2,119,ground first,0xC8,98,60,610,p02ex_602.arc,full,False,48,travel
+aqua 2,119,ground second,0xC9,99,61,611,p02ex_603.arc,full,False,48,travel
+aqua 2,119,ground alternate,0xCA,100,62,611,p02ex_603.arc,full,False,64,travel
+aqua 2,119,ground finisher,0xCB,101,63,612,p02ex_603.arc,full,False,80,travel
+aqua 2,119,air first,0xCC,102,64,616,p02ex_605.arc,full,False,40,travel
+aqua 2,119,air second,0xCD,103,65,618,p02ex_609.arc,full,False,42,travel
+aqua 2,119,air finisher,0xCE,104,66,619,p02ex_609.arc,full,False,56,travel
 aqua 2,119,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 2,119,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel
 aqua 3,120,idle,0x00,0,0,001,base,full,True,120,travel
@@ -178,13 +178,13 @@ aqua 3,120,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28
 aqua 3,120,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
 aqua 3,120,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
 aqua 3,120,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
-aqua 3,120,ground first,0xC8,98,60,399,p02ex_346.arc,full,False,48,travel
-aqua 3,120,ground second,0xC9,99,61,352,p02ex_352.arc,full,False,48,travel
-aqua 3,120,ground alternate,0xCA,100,62,352,p02ex_352.arc,full,False,64,travel
-aqua 3,120,ground finisher,0xCB,101,63,353,p02ex_352.arc,full,False,80,travel
-aqua 3,120,air first,0xCC,102,64,500,p02ex_501.arc,full,False,40,travel
-aqua 3,120,air second,0xCD,103,65,501,p02ex_501.arc,full,False,42,travel
-aqua 3,120,air finisher,0xCE,104,66,503,p02ex_501.arc,full,False,56,travel
+aqua 3,120,ground first,0xC8,98,60,613,p02ex_620.arc,full,False,48,travel
+aqua 3,120,ground second,0xC9,99,61,602,p02ex_621.arc,full,False,48,travel
+aqua 3,120,ground alternate,0xCA,100,62,602,p02ex_621.arc,full,False,64,travel
+aqua 3,120,ground finisher,0xCB,101,63,603,p02ex_621.arc,full,False,80,travel
+aqua 3,120,air first,0xCC,102,64,604,p02ex_621.arc,full,False,40,travel
+aqua 3,120,air second,0xCD,103,65,605,p02ex_621.arc,full,False,42,travel
+aqua 3,120,air finisher,0xCE,104,66,606,p02ex_621.arc,full,False,56,travel
 aqua 3,120,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 3,120,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel
 aqua 4,121,idle,0x00,0,0,001,base,full,True,120,travel
@@ -225,12 +225,12 @@ aqua 4,121,air Fire cast release,0x83,79,41,391,p02ex_153.arc,"[0, 31]",False,28
 aqua 4,121,air Thunder casting family,0x85,80,42,390,p02ex_154.arc,full,False,78,travel
 aqua 4,121,air Cure casting family,0x86,81,43,427,p02ex_154.arc,full,False,68,travel
 aqua 4,121,air Fire cast recovery,0x8A,82,44,391,p02ex_153.arc,"[31, 48]",False,52,travel
-aqua 4,121,ground first,0xC8,98,60,510,p02ex_501.arc,full,False,48,travel
-aqua 4,121,ground second,0xC9,99,61,511,p02ex_501.arc,full,False,48,travel
-aqua 4,121,ground alternate,0xCA,100,62,511,p02ex_501.arc,full,False,64,travel
-aqua 4,121,ground finisher,0xCB,101,63,512,p02ex_501.arc,full,False,80,travel
-aqua 4,121,air first,0xCC,102,64,513,p02ex_501.arc,full,False,40,travel
-aqua 4,121,air second,0xCD,103,65,507,p02ex_509.arc,full,False,42,travel
-aqua 4,121,air finisher,0xCE,104,66,508,p02ex_509.arc,full,False,56,travel
+aqua 4,121,ground first,0xC8,98,60,617,p02ex_622.arc,full,False,48,travel
+aqua 4,121,ground second,0xC9,99,61,405,p02ex_624.arc,full,False,48,travel
+aqua 4,121,ground alternate,0xCA,100,62,405,p02ex_624.arc,full,False,64,travel
+aqua 4,121,ground finisher,0xCB,101,63,406,p02ex_624.arc,full,False,80,travel
+aqua 4,121,air first,0xCC,102,64,407,p02ex_624.arc,full,False,40,travel
+aqua 4,121,air second,0xCD,103,65,452,p02ex_626.arc,full,False,42,travel
+aqua 4,121,air finisher,0xCE,104,66,621,p02ex_629.arc,full,False,56,travel
 aqua 4,121,Guard / Barrier pose,0xD4,110,72,400,base,full,False,54,travel
 aqua 4,121,Dodge Roll / Cartwheel pose,0xDC,117,79,009,base,full,False,38,travel

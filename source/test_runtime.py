@@ -12,6 +12,8 @@ for name,args,ret in [('bridge_reset',[C.c_size_t],None),('bridge_range',[C.c_si
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
 for name,args,ret in [('bridge_magic_modes',[C.c_int,C.c_int,C.c_int],None),('bridge_matrix',[C.c_size_t,C.c_size_t,C.c_uint,C.POINTER(C.c_float)],None),('bridge_point',[C.c_size_t,C.c_size_t,C.c_uint,C.c_float,C.POINTER(C.c_float)],None),('bridge_matrix_code',[],C.c_uint),('bridge_point_code',[],C.c_uint),('bridge_point_fraction',[],C.c_float)]:
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
+for name,args,ret in [('bridge_air_modes',[C.c_int,C.c_uint],None),('bridge_control',[C.c_size_t,C.c_size_t,C.c_size_t],None),('bridge_control_calls',[],C.c_uint),('bridge_control_word',[C.c_uint],C.c_uint)]:
+    f=getattr(bridge,name);f.argtypes=args;f.restype=ret
 libc=C.CDLL(None);libc.mmap.argtypes=[C.c_void_p,C.c_size_t,C.c_int,C.c_int,C.c_int,C.c_long];libc.mmap.restype=C.c_void_p
 
 def allocate(n):
@@ -25,7 +27,7 @@ def w32(p,v):C.c_uint.from_address(p).value=v
 def w64(p,v):C.c_uint64.from_address(p).value=v
 
 class Host:
-    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0):
+    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0):
         self.game=allocate(0x3000000);bridge.bridge_reset(self.game);bridge.bridge_range(self.game,0x3000000,0x40);bridge.bridge_modes(remove,conflict)
         w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp)
         self.buffers=[]
@@ -43,6 +45,15 @@ class Host:
             call=lambda n:b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(n))+b'\xff\xd0'
             put(self.game+0x29ea00,self.matrix_prefix+call(b'NativeMatrix')+bytes.fromhex('4883c4205f488b5c2408488b742410c3'))
             put(self.game+0x29eb20,self.point_prefix+call(b'NativePoint')+bytes.fromhex('0f287424604881c4800000005f5d5bc3'))
+        bridge.bridge_air_modes(air_dodge,control_mode)
+        self.dir=self.buffer(bytes(16))
+        if air:
+            self.control_prefix=bytes.fromhex('48895c2418574883ec40488b0557e82a00')
+            self.queue_prefix=bytes.fromhex('48895c2408574883ec20488bf9')
+            call=lambda n:b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(n))+b'\xff\xd0'
+            put(self.game+0x2a6220,self.control_prefix+call(b'NativeControl')+bytes.fromhex('4883c4405f488b5c2418c3'))
+            put(self.game+0x29f980,self.queue_prefix+call(b'NativeQueue')+bytes.fromhex('4883c4205f488b5c2408c3'))
+            put(self.game+0x297870,bytes.fromhex('f601047518f6818800000020750ff68144040000017506b801000000c333c0c3'))
         self.load_pe()
     def activate_bank(self,olympus,encoded_fields=False):
         self.slot=60 if olympus else 98
@@ -130,7 +141,116 @@ class Host:
     def point(self,actor=None,code=0x30,fraction=.75):
         out=(C.c_float*4)();bridge.bridge_point(self.game+0x29eb20,self.actor if actor is None else actor,code,fraction,out);return list(out)
 
+    def control(self,down=0,pressed=0,state=2,request=6,height=100,tilt=0,x=0,z=0,actor=None):
+        a=self.actor if actor is None else actor
+        w32(a+0x70,state);w32(a+0x164,request);put(a+0x3d4,struct.pack('<f',height))
+        for field in [4,8,16,20]:w32(self.game+0x298ca90+field,(down if field in [4,16] else pressed))
+        put(self.dir,struct.pack('<4f',x,0,z,tilt))
+        bridge.bridge_control(self.game+0x2a6220,a,self.dir)
+    def dodge_body(self):
+        data=bytearray((ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes());data[:80]=self.runtime_originals[10][:80];return bytes(data)
+    def arm_air(self,profile=0):
+        self.frame();self.equip(True,profile);self.frame();self.control(state=0,request=0,height=0)
+        self.control(state=2,request=6)
+
 class RuntimeTests(unittest.TestCase):
+    def test_air_control_hook_executes_relocated_cookie_trampoline_and_preserves_ground_input(self):
+        h=Host(air=True);h.frame();before=h.snapshot()
+        h.control(down=6,pressed=6,state=0,request=0,height=0)
+        self.assertEqual(bridge.bridge_control_calls(),1)
+        self.assertEqual([bridge.bridge_control_word(i) for i in range(4)],[6]*4)
+        self.assertEqual(h.snapshot(),before)
+        self.assertIn('AIR DODGE READY',bridge.bridge_log().decode())
+    def test_neutral_air_circle_plays_504_masks_only_jump_and_preserves_velocity_and_native_flags(self):
+        h=Host(air=True,control_mode=1);h.arm_air()
+        put(h.actor+0x3b0,struct.pack('<3f',-4,2,3));velocity=C.string_at(h.actor+0x3b0,12);flags=C.string_at(h.actor,4)
+        put(h.actor+0x16c,struct.pack('<f',18));h.control(down=6|0x80,pressed=6|0x100)
+        self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x16c),0)
+        self.assertEqual([bridge.bridge_control_word(i)&6 for i in range(4)],[0]*4)
+        self.assertEqual(r32(h.game+0x298ca94),6|0x80)
+        self.assertEqual(r32(h.game+0x298ca98),6|0x100|0x40000000)
+        self.assertEqual(C.string_at(h.actor+0x3b0,12),velocity);self.assertEqual(C.string_at(h.actor,4),flags)
+        for slot in h.motions:
+            if slot!=10:self.assertEqual(h.body(slot),h.expected(slot,1))
+    def test_aerial_dodge_rising_start_queues_native_fall_without_changing_native_air_state(self):
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,state=1,request=5)
+        self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x164),6)
+        self.assertEqual(r32(h.actor+0x70),1);self.assertEqual(r32(h.actor+0x178),0)
+    def test_aerial_dodge_does_not_trigger_from_held_takeoff_or_directional_air_circle(self):
+        h=Host(air=True);h.frame();h.equip(True);h.frame()
+        h.control(down=6,pressed=6,state=0,request=4,height=0)
+        h.control(down=6,pressed=0,state=1,request=5)
+        self.assertEqual(h.body(10),h.expected(10,1))
+        h.control();h.control(down=6,pressed=6,tilt=.8,x=.8)
+        self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(bridge.bridge_control_word(0)&6,6)
+        h.control();h.control(down=6,pressed=6);self.assertEqual(h.body(10),h.dodge_body())
+    def test_aerial_dodge_finishes_into_506_and_requires_a_landing_before_repeating(self):
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6)
+        put(h.actor+0x16c,struct.pack('<f',39));h.frame();h.assert_all(self,1)
+        h.control();h.control(down=6,pressed=6);h.assert_all(self,1)
+        h.control(state=0,request=0,height=0);h.control();h.control(down=6,pressed=6)
+        self.assertEqual(h.body(10),h.dodge_body())
+    def test_air_dodge_restores_on_clock_loop_interruption_and_ability_off_in_both_banks(self):
+        for bank in [98,60]:
+            for reason in ['loop','attack','cast','land','off']:
+                h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air(4);h.control(down=6,pressed=6)
+                self.assertEqual(h.body(10),h.dodge_body())
+                put(h.actor+0x16c,struct.pack('<f',20));h.frame()
+                if reason=='loop':put(h.actor+0x16c,struct.pack('<f',0))
+                elif reason=='attack':w32(h.actor+0x164,0xcc)
+                elif reason=='cast':w32(h.actor+0x164,0x85)
+                elif reason=='land':w32(h.actor+0x70,0);put(h.actor+0x3d4,struct.pack('<f',0))
+                else:h.equip(False,4)
+                h.frame();self.assertEqual(h.body(10),h.expected(10,5))
+                w32(h.actor+0x164,0);h.equip(False,4);h.frame();h.assert_all(self,False)
+    def test_aerial_dodge_retains_each_selected_test_combo_and_native_travel(self):
+        h=Host(air=True,encoded_fields=True);h.frame()
+        for profile in range(5):
+            h.equip(True,profile);w32(h.actor+0x164,0);h.frame()
+            h.control(state=0,request=0,height=0);h.control();h.control(down=6,pressed=6)
+            self.assertEqual(h.body(10),h.dodge_body())
+            for slot in range(98,105):self.assertEqual(h.body(slot),h.expected(slot,profile+1))
+            h.control(state=0,request=0,height=0);h.assert_all(self,profile+1)
+    def test_air_dodge_excludes_unbound_other_actor_events_scripts_busy_commands_and_invalid_stick(self):
+        for reason in ['off','other','event','menu','script','scriptflag','actionflag','cast','attack','reaction','shortcut','command','queued','queued_ledge','nan','moving','near_ground']:
+            h=Host(air=True);h.arm_air();kwargs={}
+            if reason=='off':h.equip(False);w32(h.actor+0x164,0);h.frame()
+            elif reason=='other':kwargs['actor']=h.buffer(bytes(0x800))
+            elif reason=='event':w32(h.game+0x298c9a0,1)
+            elif reason=='menu':w32(h.game+0x2867364,0x2000)
+            elif reason=='script':w32(h.actor+0x440,1)
+            elif reason=='scriptflag':w32(h.actor+0x444,1)
+            elif reason=='actionflag':w32(h.actor,4)
+            elif reason=='cast':kwargs['request']=0x36
+            elif reason=='attack':kwargs['request']=0xc8
+            elif reason=='reaction':kwargs.update(state=4,request=0x4e)
+            elif reason=='shortcut':kwargs['down']=6|0x40000
+            elif reason=='command':w32(h.game+0x2d53a40,2)
+            elif reason in ['queued','queued_ledge']:w32(h.actor+0x178,1);w32(h.actor+0x17c,0xc8 if reason=='queued' else 0xd)
+            elif reason=='nan':kwargs['tilt']=float('nan')
+            elif reason=='moving':kwargs.update(tilt=.5,x=.5)
+            else:kwargs['height']=1
+            before=h.body(10);h.control(pressed=6,**({'down':6}|kwargs))
+            self.assertEqual(h.body(10),before,reason)
+    def test_air_dodge_never_writes_foreign_fall_data_or_unloaded_actor(self):
+        h=Host(air=True);h.arm_air();p=h.motions[10];offset=struct.unpack_from('<I',h.body(10),40)[0]
+        C.c_ubyte.from_address(p+offset+21).value^=1;before=h.body(10)
+        h.control(down=6,pressed=6);self.assertEqual(h.body(10),before)
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6);before=h.snapshot()
+        w32(h.actor+0x374,0);h.frame();self.assertEqual(h.snapshot(),before)
+    def test_unequipped_air_dodge_does_not_retrigger_while_body_restore_waits_for_idle(self):
+        h=Host(air=True);h.arm_air();h.equip(False);h.frame()
+        self.assertEqual(h.body(10),h.expected(10,1))
+        h.control(down=6,pressed=6);self.assertEqual(h.body(10),h.expected(10,1))
+        self.assertEqual(bridge.bridge_control_word(0)&6,6)
+    def test_air_hook_admission_and_failure_paths_leave_original_control_bytes(self):
+        for reason in ['control','can','queue','alloc','protect','disabled','remove']:
+            h=Host(air=True,fail_alloc=reason=='alloc',fail_protect=reason=='protect',air_dodge=reason!='disabled',remove=reason=='remove')
+            if reason in ['control','can','queue']:
+                address=h.game+{'control':0x2a6220,'can':0x297870,'queue':0x29f980}[reason]
+                C.c_ubyte.from_address(address).value^=1
+            before=C.string_at(h.game+0x2a6220,17);h.frame()
+            self.assertEqual(C.string_at(h.game+0x2a6220,17),before,reason)
     def test_ground_and_air_fire_thunder_cure_resolve_to_requested_distinct_records(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True);h.frame()

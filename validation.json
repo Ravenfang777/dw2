@@ -1,6 +1,6 @@
 {
-  "version": 10,
-  "test_round": 2,
+  "version": 11,
+  "test_round": 3,
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -17,99 +17,79 @@
     120,
     121
   ],
-  "normal_motion_records_per_profile": 47,
-  "olympus_motion_records_per_profile": 46,
-  "unique_generated_records": 75,
-  "actual_pe_mock_tests": 38,
-  "geometry_transition_tests": 14,
-  "pose_samples": 16391,
-  "max_pose_position_fit_error": 4.0448012958590915,
-  "max_non_root_attachment_translation_error": 0.0,
-  "max_scale_error": 0.0,
-  "native_travel_error": 0.0,
-  "original_motion_lengths_headers_and_counts_preserved": true,
-  "helper_slots": 11,
-  "original_msets_on_disk": true,
-  "main_actions": {
-    "Fire": [
-      316,
-      391
-    ],
-    "Thunder": [
-      317,
-      390
-    ],
-    "Cure": [
-      318,
-      427
-    ],
-    "Falling": 506
-  },
-  "test_2_combos": [
+  "main_ground_finisher": "411",
+  "neutral_air_dodge": "504",
+  "normal_falling": "506",
+  "test_3_combos": [
     [
       [
-        "392",
-        "393",
-        "428"
+        "516",
+        "518",
+        "519"
       ],
       [
-        "429",
-        "504",
-        "514"
+        "607",
+        "608",
+        "609"
       ]
     ],
     [
       [
-        "515",
-        "517",
-        "550"
+        "610",
+        "611",
+        "612"
       ],
       [
-        "650",
-        "557",
-        "411"
+        "616",
+        "618",
+        "619"
       ]
     ],
     [
       [
-        "399",
-        "352",
-        "353"
+        "613",
+        "602",
+        "603"
       ],
       [
-        "500",
-        "501",
-        "503"
+        "604",
+        "605",
+        "606"
       ]
     ],
     [
       [
-        "510",
-        "511",
-        "512"
+        "617",
+        "405",
+        "406"
       ],
       [
-        "513",
-        "507",
-        "508"
+        "407",
+        "452",
+        "621"
       ]
     ]
   ],
-  "cast_request_words_changed": [
-    56,
-    133
-  ],
-  "thunder_cast_frames": {
-    "ground": 86,
-    "air": 78,
-    "previous_ground": 68,
-    "previous_air": 68
-  },
+  "normal_motion_records_per_profile": 47,
+  "olympus_motion_records_per_profile": 46,
+  "unique_generated_pose_variants": 76,
+  "actual_pe_mock_tests": 49,
+  "geometry_assignment_tests": 13,
+  "pose_samples": 16548,
+  "max_pose_position_fit_error": 4.98903332659248,
+  "max_non_root_attachment_translation_error": 0.0,
+  "max_scale_error": 0.0,
+  "native_travel_error": 0.0,
+  "original_motion_lengths_headers_counts_and_msets_preserved": true,
+  "helper_slots": 11,
   "left_palm_magic": 206,
-  "dll_sha256": "a4856ca89104b0324118de61c8737675d615d4dccf309bebdc5c1e77c1b6f170",
+  "air_dodge_one_per_airtime": true,
+  "air_dodge_extra_invulnerability": false,
+  "dll_sha256": "e6321ac38a5477c6d35bb4b68f891b458c7078cd675f3aa281bf7fb0b5955cd0",
   "limitations": [
-    "Windows/KH1 execution, rendering and Thunder cast timing of v10 pending",
-    "Arm separation uses joint/capsule checks; some mesh clipping may remain",
-    "Numbered clips use native KH1 durations and hit events; BBS commands/effects are not imported"
+    "Windows/KH1 execution and rendered appearance pending",
+    "New input detour and airborne transition require in-game testing",
+    "504 uses native fall gravity and40-frame timing; no added BBS travel or invulnerability",
+    "Thunder retains v10 alternate casting duration86/78"
   ]
 }

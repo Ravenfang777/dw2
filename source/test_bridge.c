@@ -10,10 +10,11 @@ static struct {uintptr_t start;size_t size;uint32_t protect;} ranges[128];
 static unsigned nranges,queries;
 static uintptr_t game_base;
 static int remove_mode,conflict;
-static int hand_magic=1,alloc_failure,protect_failure;
+static int hand_magic=1,air_enabled=1,alloc_failure,protect_failure;
+static unsigned control_calls,control_words[4],control_mode;
 static unsigned matrix_code,point_code;static float point_fraction;
 static char output[131072];static size_t used;
-void bridge_reset(uintptr_t game){game_base=game;nranges=queries=0;remove_mode=conflict=0;hand_magic=1;alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
+void bridge_reset(uintptr_t game){game_base=game;nranges=queries=0;remove_mode=conflict=0;hand_magic=air_enabled=1;control_calls=control_mode=0;memset(control_words,0,sizeof(control_words));alloc_failure=protect_failure=0;matrix_code=point_code=0;used=0;output[0]=0;}
 void bridge_magic_modes(int enabled,int noalloc,int noprotect){hand_magic=enabled;alloc_failure=noalloc;protect_failure=noprotect;}
 void bridge_range(uintptr_t start,size_t size,uint32_t protect){ranges[nranges].start=start;ranges[nranges].size=size;ranges[nranges].protect=protect;nranges++;}
 void bridge_modes(int remove,int other){remove_mode=remove;conflict=other;}
@@ -25,7 +26,7 @@ static size_t ABI query(const void*p,MemInfo*out,size_t size){queries++;uintptr_
 static uintptr_t ABI create_file(const uint16_t*path,uint32_t a,uint32_t b,void*c,uint32_t d,uint32_t e,uintptr_t f){(void)path;(void)a;(void)b;(void)c;(void)d;(void)e;(void)f;return 7;}
 static int ABI write_file(uintptr_t f,const void*data,uint32_t n,uint32_t*done,void*overlap){(void)f;(void)overlap;if(used+n>=sizeof(output))return 0;memcpy(output+used,data,n);used+=n;output[used]=0;if(done)*done=n;return 1;}
 static int ABI close_file(uintptr_t f){(void)f;return 1;}
-static uint32_t ABI profile(const uint16_t*a,const uint16_t*b,int c,const uint16_t*d){(void)a;(void)c;(void)d;return b[0]=='h'?(uint32_t)hand_magic:(uint32_t)remove_mode;}
+static uint32_t ABI profile(const uint16_t*a,const uint16_t*b,int c,const uint16_t*d){(void)a;(void)c;(void)d;return b[0]=='h'?(uint32_t)hand_magic:b[0]=='a'?(uint32_t)air_enabled:(uint32_t)remove_mode;}
 static void* ABI valloc(void*p,size_t n,uint32_t kind,uint32_t protect){(void)p;(void)kind;(void)protect;if(alloc_failure)return 0;void*q=mmap(0,n,PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);if(q==MAP_FAILED)return 0;bridge_range((uintptr_t)q,n,0x40);return q;}
 static int ABI vfree(void*p,size_t n,uint32_t kind){(void)n;(void)kind;return munmap(p,4096)==0;}
 static int ABI vprotect(void*p,size_t n,uint32_t protect,uint32_t*old){(void)p;(void)n;(void)protect;if(protect_failure)return 0;*old=0x20;return 1;}
@@ -39,6 +40,22 @@ unsigned bridge_point_code(void){return point_code;}
 float bridge_point_fraction(void){return point_fraction;}
 static uint32_t ABI handle(const void*p){uintptr_t addr=(uintptr_t)p,aligned=addr&~(uintptr_t)0x1ffffff;uintptr_t*t=(uintptr_t*)(game_base+0x2ee3980);for(unsigned i=1;i<64;i++)if(t[i]==aligned)return 0x80000000u|(i<<25)|(uint32_t)(addr-aligned);for(unsigned i=1;i<64;i++)if(!t[i]){t[i]=aligned;return 0x80000000u|(i<<25)|(uint32_t)(addr-aligned);}return 0;}
 uint32_t bridge_encode(uintptr_t p){return handle((void*)p);}
+void bridge_air_modes(int enabled,unsigned mode){air_enabled=enabled;control_mode=mode;}
+void bridge_control(uintptr_t f,uintptr_t actor,uintptr_t dir){((void(ABI*)(uintptr_t,uintptr_t))f)(actor,dir);}
+unsigned bridge_control_calls(void){return control_calls;}
+unsigned bridge_control_word(unsigned i){return i<4?control_words[i]:0;}
+static void ABI native_queue(uintptr_t actor,uint32_t request,float frame){
+    *(uint32_t*)(actor+0x178)=1;*(uint32_t*)(actor+0x17c)=request;*(float*)(actor+0x184)=frame;
+}
+static void ABI native_control(uintptr_t actor,uintptr_t dir){
+    (void)dir;control_calls++;uint32_t*pad=(uint32_t*)(game_base+0x298ca90);
+    unsigned fields[4]={1,2,4,5};for(unsigned i=0;i<4;i++)control_words[i]=pad[fields[i]];
+    if(control_mode==1)pad[2]^=0x40000000u;
+    if(*(uint32_t*)(actor+0x178)&&*(uint32_t*)(actor+0x17c)==6){
+        *(uint32_t*)(actor+0x164)=6;*(float*)(actor+0x16c)=0;*(uint32_t*)(actor+0x178)=0;
+    }
+    if(control_mode==2)*(uint32_t*)(actor+0x164)=0xcc;
+}
 uintptr_t bridge_symbol(const char*n){
     if(!strcmp(n,"GetModuleHandleA"))return (uintptr_t)get_module;
     if(!strcmp(n,"GetModuleFileNameW"))return (uintptr_t)file_name;
@@ -47,6 +64,8 @@ uintptr_t bridge_symbol(const char*n){
     if(!strcmp(n,"WriteFile"))return (uintptr_t)write_file;
     if(!strcmp(n,"CloseHandle"))return (uintptr_t)close_file;
     if(!strcmp(n,"GetPrivateProfileIntW"))return (uintptr_t)profile;
+    if(!strcmp(n,"NativeControl"))return (uintptr_t)native_control;
+    if(!strcmp(n,"NativeQueue"))return (uintptr_t)native_queue;
     if(!strcmp(n,"NativeHandle"))return (uintptr_t)handle;
     if(!strcmp(n,"VirtualAlloc"))return (uintptr_t)valloc;
     if(!strcmp(n,"VirtualFree"))return (uintptr_t)vfree;
