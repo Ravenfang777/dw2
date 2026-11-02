@@ -28,6 +28,10 @@ all_converted[(5,10)]=parse_motion((ROOT/'dodge/fixtures/aqua_s010.bin').read_by
 glide_stop_report=json.loads((ROOT/'glide_stop/curve_validation.json').read_text())
 all_converted[(6,10)]=parse_motion((ROOT/'glide_stop/fixtures/aqua_s010.bin').read_bytes())
 
+blizzard_report=json.loads((ROOT/'blizzard/curve_validation.json').read_text())
+for row in blizzard_report['motions']:
+    all_converted[(7,row['normal_slot'])]=parse_motion((ROOT/f"blizzard/fixtures/aqua_{row['fixture_stem']}.bin").read_bytes())
+
 @lru_cache(maxsize=1)
 def clearance_samples():
     data=np.load(ROOT/'fixtures/v8_arm_reference.npz');actual=[]
@@ -44,6 +48,34 @@ def capsule_overlap(points,pair,radius):
     return total
 
 class VisualTests(unittest.TestCase):
+    def test_second_swing_reaches_the_end_before_a_useful_chain_window(self):
+        for slot,finish in [(99,32),(100,44)]:
+            m=converted[slot];last=pose(model,m,float(m.frames-1));last[:,:3,3]-=helper_pose(m,m.frames-1)[-1,:3,3]
+            for f in [float(finish),float(finish+4),float(m.frames-1)]:
+                at=pose(model,m,f);at[:,:3,3]-=helper_pose(m,f)[-1,:3,3]
+                np.testing.assert_allclose(at,last,atol=.005,rtol=0)
+            earlier=pose(model,m,float(finish-12))
+            self.assertGreater(float(np.linalg.norm(earlier[100,:3,3]-pose(model,m,finish)[100,:3,3])),2.)
+    def test_running_head_is_lifted_while_the_torso_and_bind_hair_are_preserved(self):
+        from aqua_retarget_math import rotation
+        for slot in [5,6,7]:
+            # The reference was the shipped v15 run. Freeze those source curves
+            # for a comparison which does not repeat the correction formula.
+            old=parse_motion((ROOT/f'fixtures/v15_run_s{slot:03}.bin').read_bytes())
+            for f in np.linspace(0,converted[slot].frames-1,9):
+                a=pose(model,old,float(f));b=pose(model,converted[slot],float(f))
+                fa=rotation(a[151])@rotation(model.bind[151]).T@np.array([0.,0.,1.])
+                fb=rotation(b[151])@rotation(model.bind[151]).T@np.array([0.,0.,1.])
+                self.assertGreater(fb[1]-fa[1],.17)
+                np.testing.assert_allclose(a[:144],b[:144],atol=.004,rtol=0)
+    def test_blizzard_variants_preserve_every_native_spell_event_and_allocation(self):
+        for row in blizzard_report['motions']:
+            slot=row['normal_slot'];m=all_converted[(7,slot)];native=original[slot]
+            import struct
+            at=struct.unpack_from('<I',native.raw,60)[0]
+            self.assertEqual(m.raw[at:],native.raw[at:])
+            self.assertEqual(m.raw[:80],native.raw[:80]);self.assertEqual(len(m.raw),len(native.raw))
+            self.assertEqual(row['donor'],'391' if slot==55 else '316')
     def test_limb_clearance_keeps_wrist_and_ankle_displacements_bounded(self):
         before,after=clearance_samples()
         # The frozen V8 positions only compare the same source actions; V10's
@@ -127,8 +159,8 @@ class VisualTests(unittest.TestCase):
             self.assertEqual(actual,dict(zip(range(98,105),[ground[0],ground[1],ground[1],ground[2],*air])))
     def test_second_ground_event_edits_change_only_existing_time_values(self):
         import struct
-        from aqua_event_timing_v15 import tracks
-        for slot,contact,finish in [(99,35.,47.),(100,47.,63.)]:
+        from aqua_event_timing_v16 import tracks
+        for slot,contact,finish in [(98,12.,22.),(99,24.,32.),(100,36.,44.)]:
             before=original[slot].raw;after=converted[slot].raw
             self.assertEqual(tracks(before),tracks(after))
             allowed=set();active=[]
@@ -139,7 +171,8 @@ class VisualTests(unittest.TestCase):
                     self.assertEqual(before[at+4:at+16],after[at+4:at+16])
                     if kind==4 and struct.unpack_from('<H',after,at+6)[0]==0x16:active.append(times[-1])
                 self.assertEqual(times,sorted(times))
-                if kind==5:self.assertEqual(times,[finish,finish+1])
+                if kind==5:self.assertEqual(times,[finish,40. if slot==98 else float(original[slot].frames)])
+                if kind in [6,7]:self.assertEqual(before[keys:keys+count*16],after[keys:keys+count*16])
             self.assertEqual(min(active),contact)
             start=struct.unpack_from('<I',before,60)[0]
             self.assertTrue(all(before[i]==after[i] or i in allowed for i in range(start,len(before))))

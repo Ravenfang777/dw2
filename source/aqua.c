@@ -60,7 +60,9 @@ typedef struct {uptr motion,parts[AQUA_PART_COUNT];u32 handle,slot,contiguous;} 
 static Binding cached[AQUA_MOTION_COUNT];
 static uptr cache_actor,cache_array,reported_wait_array,cache_low,cache_high;
 static u32 cache_array_bytes,cache_count;
-static int air_dodge_active,glide_stop_active,glide_standard_active;
+static int air_dodge_active,glide_stop_active;
+static u32 blizzard_active;
+static void blizzard_tick(uptr actor,int choice);
 static void air_dodge_clear(void);
 static int cache_choice=-1,pending_reported,last_choice=-1;
 static u32 last_action=0xffffffffu,action_logs;
@@ -103,7 +105,7 @@ static void encode(const char*text,u8*out,usize cap){
         else out[n]=1; /* The supplied helper maps a space to 01. */
     }out[n]=0;
 }
-static void clear_binding(void){air_dodge_clear();cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
+static void clear_binding(void){air_dodge_clear();blizzard_active=0;cache_actor=cache_array=cache_low=cache_high=0;cache_array_bytes=cache_count=0;cache_choice=-1;pending_reported=0;zeros(cached,sizeof(cached));}
 static uptr decode(u32 h){
     if(!h)return 0;
     if(!(h&0x80000000u))return (uptr)h;
@@ -147,6 +149,7 @@ static int part_known(uptr p,const AquaPart *part){
     for(unsigned i=0;i<AQUA_PROFILE_COUNT;i++)if(equal((void*)p,part->after[i],part->size))return 1;
     if(part->dodge&&equal((void*)p,part->dodge,part->size))return 1;
     if(part->glide_stop&&equal((void*)p,part->glide_stop,part->size))return 1;
+    if(part->blizzard&&equal((void*)p,part->blizzard,part->size))return 1;
     return 0;
 }
 static int ensure_table(void){
@@ -242,7 +245,7 @@ static int fast_binding(uptr actor,uptr array,int choice){
         for(unsigned j=0;j<aqua_motions[i].part_count;j++){
             const AquaPart *part=d->parts+j;uptr p=motion_part(b->motion,d,part,group);
             const u8 *expected=part_data(part,choice);
-            if(glide_standard_active&&d->normal_slot>=75u&&d->normal_slot<=78u)expected=part->before;
+            if(part->blizzard&&((d->normal_slot==55u&&(blizzard_active&1u))||(d->normal_slot==80u&&(blizzard_active&2u))))expected=part->blizzard;
             if(d->normal_slot==10){
                 if(air_dodge_active&&part->dodge)expected=part->dodge;
                 else if(glide_stop_active&&part->glide_stop)expected=part->glide_stop;
@@ -322,7 +325,7 @@ static void motion_gate(uptr actor,int choice){
             if(p<cache_low)cache_low=p;if(end>cache_high)cache_high=end;
         }
     }
-    glide_standard_active=0;
+    blizzard_active=0;
     cast_publish(actor,array,&cast_found);
     copy(cached,found,sizeof(cached));cache_actor=actor;cache_array=array;cache_choice=choice;pending_reported=0;reported_wait_array=0;
     log_text(choice?"AQUA MOTIONS ENABLED: Aqua common body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all mapped original Sora records restored");
@@ -333,6 +336,7 @@ static void motion_gate(uptr actor,int choice){
 
 #include "aqua_magic.h"
 #include "aqua_air_dodge.h"
+#include "aqua_blizzard.h"
 
 EXPORT void ABI OnInit(const w16 *mod_path){
     (void)mod_path;
@@ -340,10 +344,10 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    magic_disabled=1; /* Native keyblade-tip casting is required for v15. */
+    magic_disabled=1; /* Native keyblade-tip casting is required for v16. */
     static const w16 air_key[]={'a','i','r','_','d','o','d','g','e',0};
     air_disabled=!kGetPrivateProfileIntW(section,air_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v15 loaded by Panacea; main ground300/365/366 air351/352/393; Blizzard uses Fire poses; native keyblade-tip magic; native Glide middle; late ground-second timing; dodge504 Glide guard");
+    log_text("KH1FM AQUA ANIMATION TEST v16 loaded by Panacea; main ground300/365/366 air351/352/393; Blizzard uses Fire poses; native keyblade-tip magic; Aqua Glide350 hold; completed second swing with late recovery; Master-style dodge504 movement; run head lifted12deg");
     if(magic_disabled)log_text("AQUA MAGIC: native keyblade-tip origins and effect matrices; palm redirection disabled by default");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
@@ -372,10 +376,11 @@ EXPORT void ABI OnFrame(void){
     else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("AQUA WAITING: ability list full or not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"AQUA UNEQUIPPED");last_choice=choice;}
     air_requested_choice=choice;
-    cast_followup(actor);
+    blizzard_tick(actor,choice);
     air_tick(actor,choice);
     glide_tick(actor,choice);
     motion_gate(actor,choice);
+    blizzard_tick(actor,choice);
     u32 action=r32(actor+0x164)&0xfffu;
     if(choice&&action!=last_action&&action_logs<192){
         log_number("AQUA native action request=",action);action_logs++;

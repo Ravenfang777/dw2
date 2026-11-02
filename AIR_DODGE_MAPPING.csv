@@ -1,6 +1,6 @@
-﻿Ability,Ability id,Action,Aqua clip,Trigger,Normal slot,Olympus slot,Native frames,Always queued native restart,Logged Jump flags0x03000000 allowed,Native command dispatch candidate excluded,Normal falling clip,Input restored after control,Native gravity and velocity
-aqua,117,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
-aqua 1,118,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
-aqua 2,119,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
-aqua 3,120,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
-aqua 4,121,Aerial dodge,504,Fresh airborne Jump/Circle after release; neutral or directional stick; once per airtime,10,10,40,True,True,True,506,True,True
+﻿Ability,Ability id,Aqua clip,Trigger,Neutral stick,Tilted stick,Held rise test units,Horizontal test speed,Native frames,Fall clip,Collision,Extra defense or damage
+aqua,117,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
+aqua 1,118,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
+aqua 2,119,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
+aqua 3,120,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False
+aqua 4,121,504,Fresh airborne Circle after release; once per airtime,vertical lift,vertical lift plus normalized stick direction,96,6,40,506,native displacement callback before collision,False

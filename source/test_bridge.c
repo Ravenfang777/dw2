@@ -84,6 +84,18 @@ static void ABI native_control(uintptr_t actor,uintptr_t dir){
     /* Native control0x2A630C clears its command record after dispatch. */
     *(uint64_t*)(game_base+0x2d53a40)=0;*(uint32_t*)(game_base+0x2d53a48)=0;
 }
+static unsigned move_calls;
+static float ABI native_move(uintptr_t actor,float*out){
+    move_calls++;out[0]=1;out[1]=2;out[2]=3;out[3]=4;
+    return *(float*)(actor+0x124);
+}
+static uint32_t ABI native_set_state(uintptr_t actor,uint32_t state){
+    uint32_t old=*(uint32_t*)(actor+0x70);
+    if(old!=state){*(uint32_t*)(actor+0x378)=old;*(uint32_t*)(actor+0x70)=state;*(uint32_t*)actor|=0x400;}
+    return old;
+}
+float bridge_move(uintptr_t f,uintptr_t actor,float*out){return ((float(ABI*)(uintptr_t,float*))f)(actor,out);}
+unsigned bridge_move_calls(void){return move_calls;}
 uintptr_t bridge_symbol(const char*n){
     if(!strcmp(n,"GetModuleHandleA"))return (uintptr_t)get_module;
     if(!strcmp(n,"GetModuleFileNameW"))return (uintptr_t)file_name;
@@ -95,6 +107,8 @@ uintptr_t bridge_symbol(const char*n){
     if(!strcmp(n,"NativeDecode"))return (uintptr_t)native_decode;
     if(!strcmp(n,"NativeGlideCommon"))return (uintptr_t)native_glide_common;
     if(!strcmp(n,"NativeAppend"))return (uintptr_t)native_append;
+    if(!strcmp(n,"NativeMove"))return (uintptr_t)native_move;
+    if(!strcmp(n,"NativeSetState"))return (uintptr_t)native_set_state;
     if(!strcmp(n,"NativeControl"))return (uintptr_t)native_control;
     if(!strcmp(n,"NativeQueue"))return (uintptr_t)native_queue;
     if(!strcmp(n,"NativeHandle"))return (uintptr_t)handle;

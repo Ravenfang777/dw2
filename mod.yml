@@ -1,8 +1,8 @@
-title: KH1FM Aqua Animation Test v15
+title: KH1FM Aqua Animation Test v16
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Main air second352; Blizzard uses Fire release/recovery; native keyblade-tip magic; original Sora Glide middle with Aqua350 opening/end. Adds deferred Glide guard for504 and retimes365 ground-second contact/chain to the end. Numbered combo/spell poses retained. Steam Global/Panacea.
+  Aqua v16: native Blizzard events with Fire visuals, earlier first ground hit and completed second swing with usable recovery, Aqua350 held Glide, Master-style504 lift/directional movement and lifted running head. Five0-AP abilities; original MSETs. Steam Global/Panacea.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy

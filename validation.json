@@ -1,7 +1,6 @@
 {
-  "version": 15,
-  "test_round": 4,
-  "test_round_label": "revised Test4",
+  "version": 16,
+  "test_round": "revised Test4",
   "offline_checks_passed": true,
   "game_runtime_tested": false,
   "abilities": [
@@ -28,41 +27,31 @@
     "352",
     "393"
   ],
-  "main_fire_ground_air": [
-    "391",
-    "316"
-  ],
-  "main_cure_ground_air": [
-    "427",
-    "318"
-  ],
-  "main_stop_aero_ground_air": [
-    "317",
-    "390"
-  ],
-  "numbered_combo_and_spell_poses_preserved_from_v14": true,
   "main_blizzard_ground_air": [
     "391",
     "316"
   ],
-  "keyblade_tip_magic": true,
-  "deferred_native_glide_guard": true,
-  "item_use": "395",
-  "item_source_aliases": "007 / 395",
-  "glide": "350",
-  "glide_opening_source_range": [
-    0,
+  "blizzard_native_lookup_and_events_restored": true,
+  "blizzard_added_queue_entries": 0,
+  "ground_contact_frames": [
+    12,
+    24,
+    36
+  ],
+  "second_source_finish_and_chain_open_frames": [
+    32,
+    44
+  ],
+  "second_chain_window_widths": [
+    16,
     20
   ],
-  "glide_held_source_frame": null,
-  "glide_middle": "original Sora bodies and clock",
-  "glide_closing_source_range": [
-    20,
-    40
-  ],
-  "air_dodge": "504",
-  "normal_falling": "506",
-  "test_4_combos": [
+  "glide": "350 opening0..20 / held20 / closing20..40",
+  "air_dodge": "504 Master-style KH1 movement adaptation",
+  "run_head_lift_degrees": 12,
+  "keyblade_tip_magic": true,
+  "numbered_combo_and_cast_poses_retained": true,
+  "test_sets": [
     [
       [
         "316",
@@ -112,41 +101,24 @@
       ]
     ]
   ],
-  "normal_motion_records_per_profile": 51,
-  "olympus_motion_records_per_profile": 50,
-  "unique_generated_pose_variants": 86,
-  "serialized_profile_transient_assignments": 105,
-  "actual_pe_mock_tests": 65,
-  "geometry_assignment_tests": 18,
-  "pose_samples": 18774,
-  "max_pose_position_fit_error": 4.98903332659248,
-  "max_non_root_attachment_translation_error": 0.0,
-  "max_scale_error": 0.0,
-  "native_travel_error": 0.0,
-  "original_motion_lengths_headers_counts_and_msets_preserved": true,
+  "native_motion_headers_counts_and_sizes_preserved": true,
+  "normal_motion_records": 51,
+  "olympus_motion_records": 50,
   "helper_slots": 11,
-  "native_magic_attachment": "0x30",
-  "palm_attachment_hooks": 0,
-  "ground_second_contact_frames": [
-    35,
-    47
-  ],
-  "ground_second_chain_frames": [
-    47,
-    63
-  ],
-  "air_dodge_always_native_queued_restart": true,
-  "air_dodge_one_per_airtime": true,
-  "air_dodge_directional_input_allowed": true,
-  "air_dodge_input_diagnostics": true,
-  "glide_native_unlock_required": true,
-  "glide_direction_changes_keep_pose_progress": true,
-  "dll_sha256": "2894dfe56f0cc426110d4bbb32c86690f72420c18633ee9723d0a95cb87aa0d3",
+  "original_installed_msets": true,
+  "serialized_profile_and_transient_assignments": 107,
+  "distinct_fitted_records": 88,
+  "runtime_pe_tests": 72,
+  "geometry_tests": 21,
+  "pose_samples": 19424,
+  "max_pose_position_fit_error": 4.98903332659248,
+  "max_pose_basis_fit_error": 0.08268184394477858,
+  "max_native_travel_error": 0.0,
+  "max_scale_error": 0.0,
+  "dll_sha256": "6a483ee3b4ba6cb232f6ef36829a05c3bb5fe1bb7cda48fd81d8ff1012bcdc86",
   "limitations": [
-    "Windows/KH1 execution and rendered appearance pending",
-    "Deferred native Glide takeover reproduced after control and guarded offline; post-fix KH1 verification pending",
-    "Aqua opening/end handoffs to native Sora middle need in-game visual testing",
-    "504 retains native fall gravity and40-frame timing with no extra invulnerability",
-    "Main ground-second cancel/follow-up timing now waits for the final frame; check feel in-game"
+    "No Windows/KH1 or rendered-mesh test performed",
+    "Master-style movement uses documented KH1 test tuning; exact KH2 growth parameters not imported",
+    "Spell release, collision, contact feel, Glide transitions and run appearance require in-game testing"
   ]
 }

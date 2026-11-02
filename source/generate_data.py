@@ -11,7 +11,7 @@ lines=['/* Generated immutable original and five Aqua profile payloads. */',
        '#define AQUA_PROFILE_COUNT 5',f'#define AQUA_MOTION_COUNT {len(report["motions"])}',
        '#define AQUA_PART_COUNT 6',
        f'#define AQUA_ANCHOR_INDEX {next(i for i,r in enumerate(report["motions"]) if r["normal_slot"]==98)}',
-       'typedef struct { unsigned int field,size,sentinel; const unsigned char *before,*after[AQUA_PROFILE_COUNT],*dodge,*glide_stop; } AquaPart;',
+       'typedef struct { unsigned int field,size,sentinel; const unsigned char *before,*after[AQUA_PROFILE_COUNT],*dodge,*glide_stop,*blizzard; } AquaPart;',
        'typedef struct { unsigned int request,normal_slot,olympus_slot,raw_bytes,part_count,event_count; const unsigned int *event_schema; unsigned int scalars[7]; AquaPart parts[AQUA_PART_COUNT]; } AquaMotion;',
        'static const unsigned int aqua_scalar_fields[7]={4,8,16,24,32,44,52};']
 arrays={}
@@ -35,6 +35,7 @@ for r in report['motions']:
         else:converted.append(converted[0])
     dodge=(ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes() if r['normal_slot']==10 else None
     glide_stop=(ROOT/'glide_stop/fixtures/aqua_s010.bin').read_bytes() if r['normal_slot']==10 else None
+    blizzard=(ROOT/f'blizzard/fixtures/aqua_{stem}.bin').read_bytes() if r['normal_slot'] in [55,80] else None
     assert all(len(c)==len(before) and c[:80]==before[:80] for c in converted)
     if dodge:assert len(dodge)==len(before) and dodge[:80]==before[:80]
     if glide_stop:assert len(glide_stop)==len(before) and glide_stop[:80]==before[:80]
@@ -45,7 +46,7 @@ for r in report['motions']:
             n=before[at+i*6+3];first=struct.unpack_from('<H',before,at+i*6+4)[0];body_keys.append(first+n)
     segments=[(20,u32(before,16)*4),(28,u32(before,24)*6),(40,max(body_keys)*16),(56,u32(before,52)*8),(36,u32(before,32)*6)]
     event_count=0;event_schema='0'
-    if r['normal_slot'] in [99,100]:
+    if r['normal_slot'] in [98,99,100]:
         at=u32(before,60);schema=[]
         while u32(before,at+len(schema)*4)!=0xffffffff:
             schema.extend(struct.unpack_from('<III',before,at+len(schema)*4))
@@ -62,8 +63,9 @@ for r in report['motions']:
         assert len({b[sentinel:sentinel+4] for b in blobs})>1
         extra=array(dodge[offset:offset+size]) if dodge else '0'
         stop=array(glide_stop[offset:offset+size]) if glide_stop else '0'
-        parts.append('{'+f'{field},{size},{sentinel},{symbols[0]},'+'{'+','.join(symbols[1:])+'},'+extra+','+stop+'}')
-    for after in converted+([dodge,glide_stop] if dodge else []):assert all(a==b or p in allowed for p,(a,b) in enumerate(zip(before,after)))
+        snow=array(blizzard[offset:offset+size]) if blizzard else '0'
+        parts.append('{'+f'{field},{size},{sentinel},{symbols[0]},'+'{'+','.join(symbols[1:])+'},'+extra+','+stop+','+snow+'}')
+    for after in converted+([dodge,glide_stop] if dodge else [])+([blizzard] if blizzard else []):assert all(a==b or p in allowed for p,(a,b) in enumerate(zip(before,after)))
     scalars=','.join(str(u32(before,p))+'u' for p in [4,8,16,24,32,44,52])
     descriptors.append('{'+f'{r["request"]},{r["normal_slot"]},{r["olympus_slot"]},{len(before)},{len(parts)},{event_count},{event_schema},'+'{'+scalars+'},'+'{'+','.join(parts)+'}}')
 lines+=['static const AquaMotion aqua_motions[AQUA_MOTION_COUNT]={',',\n'.join(descriptors),'};']
@@ -83,10 +85,10 @@ for name in ['he','normal']:
         word=u32(before,request*4);assert word==0x1000|old
         struct.pack_into('<I',after,request*4,(word&~0xfff)|new)
     main=bytearray(after)
-    for request,new in [(0x37,17 if suffix else 54),(0x84,41 if suffix else 79),(0x3b,18 if suffix else 55),(0x3c,18 if suffix else 55),
+    for request,new in [(0x3b,18 if suffix else 55),(0x3c,18 if suffix else 55),
                         (0x88,42 if suffix else 80),(0x89,42 if suffix else 80)]:
         word=u32(main,request*4)
-        old=((18 if suffix else 55) if request<0x80 else (42 if suffix else 80)) if request in [0x37,0x84] else ((19 if suffix else 56) if request<0x80 else (43 if suffix else 81))
+        old=(19 if suffix else 56) if request<0x80 else (43 if suffix else 81)
         assert word==(0x1000|old)
         struct.pack_into('<I',main,request*4,(word&~0xfff)|new)
     (ROOT/f'fixtures/requests_{name}_original.bin').write_bytes(before)

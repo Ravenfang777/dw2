@@ -46,29 +46,3 @@ static void cast_publish(uptr actor,uptr array,const CastBinding*b){
     cast_actor[b->bank]=actor;cast_array[b->bank]=array;cast_original[b->bank]=b->original;cast_bank=b->bank;
 }
 
-/* Native Blizzard keeps its own logical spell id. Main Aqua borrows both
- * Fire pose phases, inserting only the visual recovery before its existing
- * terminal request. MP, element, projectile and target scripts remain native. */
-static int cast_append_ready,cast_followup_notes;
-static void cast_followup(uptr actor){
-    if(remove_mode||cache_choice!=1||cache_actor!=actor||r64(base+SORA_RVA)!=actor||!memory(actor,0x448,0)
-        ||(r32(actor+0x374)&3u)!=1u||decode(r32(actor+0x1d4))!=cache_array
-        ||r32(base+0x298c9a0u)||r32(actor+0x440)||(r32(actor+0x444)&1u)
-        ||!cast_cached(actor,cache_array,1))return;
-    u32 count=r32(actor+0x178),current=r32(actor+0x164)&0xffffu;
-    if(!count||count>2u)return;
-    u32 first=r32(actor+0x17c)&0xffffu;
-    u32 spell=count==2u?first:current;
-    if(spell!=0x37u&&spell!=0x84u)return;
-    uptr tail=actor+0x17c+(count-1u)*16u;
-    if(!(r32(tail)&0x40000000u)||!memory(actor+0x178,(count+1u)*16u+4u,1))return;
-    static const u8 prefix[13]={0x48,0x89,0x5c,0x24,0x08,0x57,0x48,0x83,0xec,0x20,0x48,0x8b,0xf9};
-    if(!cast_append_ready)cast_append_ready=memory(base+0x29fa30u,13,0)&&equal((void*)(base+0x29fa30u),prefix,13)?1:-1;
-    if(cast_append_ready<0)return;
-    u8 terminal[16];copy(terminal,(void*)tail,16);
-    typedef uptr (ABI *AppendFn)(uptr,u32,float);
-    ((AppendFn)(base+0x29fa30u))(actor,spell==0x37u?0x3du:0x8au,0.f);
-    if(r32(actor+0x178)!=count+1u)return;
-    copy((void*)tail,(void*)(tail+16),16);copy((void*)(tail+16),terminal,16);
-    if(cast_followup_notes++<16)log_text("AQUA BLIZZARD: native spell retained; Fire-style release and recovery queued before original terminal");
-}

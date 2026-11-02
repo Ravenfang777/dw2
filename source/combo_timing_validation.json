@@ -1,26 +1,115 @@
 {
+  "version": 16,
   "passed": true,
-  "version": 15,
-  "scope": "main Aqua C9/CA only",
+  "game_runtime_tested": false,
   "normal_slots": [
+    98,
     99,
     100
   ],
   "olympus_slots": [
+    60,
     61,
     62
   ],
-  "source_clip": "365",
-  "contact_state_kind": 4,
-  "chain_window_kind": 5,
+  "source_clips": [
+    "300",
+    "365",
+    "365"
+  ],
   "native_event_sampler_rva": "0x394770",
   "native_chain_flag_reader": "0x29EFB0 reads actor+1CC bit0x400000",
   "native_event_evidence": "0x39229F samples kind5;0x3922AF sets model+14 bit0x400000;0x29F515 copies model flags to actor+1CC",
   "variants": {
+    "98": {
+      "contact_after": 12,
+      "chain_opens": 22,
+      "chain_closes": 40,
+      "tracks": [
+        {
+          "track": 0,
+          "kind": 1,
+          "before_frames": [
+            14.0,
+            24.0
+          ],
+          "after_frames": [
+            10.0,
+            24.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 5,
+          "before_frames": [
+            22.0,
+            40.0
+          ],
+          "after_frames": [
+            22.0,
+            40.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 7,
+          "before_frames": [
+            4.0,
+            24.0
+          ],
+          "after_frames": [
+            4.0,
+            24.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 4,
+          "before_frames": [
+            18.0,
+            46.0
+          ],
+          "after_frames": [
+            12.0,
+            46.0
+          ]
+        },
+        {
+          "track": 1,
+          "kind": 4,
+          "before_frames": [
+            18.0,
+            32.0,
+            40.0
+          ],
+          "after_frames": [
+            12.0,
+            32.0,
+            40.0
+          ]
+        },
+        {
+          "track": 0,
+          "kind": 6,
+          "before_frames": [
+            0.0,
+            18.534000396728516,
+            42.0
+          ],
+          "after_frames": [
+            0.0,
+            18.534000396728516,
+            42.0
+          ]
+        }
+      ],
+      "changed_bytes": 3,
+      "counts_pointers_and_payloads_preserved": true,
+      "sound_and_effect_tracks_unchanged": true
+    },
     "99": {
-      "contact_before": 8.0,
-      "contact_after": 35.0,
-      "chain_opens": 47,
+      "contact_after": 24,
+      "chain_opens": 32,
       "chain_closes": 48,
       "tracks": [
         {
@@ -31,8 +120,8 @@
             32.0
           ],
           "after_frames": [
-            38.25,
-            42.8
+            24.0,
+            32.0
           ]
         },
         {
@@ -43,7 +132,7 @@
             42.0
           ],
           "after_frames": [
-            47.0,
+            32.0,
             48.0
           ]
         },
@@ -55,8 +144,8 @@
             32.0
           ],
           "after_frames": [
-            36.3,
-            42.8
+            12.0,
+            32.0
           ]
         },
         {
@@ -69,9 +158,9 @@
             48.0
           ],
           "after_frames": [
-            26.25,
-            35.0,
-            40.2,
+            6.0,
+            8.0,
+            24.0,
             48.0
           ]
         },
@@ -85,9 +174,9 @@
             48.0
           ],
           "after_frames": [
-            26.25,
-            35.0,
-            40.2,
+            6.0,
+            24.0,
+            25.0,
             48.0
           ]
         },
@@ -101,18 +190,18 @@
           ],
           "after_frames": [
             0.0,
-            40.36704998016357,
-            47.792649841308595
+            24.513999938964844,
+            47.36199951171875
           ]
         }
       ],
-      "changed_bytes": 38,
-      "counts_pointers_and_payloads_preserved": true
+      "changed_bytes": 6,
+      "counts_pointers_and_payloads_preserved": true,
+      "sound_and_effect_tracks_unchanged": true
     },
     "100": {
-      "contact_before": 24.0,
-      "contact_after": 47.0,
-      "chain_opens": 63,
+      "contact_after": 36,
+      "chain_opens": 44,
       "chain_closes": 64,
       "tracks": [
         {
@@ -123,8 +212,8 @@
             30.0
           ],
           "after_frames": [
-            35.25,
-            49.55
+            36.0,
+            44.0
           ]
         },
         {
@@ -135,7 +224,7 @@
             54.0
           ],
           "after_frames": [
-            63.0,
+            44.0,
             64.0
           ]
         },
@@ -147,8 +236,8 @@
             30.0
           ],
           "after_frames": [
-            35.25,
-            49.55
+            18.0,
+            30.0
           ]
         },
         {
@@ -162,11 +251,11 @@
             30.0
           ],
           "after_frames": [
-            43.083333333333336,
-            47.0,
-            47.85,
-            48.7,
-            49.55
+            22.0,
+            36.0,
+            38.0,
+            40.0,
+            42.0
           ]
         },
         {
@@ -180,11 +269,11 @@
             30.0
           ],
           "after_frames": [
-            43.083333333333336,
-            47.0,
-            47.85,
-            48.7,
-            49.55
+            22.0,
+            36.0,
+            38.0,
+            40.0,
+            42.0
           ]
         },
         {
@@ -197,18 +286,24 @@
           ],
           "after_frames": [
             0.0,
-            39.045249462127686,
-            61.249399948120114
+            19.937999725341797,
+            57.52799987792969
           ]
         }
       ],
-      "changed_bytes": 58,
-      "counts_pointers_and_payloads_preserved": true
+      "changed_bytes": 23,
+      "counts_pointers_and_payloads_preserved": true,
+      "sound_and_effect_tracks_unchanged": true
     }
   },
-  "event_time_values_only": true,
-  "header_counts_payloads_and_descriptor_pointers_unchanged": true,
-  "numbered_profiles_retain_native_timing": true,
-  "native_cancels_using_the_same_chain_window_are_also_later": true,
-  "game_runtime_tested": false
+  "second_source_finishes_at_native_frames": {
+    "99": 32,
+    "100": 44
+  },
+  "second_chain_window_widths_native_frames": {
+    "99": 16,
+    "100": 20
+  },
+  "sound_and_effect_keys_payloads_descriptors_and_counts_unchanged": true,
+  "numbered_profiles_keep_native_timing": true
 }

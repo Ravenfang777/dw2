@@ -14,11 +14,16 @@ for name,args,ret in [('bridge_magic_modes',[C.c_int,C.c_int,C.c_int],None),('br
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
 for name,args,ret in [('bridge_air_modes',[C.c_int,C.c_uint],None),('bridge_control',[C.c_size_t,C.c_size_t,C.c_size_t],None),('bridge_control_calls',[],C.c_uint),('bridge_control_word',[C.c_uint],C.c_uint),('bridge_queue_calls',[],C.c_uint),('bridge_commit',[C.c_size_t],None),('bridge_native_glide_calls',[],C.c_uint),('bridge_glide',[C.c_size_t,C.c_size_t],None),('bridge_event',[C.c_size_t,C.c_size_t,C.c_uint,C.c_float],C.c_size_t)]:
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
+bridge.bridge_move.argtypes=[C.c_size_t,C.c_size_t,C.POINTER(C.c_float)];bridge.bridge_move.restype=C.c_float
+bridge.bridge_move_calls.argtypes=[];bridge.bridge_move_calls.restype=C.c_uint
 libc=C.CDLL(None);libc.mmap.argtypes=[C.c_void_p,C.c_size_t,C.c_int,C.c_int,C.c_int,C.c_long];libc.mmap.restype=C.c_void_p
 
+libc.munmap.argtypes=[C.c_void_p,C.c_size_t];libc.munmap.restype=C.c_int
+allocation_sizes={}
 def allocate(n):
     addr=libc.mmap(None,n,7,0x22,-1,0)
     if addr in [None,C.c_void_p(-1).value]:raise OSError('mmap failed')
+    allocation_sizes[int(addr)]=n
     return int(addr)
 def put(p,data):C.memmove(p,data,len(data))
 def r32(p):return C.c_uint.from_address(p).value
@@ -27,9 +32,13 @@ def w32(p,v):C.c_uint.from_address(p).value=v
 def w64(p,v):C.c_uint64.from_address(p).value=v
 
 class Host:
+    def __del__(self):
+        for address in getattr(self,'buffers',[])+[getattr(self,'game',0),getattr(self,'image',0)]:
+            size=allocation_sizes.pop(address,0)
+            if size:libc.munmap(address,size)
     def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0):
         self.game=allocate(0x3000000);bridge.bridge_reset(self.game);bridge.bridge_range(self.game,0x3000000,0x40);bridge.bridge_modes(remove,conflict)
-        w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp)
+        w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp);put(self.game+0x233fbdc,struct.pack('<f',1.))
         self.buffers=[]
         self.actor=self.buffer(bytes(0x800));w32(self.actor+0x374,1);w64(self.game+0x2537e48,self.actor)
         self.save=self.game+0x2de9360;put(self.save+4,b'\x64\x05\x0a');put(self.save+0x44,b'\x81\x82\x00')
@@ -59,6 +68,10 @@ class Host:
             put(self.game+0x2b26c0,(ROOT/'fixtures/native_glide_constructor.bin').read_bytes())
             put(self.game+0x2b2d30,b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeGlideCommon'))+b'\xff\xe0')
             put(self.game+0x29fa30,self.queue_prefix+call(b'NativeAppend')+bytes.fromhex('4883c4205f488b5c2408c3'))
+            self.move_prefix=bytes.fromhex('48895c2410574883ec40f70100100000')
+            put(self.game+0x2af6a0,self.move_prefix+call(b'NativeMove')+bytes.fromhex('4883c4405f488b5c2410c3'))
+            self.state_prefix=bytes.fromhex('48895c2410574883ec2048634170')
+            put(self.game+0x2b1960,self.state_prefix+call(b'NativeSetState')+bytes.fromhex('4883c4205f488b5c2410c3'))
             put(self.game+0x297870,bytes.fromhex('f601047518f6818800000020750ff68144040000017506b801000000c333c0c3'))
         self.load_pe()
     def activate_bank(self,olympus,encoded_fields=False):
@@ -164,6 +177,16 @@ class Host:
         for field in [4,8,16,20]:w32(self.game+0x298ca90+field,(down if field in [4,16] else pressed))
         put(self.dir,struct.pack('<4f',x,0,z,tilt))
         bridge.bridge_control(self.game+0x2a6220,a,self.dir)
+    def move(self,dt=1.):
+        put(self.game+0x233fbdc,struct.pack('<f',dt));out=self.buffer(bytes(16))
+        result=bridge.bridge_move(self.game+0x2af6a0,self.actor,C.cast(out,C.POINTER(C.c_float)))
+        return list((C.c_float*4).from_address(out)),result
+    def blizzard_body(self,slot):
+        data=bytearray((ROOT/f'blizzard/fixtures/aqua_s{slot:03}.bin').read_bytes());data[:80]=self.runtime_originals[slot][:80]
+        at=struct.unpack_from('<I',(ROOT/f'blizzard/fixtures/aqua_s{slot:03}.bin').read_bytes(),60)[0]
+        while struct.unpack_from('<I',data,at)[0]!=0xffffffff:
+            data[at+8:at+12]=self.runtime_originals[slot][at+8:at+12];at+=12
+        return bytes(data)
     def dodge_body(self):
         data=bytearray((ROOT/'dodge/fixtures/aqua_s010.bin').read_bytes());data[:80]=self.runtime_originals[10][:80];return bytes(data)
     def glide_stop_body(self):
@@ -180,6 +203,74 @@ class Host:
         self.control(state=2,request=6)
 
 class RuntimeTests(unittest.TestCase):
+    def test_master_style_dodge_lifts_neutrally_and_moves_in_each_stick_direction(self):
+        import math
+        for bank in [98,60]:
+          for x,z in [(0,0),(1,0),(-1,0),(0,1),(0,-1),(.7,.7)]:
+            h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air()
+            h.control(down=6,pressed=6,x=x,z=z,tilt=1 if x or z else 0)
+            before=C.string_at(h.actor+0x10,16);out,result=h.move()
+            self.assertEqual(C.string_at(h.actor+0x10,16),before)
+            self.assertLess(out[1],0);self.assertLessEqual(abs(out[1]),12)
+            distance=math.hypot(out[0],out[2]);self.assertAlmostEqual(distance,6 if x or z else 0,places=4)
+            if x:self.assertGreater(out[0]*x,0)
+            if z:self.assertGreater(out[2]*z,0)
+            self.assertEqual(r32(h.actor+0x70),2)
+    def test_dodge_arc_has_bounded_height_release_and_native_fall_handoff_without_teleporting(self):
+        for step in [.5,1.,2.]:
+            h=Host(air=True);h.arm_air();h.control(down=6,pressed=6)
+            y=0.;peak=0.;total=0.
+            while total<38.:
+                out,_=h.move(step);y+=out[1];peak=max(peak,-y);total+=step
+                put(h.actor+0x14,struct.pack('<f',y))
+            self.assertAlmostEqual(peak,96.,delta=.5)
+            h.clock(39);h.frame();self.assertEqual(h.body(10),h.expected(10,1))
+            self.assertAlmostEqual(C.c_float.from_address(h.actor+0x3b4).value,y,places=4)
+            self.assertEqual(C.c_float.from_address(h.actor+0x3b8).value,0.)
+            out,_=h.move();self.assertEqual(out,[1,2,3,4])
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6);h.move()
+        w32(h.game+0x298ca94,0);out,_=h.move();self.assertGreaterEqual(out[1],-4.)
+    def test_dodge_ceiling_contact_stops_lift_and_busy_action_returns_native_displacement(self):
+        h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,x=1,tilt=1)
+        w32(h.actor+0x2d0,8);out,_=h.move();self.assertGreaterEqual(out[1],0)
+        # KH1's post-collision callback may queue a fall or reaction. The mod
+        # must stop replacing displacement as soon as the native action changes.
+        w32(h.actor+0x164,0x4e);out,_=h.move();self.assertEqual(out,[1,2,3,4])
+        self.assertEqual(h.body(10),h.expected(10,1))
+    def test_off_disabled_foreign_and_invalid_timestep_never_replace_native_movement(self):
+        for reason in ['off','disabled','script','land','nan','long_dt']:
+            h=Host(air=True,air_dodge=reason!='disabled');h.arm_air();h.control(down=6,pressed=6)
+            if reason=='off':h.equip(False);h.frame()
+            elif reason=='script':w32(h.actor+0x440,1)
+            elif reason=='land':w32(h.actor+0x70,0)
+            out,_=h.move(float('nan') if reason=='nan' else 9 if reason=='long_dt' else 1)
+            self.assertEqual(out,[1,2,3,4],reason)
+    def test_third_hook_protection_failure_leaves_all_three_entries_intact(self):
+        h=Host(air=True,fail_protect=4)
+        before={r:C.string_at(h.game+r,n) for r,n in [(0x2a6220,17),(0x2b26c0,14),(0x2af6a0,16)]}
+        h.frame()
+        for r,data in before.items():self.assertEqual(C.string_at(h.game+r,len(data)),data)
+    def test_blizzard_visual_starts_from_new_queue_and_restores_before_next_spell_or_profile(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air()
+            for request,slot in [(0x37,55),(0x84,80)]:
+                w32(h.actor+0x164,6);h.queue(0x01000000|request);before=C.string_at(h.actor+0x178,20)
+                h.frame();self.assertEqual(h.body(slot),h.blizzard_body(slot))
+                self.assertEqual(C.string_at(h.actor+0x178,20),before)
+                h.queue(0x38 if request==0x37 else 0x85);h.frame()
+                self.assertEqual(h.body(slot),h.expected(slot,1))
+                w32(h.actor+0x178,0)
+            w32(h.actor+0x164,0x37);h.frame();self.assertEqual(h.body(55),h.blizzard_body(55))
+            h.equip(False);h.frame();self.assertEqual(h.body(55),h.expected(55,1))
+            w32(h.actor+0x164,0);h.frame();h.assert_all(self,False)
+    def test_blizzard_unknown_or_unloaded_motion_is_never_overwritten(self):
+        for reason in ['foreign','unloaded']:
+            h=Host(air=True);h.arm_air()
+            if reason=='foreign':
+                at=struct.unpack_from('<I',h.body(55),40)[0];C.c_ubyte.from_address(h.motions[55]+at+21).value^=1
+            else:w32(h.actor+0x374,0)
+            before=h.snapshot();w32(h.actor+0x164,0x37);h.frame();self.assertEqual(h.snapshot(),before)
+
     def test_air_control_hook_executes_relocated_cookie_trampoline_and_preserves_ground_input(self):
         h=Host(air=True);h.frame();before=h.snapshot()
         h.control(down=6,pressed=6,state=0,request=0,height=0)
@@ -187,7 +278,7 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual([bridge.bridge_control_word(i) for i in range(4)],[6]*4)
         self.assertEqual(h.snapshot(),before)
         self.assertIn('AIR DODGE READY',bridge.bridge_log().decode())
-    def test_neutral_air_circle_plays_504_masks_only_jump_and_preserves_velocity_and_native_flags(self):
+    def test_neutral_air_circle_plays_504_masks_only_jump_and_initializes_a_lift(self):
         h=Host(air=True,control_mode=1);h.arm_air()
         put(h.actor+0x3b0,struct.pack('<3f',-4,2,3));velocity=C.string_at(h.actor+0x3b0,12);flags=C.string_at(h.actor,4)
         put(h.actor+0x16c,struct.pack('<f',18));h.control(down=6|0x80,pressed=6|0x100)
@@ -195,13 +286,15 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual([bridge.bridge_control_word(i)&6 for i in range(4)],[0]*4)
         self.assertEqual(r32(h.game+0x298ca94),6|0x80)
         self.assertEqual(r32(h.game+0x298ca98),6|0x100|0x40000000)
-        self.assertEqual(C.string_at(h.actor+0x3b0,12),velocity);self.assertEqual(C.string_at(h.actor,4),flags)
+        self.assertEqual(C.string_at(h.actor,4),flags)
+        before=C.string_at(h.actor+0x10,16);out,_=h.move();self.assertLess(out[1],0);self.assertEqual(out[0],0);self.assertEqual(out[2],0)
+        self.assertEqual(C.string_at(h.actor+0x10,16),before)
         for slot in h.motions:
             if slot!=10:self.assertEqual(h.body(slot),h.expected(slot,1))
-    def test_aerial_dodge_rising_start_queues_native_fall_without_changing_native_air_state(self):
+    def test_aerial_dodge_rising_start_enters_native_fall_callbacks_and_queues_504(self):
         h=Host(air=True);h.arm_air();h.control(down=6,pressed=6,state=1,request=5)
         self.assertEqual(h.body(10),h.dodge_body());self.assertEqual(r32(h.actor+0x164),6)
-        self.assertEqual(r32(h.actor+0x70),1);self.assertEqual(r32(h.actor+0x178),0)
+        self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(r32(h.actor+0x178),0)
     def test_aerial_dodge_requires_release_after_held_takeoff_then_accepts_directional_circle(self):
         h=Host(air=True);h.frame();h.equip(True);h.frame()
         h.control(down=6,pressed=6,state=0,request=4,height=0)
@@ -279,10 +372,10 @@ class RuntimeTests(unittest.TestCase):
         h.control(down=6,pressed=6);self.assertEqual(h.body(10),h.expected(10,1))
         self.assertEqual(bridge.bridge_control_word(0)&6,6)
     def test_air_hook_admission_and_failure_paths_leave_original_control_bytes(self):
-        for reason in ['control','glide','can','queue','alloc','protect','remove']:
+        for reason in ['control','glide','move','state','can','queue','alloc','protect','remove']:
             h=Host(air=True,fail_alloc=reason=='alloc',fail_protect=reason=='protect',air_dodge=reason!='disabled',remove=reason=='remove')
-            if reason in ['control','glide','can','queue']:
-                address=h.game+{'control':0x2a6220,'glide':0x2b26c0,'can':0x297870,'queue':0x29f980}[reason]
+            if reason in ['control','glide','move','state','can','queue']:
+                address=h.game+{'control':0x2a6220,'glide':0x2b26c0,'move':0x2af6a0,'state':0x2b1960,'can':0x297870,'queue':0x29f980}[reason]
                 C.c_ubyte.from_address(address).value^=1
             before=C.string_at(h.game+0x2a6220,17);h.frame()
             self.assertEqual(C.string_at(h.game+0x2a6220,17),before,reason)
@@ -349,17 +442,22 @@ class RuntimeTests(unittest.TestCase):
                     self.assertEqual(bridge.bridge_point_fraction(),.25)
             self.assertEqual(C.string_at(h.game+0x29ea00,15),before_matrix)
             self.assertEqual(C.string_at(h.game+0x29eb20,16),before_point)
-    def test_main_second_ground_contact_and_chain_are_late_using_the_actual_native_event_sampler(self):
+    def test_ground_hits_and_usable_chain_windows_use_the_actual_native_event_sampler(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True);h.frame();h.equip(True);h.frame()
-            for slot,contact,end,track in [(99,35,47,1),(100,47,63,0)]:
-                self.assertEqual(h.event(slot,4,contact-.1,track)>>16,0x30)
-                self.assertEqual(h.event(slot,4,contact+.1,track)>>16,0x16)
-                self.assertIn(h.event(slot,5,end-.1),[None,0])
-                self.assertEqual(h.event(slot,5,end+.1),1)
-            h.equip(True,1);h.frame()
-            for slot in [99,100]:self.assertEqual(h.event(slot,5,26.1),1)
-            h.equip(False,1);h.frame();h.assert_all(self,False)
+            for slot,contact,start,end in [(98,12.,22.,40.),(99,24.,32.,48.),(100,36.,44.,64.)]:
+                self.assertNotEqual((h.event(slot,4,contact-.5) or 0)&0xffff0000,0x160000)
+                self.assertEqual(h.event(slot,4,contact)&0xffff0000,0x160000)
+                self.assertNotEqual(h.event(slot,5,start-.5),1)
+                self.assertEqual(h.event(slot,5,start),1)
+                self.assertEqual(h.event(slot,5,end-.5),1)
+                self.assertEqual(h.event(slot,5,end),0)
+                for step in [.5,1.,2.]:
+                    # Native event sampler still offers multiple follow-up checks
+                    # when the timestep skips the old v15 one-frame window.
+                    self.assertGreaterEqual(sum(h.event(slot,5,f)==1 for f in __import__('numpy').arange(start+.25,end,step)),8)
+            h.equip(False);h.frame();h.assert_all(self,False)
+
     def test_foreign_event_descriptor_or_payload_blocks_every_initial_body_write(self):
         for change in ['descriptor','payload']:
             h=Host(encoded_fields=True);h.frame();h.equip(True)
@@ -369,21 +467,24 @@ class RuntimeTests(unittest.TestCase):
                 keys=struct.unpack_from('<I',original,at+8)[0]
                 C.c_ubyte.from_address(h.motions[99]+keys+5).value^=1
             before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
-    def test_blizzard_uses_fire_lookup_and_recovery_without_changing_its_logical_spell_or_terminal(self):
+    def test_blizzard_keeps_original_lookup_events_and_queue_with_only_the_fire_body_changed(self):
         for bank in [98,60]:
-            h=Host(slot=bank,air=True,encoded_fields=True);h.frame();h.equip(True);h.frame()
+            h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air()
             table=h.decode(r32(h.actor+0x1d8))
-            self.assertEqual([r32(table+q*4)&0xfff for q in [0x37,0x84]],[54,79] if bank==98 else [17,41])
-            for spell,recovery,terminal in [(0x37,0x3d,0x40000000),(0x84,0x8a,0x40000075)]:
-                h.queue(0x01000000|spell);w32(h.actor+0x178,2)
-                entry=struct.pack('<Ifff',terminal,0.,1.,0.)
-                put(h.actor+0x18c,entry);h.frame()
-                self.assertEqual(r32(h.actor+0x178),3)
-                self.assertEqual([r32(h.actor+0x17c+i*16) for i in range(3)],[0x01000000|spell,recovery,terminal])
-                self.assertEqual(C.string_at(h.actor+0x19c,16),entry)
-                h.frame();self.assertEqual(r32(h.actor+0x178),3)
-            w32(h.actor+0x178,0);h.equip(True,1);h.frame();h.queue(0x37);w32(h.actor+0x178,2);w32(h.actor+0x18c,0x40000000)
-            h.frame();self.assertEqual(r32(h.actor+0x178),2)
+            self.assertEqual([r32(table+q*4)&0xfff for q in [0x37,0x84]],[55,80] if bank==98 else [18,42])
+            for spell,slot,terminal in [(0x37,55,0x40000000),(0x84,80,0x40000075)]:
+                w32(h.actor+0x164,spell);h.queue(terminal);queue=C.string_at(h.actor+0x178,36)
+                h.frame()
+                self.assertEqual(C.string_at(h.actor+0x178,36),queue)
+                self.assertEqual(h.body(slot),h.blizzard_body(slot))
+                raw=h.runtime_originals[slot];at=struct.unpack_from('<I',raw,60)[0]
+                self.assertEqual(h.body(slot)[at:],raw[at:])
+                h.frame();self.assertEqual(C.string_at(h.actor+0x178,36),queue)
+                w32(h.actor+0x164,0x38 if spell==0x37 else 0x85);w32(h.actor+0x178,0);h.frame()
+                self.assertEqual(h.body(slot),h.expected(slot,1))
+            w32(h.actor+0x164,0);h.equip(True,1);h.frame()
+            w32(h.actor+0x164,0x37);h.frame();self.assertEqual(h.body(55),h.expected(55,2))
+
     def test_actual_nonzero_native_command_dispatch_remains_excluded(self):
         for command in [1,2,0x02000002]:
             h=Host(air=True);h.arm_air();w32(h.game+0x2d53a40,command)
@@ -411,24 +512,23 @@ class RuntimeTests(unittest.TestCase):
         h=Host(air=True,air_dodge=0);h.arm_air();h.control(down=6,pressed=6)
         self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(bridge.bridge_control_word(0)&6,6)
         h.clock(55);h.control(state=21,request=0x71,down=4)
-        for slot in range(75,79):self.assertEqual(h.body(slot),h.runtime_originals[slot])
-    def test_glide_uses_aqua_opening_then_exact_original_sora_flight_with_native_clock_and_turns(self):
+        for slot in range(75,79):self.assertEqual(h.body(slot),h.expected(slot,1))
+    def test_glide_keeps_aqua350_held_pose_through_long_flight_and_direction_changes(self):
         for bank in [98,60]:
             h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air()
             h.clock(0);h.control(state=21,request=0x71,down=4)
-            for slot in range(75,79):self.assertEqual(h.body(slot),h.expected(slot,1))
             h.clock(12);h.queue(0x72);h.control(state=21,request=0x71,down=4)
             self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,12)
-            h.clock(40);h.control(state=21,request=0x72,down=4)
-            for slot in range(75,79):self.assertEqual(h.body(slot),h.runtime_originals[slot])
-            h.clock(51);h.control(state=21,request=0x72,down=4)
-            self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,51)
-            h.queue(0x73);h.control(state=21,request=0x72,down=4)
-            self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,0)
-            for slot in range(75,79):self.assertEqual(h.body(slot),h.runtime_originals[slot])
+            for clock in [40,51,59,65,119,4,0]:
+                h.clock(clock);h.control(state=21,request=0x72,down=4)
+                self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,40)
+                for slot in range(75,79):self.assertEqual(h.body(slot),h.expected(slot,1))
+            for request in [0x73,0x74,0x71,0x78,0x79]:
+                h.queue(request);h.control(state=21,request=0x72,down=4)
+                self.assertEqual(C.c_float.from_address(h.actor+0x16c).value,40)
             h.control(state=2,request=6);self.assertEqual(h.body(10),h.glide_stop_body())
-            for slot in range(75,79):self.assertEqual(h.body(slot),h.expected(slot,1))
             h.clock(39);h.frame();h.assert_all(self,1)
+
     def test_glide_ending_plays_350_closing_frames_then_restores_506_without_changing_physics(self):
         for bank in [98,60]:
             h=Host(slot=bank,air=True,encoded_fields=True);h.arm_air(3)
@@ -465,7 +565,7 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual([r32(p+q*4)&0xfff for q in [0x36,0x38,0x39,0x83,0x85,0x86]],targets)
                 self.assertEqual([i//4 for i in range(0,len(h.request_original),4)
                                   if C.string_at(p+i,4)!=h.request_original[i:i+4]],
-                                  [0x37,0x38,0x3b,0x3c,0x84,0x85,0x88,0x89] if profile==0 else [0x38,0x85])
+                                  [0x38,0x3b,0x3c,0x85,0x88,0x89] if profile==0 else [0x38,0x85])
             h.equip(False,4);h.frame();h.assert_all(self,False)
     def test_main_stop_and_aero_resolve_to_gravity_while_numbered_profiles_keep_v13_routes(self):
         for bank in [98,60]:
@@ -625,6 +725,6 @@ class RuntimeTests(unittest.TestCase):
 
 
 if __name__=='__main__':
-    result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(RuntimeTests))
+    result=unittest.TextTestRunner(verbosity=1).run(unittest.defaultTestLoader.loadTestsFromTestCase(RuntimeTests))
     (ROOT/'runtime_validation.json').write_text(json.dumps({'passed':result.wasSuccessful(),'tests':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'executed_actual_pe_dll':True,'win64_abi_and_imports_mocked':True,'windows_or_game_executed':False},indent=2)+'\n')
     raise SystemExit(0 if result.wasSuccessful() else 1)

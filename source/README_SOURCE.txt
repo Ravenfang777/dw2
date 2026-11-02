@@ -1,82 +1,79 @@
-AQUA V15 DEVELOPMENT SOURCE
+AQUA V16 SOURCE / REPRODUCIBILITY
 
-BUILD / CHECK (Linux x64)
-  python3 generate_data.py
-  python3 build.py
-  python3 test_runtime.py
-  python3 test_visuals.py
-Requires Python/GCC/GNU ld i386pep; geometry needs NumPy/SciPy.
-Runtime checks execute the actual emitted PE and Win64 ABI entry detours with
-native-control mocks. The native event sampler fixture is real supplied EXE code.
+The supplied original EXE is Steam Global timestamp1721645006, SHA256
+ d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac.
+Its full bytes and the user's log are not redistributed. Native anchors and
+Master-reference provenance are recorded in native_movement_validation.json.
 
-REBUILD POSES (optional; NumPy/SciPy/Pillow)
-From this source directory, run retargeting/tools/build_aqua_complete_v15.py
-with --profile0 --output .; profiles1..4 use outputs sets/p1..p4,profile5 uses
-dodge and profile6 uses glide_stop. Arguments have spaces: --profile 0.
-Then regenerate data, build and run both checks. --slots limits rebuilt records.
-Model/source inputs are under retargeting; original MSETs are ../assets.
-The exported builder resolves its paths relative to this source layout.
+Build DLL on Linux with Python3, GCC and GNU ld PE support:
+ python3 generate_data.py
+ python3 build.py
+ python3 test_runtime.py
+ python3 test_visuals.py
+NumPy/SciPy are required for pose fitting/geometry; Python3/GCC for runtime mocks.
+The runtime checks map the actual emitted PE with Win64 ABI/import mocks.
+They are not Windows/KH1 execution or a rendered-mesh test.
 
-NEW SECOND-AIR / SPELL POSES
-Main103 uses352 from p02ex_352.arc. The v15 plan inherits v14's other sources.
-Main Blizzard requests37/84 now use Fire release records54/79, retaining native
-request flags. cast_followup detects a verified main Blizzard queue, calls the
-checked native append0x29FA30 to add recovery3D/8A, then places it before the
-unchanged original terminal record. The logical spell stays37/84; original
-terminal payloads, spell scripts, MP, targeting and element are retained.
-Numbered profile body overrides and request tables retain their previous casts.
+Optional source pose rebuild from this directory:
+ python3 retargeting/tools/build_aqua_complete_v16.py --profile 0 --output .
+ python3 retargeting/tools/build_aqua_complete_v16.py --profile 1 --output sets/p1
+Profiles2..4 use sets/p2..p4;5 uses dodge;6 uses glide_stop;7 uses blizzard.
+The builder finds model/PAM/ARC inputs below retargeting and original MSETs in
+../assets. --slots limits rebuilt native records. The sampling cache is rebuilt
+from immutable baseline data; refinements are applied once. Regenerate data,
+rebuild the DLL and run checks after modifying any serialized fixture.
 
-EVENT RETIMING WITHOUT NATIVE ALLOCATION/PATH CHANGES
-Main99/100 keep their exact existing48/64-frame headers and source365 poses.
-aqua_event_timing_v15.py changes only the first float of existing16-byte event
-records. It warps the earliest kind4 state0x16 contact from8->35 or24->47 and
-keeps all other timed state/trail/sound records aligned. Kind5 opens at47/63
-and closes at48/64. All descriptor words/counts/pointers and payload bytes stay.
-The actual native sampler0x394770 reads these fixtures in the runtime tests.
-Native kind5 sets model+14 bit0x400000 at0x3922AF, copied to actor+1CC by0x29F515;
-0x29EFB0 reads that bit for native cancellation/chain decisions.
+Blizzard selector: aqua_blizzard.h recognizes current/newly queued logical37/84
+including native request flags, verifies the admitted55/80 motion parts, then
+copies only full391/316 body curves into those original records. Their native
+spell events and request lookup remain. Restore the shared317/390 body before
+the next spell, interruption, ability-off or idle profile switch. No recovery
+append, terminal reordering, MP call or projectile hook exists in v16.
 
-AquaMotion.part_count is5 normally and6 for the two second-ground records.
-The sixth AquaPart uses header field60 as an event-descriptor indirection.
-The generated schema verifies descriptor type/count, terminator and every live
-key pointer against the known contiguous layout. Only the key stream is copied;
-live encoded descriptor pointers are never overwritten. Original and main
-retimed streams are known immutable variants; numbered profiles use original
-event times. This changes DLL admission metadata, not native MSET counts.
-Unknown event schema/payload blocks the whole body transaction. All motion
-headers, sizes, eleven helpers and existing travel remain original.
+Main timing: aqua_event_timing_v16 changes existing hit/chain frame floats for
+98/99/100 only. It preserves every descriptor, key payload, sound and effect key.
+Second365 reaches its last source frame at native32/44, then holds. Kind5 opens
+32/44 through48/64, giving16/20 native frames to chain after the full swing.
+The sixth runtime AquaPart admits the known event-key stream through header60,
+checking all encoded descriptor/key handles. All native allocation sizes/counts
+remain original. Other profiles use original event times, and off restores them.
 
-DEFERRED GLIDE GUARD FOR504
-V14's accepted504 was immediately replaced by Glide71 in kh1-aqua(4).log.
-0x2AFD79 reads cached global0x2D5EC10 bit0x80;0x2AFD82 calls native regular Glide
-at0x2B26C0 independently of the temporary input mask. V15 hooks that constructor
-only for an admitted live Sora504 session. Otherwise its original code resumes.
-The14-byte span40534883ec20488bd9e862060000 contains the nine-byte prologue and
-a relative call. The trampoline copies9bytes, calls original0x2B2D30 via absolute
-RAX, then jumps to0x2B26CE without destroying the returned EAX. The native subtype
-AND at+1D is checked too. The existing control0x2A6220 span and both constructor
-anchors are admitted before either patch; protection failure leaves both intact.
-Tests exercise a deferred native constructor after the input callback returns,
-and the relocated successful original constructor including its subtype clear.
-No Superglide constructor is hooked. Native state/velocity/defense are retained.
+Aerial dodge: aqua_air_dodge.h verifies and installs control0x2A6220, regular
+Glide constructor0x2B26C0 and native state2 displacement0x2AF6A0 hooks. It admits
+all anchors and obtains all code-page protections before patching any entry.
+The control trampoline relocates the RIP cookie load; the Glide trampoline
+relocates its common constructor call. The16-byte movement span is entirely
+position independent and preserves its TEST flags before resuming native code.
+Outside admitted504, all three original functions pass through.
 
-GLIDE / MAGIC
-Glide starts with the existing350 source0..20 opening, reaching frame40. Then
-all four original Sora Glide body parts are restored and the native clock and
-steering resume. The fast cache recognizes that known temporary original-body
-state. Native Glide ending restores the opening fixtures for next use and plays
-the existing350[20,40] fall overlay before506. The frame/header counts stay native.
-Magic attachment detours are removed. Native point/matrix attachment0x30 is used
-for every spell/profile; legacy hand_magic INI values are ignored.
+On a fresh free-air Circle, native state setter0x2B1960 selects fall callbacks,
+then native queue0x29F980 restarts fall10 with504 body. The native input command
+predicate remains the checked low-byte/bit24 test. A held takeoff cannot retrigger;
+landing rearms once per airtime. Deferred cached Glide selection is blocked only
+for that live session. Native controller commands and busy actions interrupt it.
 
-OTHER RETAINED SYSTEMS
-Zero-AP ids117..121, exclusive selection, saved states, native ability-list size,
-original request pointer restoration, item007/395, falling506, wrist/hair
-refinements and all unrelated motion data remain. Guard/Cartwheel records keep
-native defensive windows. The main second-ground cancel window is later, so
-other commands using it are also delayed. Only idle transactions change profiles.
+Movement borrows the supplied Master begin_aerial_dodge structure: neutral up,
+normalized stick travel, held arc, finite action, native fall handoff. Exact KH2
+growth values are absent from the supplied extract. The separately documented
+96/6/.75 values are KH1 test tuning, without the v52 style's2x distance multiplier.
+The callback returns requested displacement before KH1's collision pass. It never
+writes actor+10 position. Native wall/ceiling/floor/collision callbacks remain.
+A release caps upward speed; the native ceiling bit clips lift. At normal handoff,
+arc values are reset to the actual actor Y, and fall506 resumes. No defense or
+hitbox import is added. This is not a full source-identical Master port.
 
-Evidence and scope are in the validation JSON files; all current action/source
-assignments are the root CSVs. The supplied full EXE and user log are not included.
-Existing upstream licenses remain in licenses. Format reference:
-https://openkh.dev/bbs/file/type/pam.html
+Glide retains Aqua350 throughout start/held middle/closing. Native current and
+queued visual clocks cap40 after the opening, including direction changes. No
+native Sora body is republished during flight. Native Glide physics/unlocks are
+untouched. 350 stop uses the fall overlay, then506 returns on end/interruption.
+
+Run refinement: aqua_refine_v16 lifts head151 by12 degrees only on slots5/6/7
+relative to the character's root-right axis. It preserves torso and local bind
+hair, joint translations, scale, helper travel and all unrelated motions.
+Previous run fixtures are frozen solely for independent geometry comparison.
+
+IDs117..121, exclusivity, idle transactions, original request pointers, keyblade
+tip attachment0x30, wrist and limb refinements and native defensive windows stay.
+Current mappings are the root CSVs; source event timing is in validation JSON.
+Previous plan/refiner modules are retained as explicit build dependencies.
+Existing upstream license files remain in licenses.

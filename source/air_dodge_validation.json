@@ -31,7 +31,7 @@
   "native_frames": 40,
   "end_clock": 39,
   "original_fall_clip": "506",
-  "actor_state_velocity_gravity_unchanged": true,
+  "actor_state_velocity_gravity_unchanged": false,
   "extra_invulnerability_or_damage_boxes": false,
   "motion_header_or_table_expansion": false,
   "fall_body_restored_on_end_interrupt_and_off": true,
@@ -39,7 +39,7 @@
   "optional_ini": "air_dodge=0",
   "directional_input_allowed": true,
   "neutral_stick_required": false,
-  "version": 15,
+  "version": 16,
   "always_uses_native_queued_restart": true,
   "already_falling_clock_is_not_manually_reset": true,
   "native_commit_wait_ticks": 16,
@@ -48,12 +48,9 @@
   "native_control_observed_diagnostic": true,
   "normal_jump_flags": "0x03000000",
   "native_command_dispatch_predicate": "(command & 0xFF) != 0 && (command & 0x01000000) == 0",
-  "user_log_name": "kh1-aqua(4).log",
-  "user_log_sha256": "7d94ec5d9008b5a203e05dd95cbaa2c01649254f235ffba4b21b18c29ecc953b",
-  "user_log_airborne_press_rejections_due_only_to_command_flag": 5,
-  "user_log_accepted_504_actions": 0,
-  "v13_exact_log_shaped_reproduction_rejected": true,
-  "v14_exact_log_shaped_reproduction_in_tests": true,
+  "user_log_name": "kh1-aqua(5).log",
+  "user_log_sha256": "0016236af6c59a2b427d705a9665d5a8c3c3728f820018b1ba1377f33d78a0fd",
+  "user_log_accepted_504_actions": 10,
   "native_evidence": {
     "0x2A629A": "test byte [command+3],1; set bit skips command dispatch",
     "0x2A62F8": "cmp byte [command],0; zero type skips native command handler",
@@ -69,5 +66,12 @@
     "suppression_scope": "same verified Sora actor while504 active"
   },
   "native_cached_glide_selection_evidence": "0x2AFD79 tests0x2D5EC10 bit0x80;0x2AFD82 calls0x2B26C0 independently of pad mask",
-  "postfix_game_verified": false
+  "postfix_game_verified": false,
+  "actor_position_written": false,
+  "master_style_movement_added": true,
+  "movement_callback_rva": "0x2AF6A0",
+  "native_set_state_rva": "0x2B1960",
+  "native_fall_state": 2,
+  "collision_handling": "native",
+  "movement_tuning_report": "native_movement_validation.json"
 }
