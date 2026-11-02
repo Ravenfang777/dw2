@@ -19,7 +19,7 @@ static const u8 matrix_prefix[15]={0x48,0x89,0x5c,0x24,0x08,0x48,0x89,0x74,0x24,
 static const u8 point_prefix[16]={0x40,0x53,0x55,0x57,0x48,0x81,0xec,0x80,0,0,0,0x0f,0x29,0x74,0x24,0x60};
 
 static int magic_scope(uptr actor,u32 code){
-    if(!magic_ready||magic_disabled||magic_conflict||code!=0x30u||cache_choice!=1||actor!=cache_actor||!actor)return 0;
+    if(!magic_ready||magic_disabled||magic_conflict||code!=0x30u||cache_choice<1||actor!=cache_actor||!actor)return 0;
     if(r64(base+SORA_RVA)!=actor||!memory(actor,0x448,0)||(r32(actor+0x374)&3u)!=1u)return 0;
     if(decode(r32(actor+0x1d4))!=cache_array||r32(base+0x298c9a0u)||r32(actor+0x440)||(r32(actor+0x444)&1u))return 0;
     u32 action=r32(actor+0x164)&0xfffu;
@@ -31,7 +31,7 @@ static int magic_matrix_valid(const float*m){
 }
 static void ABI magic_matrix(uptr actor,u32 code,float*out){
     if(magic_scope(actor,code)){
-        magic_matrix_original(actor,0x2065u,out); /* direct Sora right palm 101 */
+        magic_matrix_original(actor,0x20ceu,out); /* direct Sora LEFT palm 206 */
         if(magic_matrix_valid(out)){
             if(magic_matrix_notes++<16)log_number("AQUA HAND MAGIC MATRIX: native request=",r32(actor+0x164)&0xfffu);
             return;
@@ -42,7 +42,7 @@ static void ABI magic_matrix(uptr actor,u32 code,float*out){
 static void ABI magic_point(uptr actor,u32 code,float fraction,float*out){
     if(magic_scope(actor,code)){
         float hand[16] __attribute__((aligned(16)));
-        magic_matrix_original(actor,0x2065u,hand);
+        magic_matrix_original(actor,0x20ceu,hand);
         if(magic_matrix_valid(hand)){
             copy(out,hand+12,16);
             if(magic_point_notes++<16)log_number("AQUA HAND MAGIC ORIGIN: native request=",r32(actor+0x164)&0xfffu);
@@ -79,5 +79,5 @@ static void magic_install(void){
     kFlushInstructionCache((uptr)-1,(void*)a,sizeof(aa));kFlushInstructionCache((uptr)-1,(void*)b,sizeof(bb));
     kVirtualProtect((void*)a,code_span,old_code,&unused);
     magic_ready=1;
-    log_text("AQUA HAND MAGIC READY: weapon attachment 0x30 -> right palm 101; native position and effect matrix; Aqua casts only");
+    log_text("AQUA HAND MAGIC READY: weapon attachment 0x30 -> LEFT palm 206; native position and effect matrix; all five Aqua profiles");
 }

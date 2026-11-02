@@ -1,11 +1,8 @@
-title: KH1FM Aqua Animation Test v8
+title: KH1FM Aqua Animation Test v9
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  The 0 AP ability aqua selects Aqua motions with restored hair rest shape,
-  bounded limb clearance and experimental right-hand native spell attachments.
-  Includes the 349-clip Aqua inventory. Steam Global / Panacea; disable older
-  Aqua packages and Nine Styles / Dual Wield.
+  The 0 AP abilities aqua and aqua 1..4 select Aqua moves with anatomical wrist correction, finisher arm clearance, LEFT-hand native magic and four exact numbered combo test sets. Steam Global / Panacea; disable earlier Aqua packages and Nine Styles / Dual Wield.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy

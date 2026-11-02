@@ -1,0 +1,7 @@
+Ability aqua / id117 / 0 AP / original Aqua set
+Ability aqua 1 / id118 / 0 AP / ground 045 217 218 / air 332 357 361
+Ability aqua 2 / id119 / 0 AP / ground 362 363 350 / air 365 366 370
+Ability aqua 3 / id120 / 0 AP / ground 370 371 372 / air 373 506 315
+Ability aqua 4 / id121 / 0 AP / ground 316 317 318 / air 391 390 427
+
+Select one while idle. Other Aqua entries turn off automatically.

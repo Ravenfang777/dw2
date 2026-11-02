@@ -1,4 +1,4 @@
-"""Independent checks of serialized V8 geometry constraints and transitions."""
+"""Independent checks of serialized V9 base and four test profiles."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
@@ -16,13 +16,18 @@ report=json.loads((ROOT/'curve_validation.json').read_text())
 records=report['motions'];by_slot={r['normal_slot']:r for r in records}
 original={r['normal_slot']:parse_motion((ROOT/f"fixtures/original_{r['fixture_stem']}.bin").read_bytes()) for r in records}
 converted={r['normal_slot']:parse_motion((ROOT/f"fixtures/aqua_{r['fixture_stem']}.bin").read_bytes()) for r in records}
+all_converted={(0,s):m for s,m in converted.items()}
+for profile in range(1,5):
+    data=json.loads((ROOT/f'sets/p{profile}/curve_validation.json').read_text())
+    for row in data['motions']:
+        all_converted[(profile,row['normal_slot'])]=parse_motion((ROOT/f"sets/p{profile}/fixtures/aqua_{row['fixture_stem']}.bin").read_bytes())
 
 @lru_cache(maxsize=1)
 def clearance_samples():
-    data=np.load(ROOT/'fixtures/v7_clearance_reference.npz');actual=[]
+    data=np.load(ROOT/'fixtures/v8_arm_reference.npz');actual=[]
     for slot in data['slots']:
         m=converted[int(slot)]
-        actual.append(np.array([pose(model,m,float(f))[data['joints'],:3,3] for f in np.linspace(0,m.frames-1,21)]))
+        actual.append(np.array([pose(model,m,float(f))[data['joints'],:3,3] for f in np.linspace(0,m.frames-1,41)]))
     return data['positions'],np.array(actual)
 
 def capsule_overlap(points,pair,radius):
@@ -33,17 +38,34 @@ def capsule_overlap(points,pair,radius):
     return total
 
 class VisualTests(unittest.TestCase):
-    def test_joint_capsule_overlap_reduces_against_frozen_v7_reference(self):
+    def test_original_ground_finisher_forearm_overlap_reduces_against_v8(self):
         before,after=clearance_samples()
-        for pair,radius in [([2,3],17.),([4,5],16.)]:
-            self.assertLess(capsule_overlap(after,pair,radius),capsule_overlap(before,pair,radius))
+        slots=np.load(ROOT/'fixtures/v8_arm_reference.npz')['slots'];i=list(slots).index(101)
+        def score(points):
+            total=0.
+            for elbow,wrist in [(3,4),(6,7)]:
+                for t in [.2,.4,.6,.8,1.]:
+                    p=points[:,elbow]*(1-t)+points[:,wrist]*t;a=points[:,0];d=points[:,1]-a
+                    u=np.clip(np.sum((p-a)*d,axis=1)/np.sum(d*d,axis=1),0,1)
+                    gap=np.linalg.norm(p-(a+d*u[:,None]),axis=1);total+=float(np.maximum(0,17-gap).sum())
+            return total
+        self.assertLess(score(after[i]),score(before[i])*.5)
     def test_limb_clearance_keeps_wrist_and_ankle_displacements_bounded(self):
         before,after=clearance_samples()
-        self.assertLess(float(np.max(np.linalg.norm(after[:,:,[2,3],:]-before[:,:,[2,3],:],axis=3))),5.)
-        self.assertLess(float(np.max(np.linalg.norm(after[:,:,[6,7],:]-before[:,:,[6,7],:],axis=3))),2.)
+        self.assertLess(float(np.max(np.linalg.norm(after[:,:,[4,7],:]-before[:,:,[4,7],:],axis=3))),23.)
+        self.assertLess(float(np.max(np.linalg.norm(after[:,:,[8,9],:]-before[:,:,[8,9],:],axis=3))),2.)
+    def test_distal_forearm_helpers_keep_bind_angles_instead_of_bending_with_the_hand(self):
+        ids=list(range(95,100))+list(range(200,205));wanted=Rotation.from_euler('xyz',model.local[ids,3:6]).as_matrix()
+        for key,m in all_converted.items():
+            for f in np.linspace(0,m.frames-1,7):
+                local=model.local.copy()
+                for b,k,v in m.constants:local[b,k-1]=v
+                apply(m.channels,local,float(f))
+                actual=Rotation.from_euler('xyz',local[ids,3:6]).as_matrix()
+                np.testing.assert_allclose(actual,wanted,atol=1e-6,rtol=0,err_msg=(key,f))
     def test_hair_chains_keep_model_bind_rotations_through_all_actions(self):
         expected=Rotation.from_euler('xyz',model.local[155:194,3:6]).as_matrix()
-        for slot,m in converted.items():
+        for slot,m in all_converted.items():
             for f in np.linspace(0,m.frames-1,7):
                 local=model.local.copy()
                 for b,k,v in m.constants:local[b,k-1]=v
@@ -51,12 +73,12 @@ class VisualTests(unittest.TestCase):
                 actual=Rotation.from_euler('xyz',local[155:194,3:6]).as_matrix()
                 np.testing.assert_allclose(actual,expected,atol=1e-6,rtol=0,err_msg=(slot,f))
     def test_every_motion_keeps_original_header_length_and_helper_hierarchy(self):
-        for slot,m in converted.items():
+        for (profile,slot),m in all_converted.items():
             o=original[slot];self.assertEqual(len(m.raw),len(o.raw));self.assertEqual(m.raw[:80],o.raw[:80]);self.assertEqual(m.helper_parents,o.helper_parents)
             np.testing.assert_array_equal(m.helper_local,o.helper_local)
     def test_serialized_poses_keep_bind_lengths_and_scale_without_anatomical_translation_warps(self):
         indices=[i for i in range(1,293) if i!=280]
-        for slot,m in converted.items():
+        for slot,m in all_converted.items():
             for f in np.linspace(0,m.frames-1,9):
                 local=model.local.copy()
                 for b,k,v in m.constants:local[b,k-1]=v
@@ -65,7 +87,7 @@ class VisualTests(unittest.TestCase):
                 np.testing.assert_allclose(local[:,:3],model.local[:,:3],atol=1e-6,rtol=0)
     def test_skin_bases_have_no_extra_scale_or_shear(self):
         worst=0.
-        for slot,m in converted.items():
+        for slot,m in all_converted.items():
             for f in np.linspace(0,m.frames-1,9):
                 skin=pose(model,m,float(f))@inverse_bind
                 singular=np.linalg.svd(skin[:,:3,:3],compute_uv=False)
@@ -97,7 +119,7 @@ class VisualTests(unittest.TestCase):
                 error=float(np.linalg.norm(actual[206,:3,3]-native[101,:3,3]))
                 self.assertLess(error,3.,(slot,float(f),error))
     def test_travel_helper_is_unchanged_through_every_fitted_motion(self):
-        for slot,m in converted.items():
+        for (profile,slot),m in all_converted.items():
             for f in np.linspace(0,m.frames-1,11):
                 np.testing.assert_allclose(helper_pose(m,float(f))[-1],helper_pose(original[slot],float(f))[-1],atol=1e-7,rtol=0)
 

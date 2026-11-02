@@ -25,6 +25,7 @@ extern u32 (ABI *kGetPrivateProfileIntW)(const w16*,const w16*,int,const w16*) H
 #include "aqua_data.h"
 #define AQUA_ID 117u
 #define AQUA_OFF (AQUA_ID|0x80u)
+#define AQUA_ABILITIES 5u
 #define ABILITY_SLOTS 48u
 #define TABLE_ROWS 127u
 #define TABLE_BYTES (TABLE_ROWS*12u)
@@ -39,8 +40,18 @@ extern u32 (ABI *kGetPrivateProfileIntW)(const w16*,const w16*,int,const w16*) H
 static uptr base,log_handle;
 static int checked,ready,remove_mode,learned_reported,conflict_reported,full_reported;
 static u8 table[TABLE_BYTES] __attribute__((aligned(16)));
-static u8 encoded_name[16],encoded_help[128];
-static u32 name_handle,help_handle;
+static u8 encoded_name[AQUA_ABILITIES][16],encoded_help[AQUA_ABILITIES][128];
+static u32 name_handle[AQUA_ABILITIES],help_handle[AQUA_ABILITIES];
+static uptr choice_save;
+static u32 previous_equipped_mask;
+static int slots_reported;
+static const char *profile_names[AQUA_ABILITIES]={"aqua","aqua 1","aqua 2","aqua 3","aqua 4"};
+static const char *profile_help[AQUA_ABILITIES]={
+    "Aqua movement attacks guard dodge magic and reactions",
+    "Ground 045 217 218 Air 332 357 361",
+    "Ground 362 363 350 Air 365 366 370",
+    "Ground 370 371 372 Air 373 506 315",
+    "Ground 316 317 318 Air 391 390 427"};
 static int table_reported;
 static w16 log_path[1024],ini_path[1024];
 /* A real DIR64 relocation keeps the PE image independently relocatable. */
@@ -109,50 +120,74 @@ static uptr save_block(void){
     if(!memory(p,0x74,1)||!r8(p+4)||!r8(p+5)||!r8(p+6))return 0;
     return p;
 }
+static int own_id(u8 value){u32 id=value&0x7fu;return id>=AQUA_ID&&id<AQUA_ID+AQUA_ABILITIES;}
+static const u8 *part_data(const AquaPart *part,int choice){return choice>0?part->after[choice-1]:part->before;}
+static int part_known(uptr p,const AquaPart *part){
+    if(equal((void*)p,part->before,part->size))return 1;
+    for(unsigned i=0;i<AQUA_PROFILE_COUNT;i++)if(equal((void*)p,part->after[i],part->size))return 1;
+    return 0;
+}
 static int ensure_table(void){
     uptr current=(uptr)r64(base+TABLE_RVA);
     if(current==(uptr)table)return 1;
     if(!memory(current,65*12,0)||!memory(base+TABLE_RVA,8,1))return 0;
-    if(!name_handle||!help_handle){
+    if(!name_handle[0]||!help_handle[0]){
         if(!memory(base+HANDLE_RVA,16,0))return 0;
         typedef u32 (ABI *HandleFn)(const void*);
         HandleFn handle=(HandleFn)(base+HANDLE_RVA);
-        encode("aqua",encoded_name,sizeof(encoded_name));
-        encode("Aqua movement attacks guard dodge magic and reactions",encoded_help,sizeof(encoded_help));
-        name_handle=handle(encoded_name);help_handle=handle(encoded_help);
-        if(!name_handle||!help_handle||decode(name_handle)!=(uptr)encoded_name||decode(help_handle)!=(uptr)encoded_help){
-            name_handle=help_handle=0;return 0;
+        for(unsigned i=0;i<AQUA_ABILITIES;i++){
+            encode(profile_names[i],encoded_name[i],sizeof(encoded_name[i]));
+            encode(profile_help[i],encoded_help[i],sizeof(encoded_help[i]));
+            name_handle[i]=handle(encoded_name[i]);help_handle[i]=handle(encoded_help[i]);
+            if(!name_handle[i]||!help_handle[i]||decode(name_handle[i])!=(uptr)encoded_name[i]||decode(help_handle[i])!=(uptr)encoded_help[i]){
+                zeros(name_handle,sizeof(name_handle));zeros(help_handle,sizeof(help_handle));return 0;
+            }
         }
     }
     u8 snapshot[65*12];copy(snapshot,(void*)current,sizeof(snapshot));
     zeros(table,sizeof(table));copy(table,snapshot,sizeof(snapshot));
-    u8 *record=table+(AQUA_ID-1)*12;copy(record,snapshot+64*12,12);record[0]=0;
-    u16 order=(u16)snapshot[64*12+2]|((u16)snapshot[64*12+3]<<8);if(order<65535)order++;
-    record[2]=(u8)order;record[3]=(u8)(order>>8);copy(record+4,&name_handle,4);copy(record+8,&help_handle,4);
+    for(unsigned i=0;i<AQUA_ABILITIES;i++){
+        u8 *record=table+(AQUA_ID+i-1)*12;copy(record,snapshot+64*12,12);record[0]=0;
+        u32 order=(u16)snapshot[64*12+2]|((u32)snapshot[64*12+3]<<8);order+=1+i;if(order>65535)order=65535;
+        record[2]=(u8)order;record[3]=(u8)(order>>8);copy(record+4,name_handle+i,4);copy(record+8,help_handle+i,4);
+    }
     if(r64(base+TABLE_RVA)!=current||!equal(snapshot,(void*)current,sizeof(snapshot)))return 0;
     *(volatile u64*)(base+TABLE_RVA)=(u64)(uptr)table;
-    if(!table_reported){log_text("AQUA ABILITY TABLE READY: name=aqua id=117 AP=0; original 65 records copied unchanged");table_reported=1;}
+    if(!table_reported){log_text("AQUA ABILITY TABLE READY: aqua and aqua 1..4 ids117..121 AP=0; original 65 records copied unchanged");table_reported=1;}
     return 1;
 }
 static int choice_and_learn(uptr save){
-    u8 list[ABILITY_SLOTS];copy(list,(void*)(save+0x44),sizeof(list));
+    u8 before[ABILITY_SLOTS],list[ABILITY_SLOTS];copy(before,(void*)(save+0x44),sizeof(before));copy(list,before,sizeof(list));
     unsigned end=0;while(end<ABILITY_SLOTS&&list[end])end++;
-    for(unsigned i=0;i<end;i++)if((list[i]&0x7f)==AQUA_ID)return list[i]==AQUA_ID;
-    if(end>=ABILITY_SLOTS-1)return -1;
     for(unsigned i=end;i<ABILITY_SLOTS;i++)if(list[i])return -1;
-    if(!equal(list,(void*)(save+0x44),sizeof(list)))return -1;
-    *(volatile u8*)(save+0x44+end)=(u8)AQUA_OFF;
-    if(!learned_reported){log_text("AQUA ABILITY LEARNED: initially UNEQUIPPED; native abilities and AP untouched");learned_reported=1;}
-    return 0;
+    u32 present=0,enabled=0;
+    for(unsigned i=0;i<end;i++)if(own_id(list[i])){u32 bit=1u<<((list[i]&0x7fu)-AQUA_ID);present|=bit;if(!(list[i]&0x80u))enabled|=bit;}
+    unsigned missing=0;for(unsigned i=0;i<AQUA_ABILITIES;i++)if(!(present&(1u<<i)))missing++;
+    if(missing&&end+missing<ABILITY_SLOTS){
+        for(unsigned i=0;i<AQUA_ABILITIES;i++)if(!(present&(1u<<i)))list[end++]=(u8)(AQUA_OFF+i);
+        if(!learned_reported){log_text("AQUA ABILITIES LEARNED: missing aqua entries added UNEQUIPPED; native abilities and AP untouched");learned_reported=1;}
+        slots_reported=0;
+    }else if(missing&&!slots_reported){log_text("AQUA ABILITY SLOTS FULL: five entries need free tail slots; native entries retained");slots_reported=1;}
+    if(choice_save!=save){choice_save=save;previous_equipped_mask=0;}
+    u32 newly_enabled=enabled&~previous_equipped_mask;int chosen=-1;
+    for(unsigned i=0;i<AQUA_ABILITIES;i++)if((newly_enabled?newly_enabled:enabled)&(1u<<i))chosen=(int)i;
+    if(chosen>=0){
+        for(unsigned i=0;i<end;i++)if(own_id(list[i])&&(list[i]&0x7fu)!=AQUA_ID+(u32)chosen)list[i]|=0x80u;
+        if(enabled!=(1u<<chosen))log_text("AQUA EXCLUSIVE SELECTION: other Aqua entries unequipped");
+    }
+    if(!equal(before,(void*)(save+0x44),sizeof(before)))return -1;
+    if(!equal(before,list,sizeof(before)))copy((void*)(save+0x44),list,sizeof(list));
+    previous_equipped_mask=chosen<0?0:1u<<chosen;
+    return chosen+1;
 }
 static void remove_ability(uptr save){
     u8 before[ABILITY_SLOTS],after[ABILITY_SLOTS];copy(before,(void*)(save+0x44),sizeof(before));copy(after,before,sizeof(after));
     unsigned end=0;while(end<ABILITY_SLOTS&&before[end])end++;
-    unsigned n=0;for(unsigned i=0;i<end;i++)if((before[i]&0x7f)!=AQUA_ID)after[n++]=before[i];
+    unsigned n=0;for(unsigned i=0;i<end;i++)if(!own_id(before[i]))after[n++]=before[i];
     for(unsigned i=n;i<end;i++)after[i]=0;
-    for(unsigned i=end;i<ABILITY_SLOTS;i++)if((after[i]&0x7f)==AQUA_ID)after[i]=0;
+    for(unsigned i=end;i<ABILITY_SLOTS;i++)if(own_id(after[i]))after[i]=0;
     if(!equal(before,after,sizeof(before))&&equal(before,(void*)(save+0x44),sizeof(before))){
-        copy((void*)(save+0x44),after,sizeof(after));log_text("AQUA ABILITY REMOVED: only id117 removed; save now to retain uninstall");
+        copy((void*)(save+0x44),after,sizeof(after));log_text("AQUA ABILITIES REMOVED: only ids117..121 removed; save now to retain uninstall");
     }
 }
 static int valid_motion(uptr motion,const AquaMotion *d,Binding *out,int *failure){
@@ -162,7 +197,7 @@ static int valid_motion(uptr motion,const AquaMotion *d,Binding *out,int *failur
     for(unsigned i=0;i<AQUA_PART_COUNT;i++){
         const AquaPart *part=d->parts+i;uptr p=relative_or_handle(motion,r32(motion+part->field),d->raw_bytes);
         *failure=(int)(0x10u+part->field);
-        if(!memory(p,part->size,1)||(!equal((void*)p,part->before,part->size)&&!equal((void*)p,part->after,part->size)))return 0;
+        if(!memory(p,part->size,1)||!part_known(p,part))return 0;
         out->parts[i]=p;
         if(p<motion||p+part->size<motion||p+part->size>motion+d->raw_bytes)out->contiguous=0;
     }
@@ -182,7 +217,7 @@ static int fast_binding(uptr actor,uptr array,int choice){
         for(unsigned k=0;k<7;k++)if(r32(b->motion+aqua_scalar_fields[k])!=d->scalars[k])return 0;
         for(unsigned j=0;j<AQUA_PART_COUNT;j++){
             const AquaPart *part=d->parts+j;uptr p=relative_or_handle(b->motion,r32(b->motion+part->field),d->raw_bytes);
-            const u8 *expected=choice?part->after:part->before;
+            const u8 *expected=part_data(part,choice);
             if(p!=b->parts[j])return 0;
             if(!group&&!b->contiguous&&!memory(p+part->sentinel,4,0))return 0;
             if(!equal((void*)(p+part->sentinel),expected+part->sentinel,4))return 0;
@@ -232,12 +267,12 @@ static void motion_gate(uptr actor,int choice){
         for(unsigned j=0;j<AQUA_PART_COUNT;j++)if(again.parts[j]!=found[i].parts[j])return;
     }
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
-        const AquaPart *part=aqua_motions[i].parts+j;const u8 *desired=choice?part->after:part->before;
+        const AquaPart *part=aqua_motions[i].parts+j;const u8 *desired=part_data(part,choice);
         if(!equal((void*)found[i].parts[j],desired,part->size))copy((void*)found[i].parts[j],desired,part->size);
     }
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<AQUA_PART_COUNT;j++){
         const AquaPart *part=aqua_motions[i].parts+j;
-        if(!equal((void*)found[i].parts[j],choice?part->after:part->before,part->size)){clear_binding();return;}
+        if(!equal((void*)found[i].parts[j],part_data(part,choice),part->size)){clear_binding();return;}
     }
     cache_low=(uptr)-1;cache_high=0;cache_array_bytes=cache_count=0;
     for(unsigned i=0;i<AQUA_MOTION_COUNT;i++){
@@ -254,6 +289,7 @@ static void motion_gate(uptr actor,int choice){
     log_text(choice?"AQUA MOTIONS ENABLED: Aqua common body records applied; eleven helper slots and native travel retained":"AQUA MOTIONS DISABLED: all mapped original Sora records restored");
     log_text(bank?"AQUA BANK: normal Sora":"AQUA BANK: Olympus");
     log_number("AQUA verified motion count=",cache_count);
+    log_number("AQUA active profile 0 native 1 aqua 2..5 tests=",(uptr)choice);
 }
 
 #include "aqua_magic.h"
@@ -266,9 +302,9 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
     static const w16 magic_key[]={'h','a','n','d','_','m','a','g','i','c',0};
     magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v8 loaded by Panacea; ability name=aqua; hair rest shape, limb clearance and hand magic attachment test");
+    log_text("KH1FM AQUA ANIMATION TEST v9 loaded by Panacea; aqua and aqua 1..4; wrist pivot correction and LEFT-hand magic");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
-    if(remove_mode)log_text("AQUA UNINSTALL MODE: id117 will be removed from the loaded ability list");
+    if(remove_mode)log_text("AQUA UNINSTALL MODE: ids117..121 will be removed from the loaded ability list");
 }
 EXPORT void ABI OnFrame(void){
     if(!checked){
@@ -292,7 +328,7 @@ EXPORT void ABI OnFrame(void){
     int choice=0;
     if(remove_mode){remove_ability(save);choice=0;}
     else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("AQUA WAITING: ability list full or not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
-    if(choice!=last_choice){log_text(choice?"AQUA EQUIPPED":"AQUA UNEQUIPPED");last_choice=choice;}
+    if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"AQUA UNEQUIPPED");last_choice=choice;}
     motion_gate(actor,choice);
     u32 action=r32(actor+0x164)&0xfffu;
     if(choice&&action!=last_action&&action_logs<192){

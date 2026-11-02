@@ -1,65 +1,67 @@
-AQUA V8 SOURCE
+AQUA V9 SOURCE
 
-Normal installation needs OpenKH/Panacea; these scripts are development files.
+Normal installation requires OpenKH/Panacea; these are development files.
 
-BUILD AND TEST THE WINDOWS DLL ON A LINUX X64 HOST
+DLL BUILD / EXECUTION CHECK (Linux x64)
+  python3 generate_data.py
+  python3 build.py
+  python3 test_runtime.py
+  python3 test_visuals.py
+GCC, GNU ld with i386pep support and Python are needed. Geometry checks also
+need NumPy/SciPy. Runtime tests map the final PE and execute its real exports
+and attachment detours against Win64 ABI mocks, not Windows or KH1.
+
+REBUILD POSES (optional; NumPy, SciPy, Pillow)
 From this source directory:
+  python3 retargeting/tools/build_aqua_complete_v9.py --profile 0 --output .
+  python3 retargeting/tools/build_aqua_complete_v9.py --profile 1 --output sets/p1
+  python3 retargeting/tools/build_aqua_complete_v9.py --profile 2 --output sets/p2
+  python3 retargeting/tools/build_aqua_complete_v9.py --profile 3 --output sets/p3
+  python3 retargeting/tools/build_aqua_complete_v9.py --profile 4 --output sets/p4
   python3 generate_data.py
   python3 build.py
   python3 test_runtime.py
   python3 test_visuals.py
-The DLL builder uses Python, GCC and GNU ld with i386pep support. Visual tests
-also need NumPy and SciPy. Runtime tests map and execute the actual PE with
-Win64 ABI mocks. No Windows/game execution is claimed.
+--slots followed by normal slot numbers rebuilds only those records in a
+profile. Required source ARC files are in retargeting/core_source. Original
+MSET files are ../assets. Immutable baseline sampling caches are reproducible
+and are not distributed. V9 refinements are applied once to each baseline.
 
-REGENERATE MOTION FIXTURES
-  python3 retargeting/tools/build_aqua_complete_v8.py .
-  python3 generate_data.py
-  python3 build.py
-  python3 test_runtime.py
-  python3 test_visuals.py
-Requires NumPy, SciPy and Pillow. The supplied model/animation inputs are under
-retargeting; original MSET inputs are ../assets. Optional numeric normal slots
-after the output directory rebuild only those slots. Sampling caches are not
-distributed. V8 first builds an immutable V7 baseline and then applies
-aqua_refine_v8.py once before fitting. Rebuilding never compounds corrections.
+ANATOMICAL WRIST PIVOTS
+aqua_refine_v9.py keeps Sora's distal forearm helper angles at bind and applies
+the hand's authored orientation at pivots100/205. Arm solves rotate the whole
+distal forearm together and preserve the hand's orientation at that pivot.
+Finisher clearance checks include interior arm samples. All local anatomical
+offsets/scales retain their bind values. The V8 reference contains 41 samples
+of ten joints per original converted motion; it supports an independent
+before/after comparison of serialized forearm clearance. It is not mesh
+collision detection. Hair155..193 retains the v8 bind-rest correction.
 
-HAIR AND CLEARANCE
-Hair joints 155..193 use model bind rotations. The jaw and grip are preserved.
-Bounded two-link arm/leg solves adjust goals/poles while preserving segment
-lengths and local scales/offsets. Airborne hand goals are retained for ledges.
-The frozen V7 clearance reference stores 21 samples per motion for eight
-joints; per-motion SHA-256 values identify the original V7 fixtures. Independent
-tests compare the serialized V8 joints against that reference. Capsule overlap
-is a geometric proxy, not a guarantee of mesh separation in the game.
+FIVE PROFILE GATE
+The generated header stores original tables and five immutable after sets.
+Unchanged profile blocks are shared. All 47/46 records are admitted against
+the known original/base/test sets before any writes. Selection changes wait
+for idle. Ability ids117..121 are 0 AP. Newly enabled Aqua entries win and
+only other Aqua entries are turned off. Missing entries are granted only if
+all fit with a terminator in the original 48-byte list. Native entries are
+not evicted. Uninstall removes only ids117..121.
 
-HAND MAGIC
-aqua_magic.h admits the exact 15/16-byte instruction spans at Steam RVAs
-0x29EA00 and 0x29EB20 from the user-supplied executable. These spans contain
-complete instructions with no relative branches/calls or RIP-relative data.
-Two native trampolines redirect logical weapon attachment 0x30 only when the
-current loaded Sora and motion bank match an enabled Aqua bank, the request is
-0x36..0x3D or 0x83..0x8A, and event/script scope is clear. Other actors, other
-attachments, other actions and unequipped Aqua fall through to the original.
-Native direct-matrix selector 0x2065 reads right-palm world matrix 101. Position
-queries use that matrix's translation; effect-matrix queries use the matrix.
-The native projectile/effect VM remains responsible for simulation and drawing.
-The executable is not included. native_attachment_validation.json records its
-hash, build timestamp, entry spans and reviewed selector semantics.
+LEFT-HAND MAGIC
+The two native entry points and admitted instruction spans are unchanged from
+v8. Their direct matrix selector is now0x20CE, the LEFT palm206, in all five
+profiles. Native cast requests, current actor/bank, event/script exclusions
+and native fallthrough are retained. No spell-resource or projectile script
+is replaced. The supplied executable is not included; its original hash and
+the entry spans are in native_attachment_validation.json.
 
-INVENTORY
-retargeting/tools/build_aqua_inventory_v8.py reads the originally supplied
-core_source, input, round2_regular, round3_regular and captured PC p02 banks.
-Unused gameplay and cinematic assets are not required to run this mod and are
-not copied into it. To rebuild the complete inventory, provide those source
-folders again. The complete generated inventory and all source occurrences are
-in ../inventory. The optional workbook builder requires @oai/artifact-tool.
+CAPACITY / SOURCE IDS
+No motion/header/table expansion is used. The original eleven helpers and
+native travel remain. Four sets change seven physical combo records each:
+C8 first, C9/CA second, CB finisher, CC first air, CD second air, CE finisher.
+The donor selection is in aqua_v9_plan.py. Numeric IDs retain their exact
+source bank/hash in TEST_CLIP_SOURCES.csv; no command names are inferred.
+The source inventory files under ../inventory retain v8's source metadata.
+Current ability mappings are ../ANIMATION_MAP.csv.
 
-CAPACITY AND LICENSING
-All native motion headers, lengths and counts are unchanged. Body flags,
-constants, channels and reusable key storage implement the poses; helper
-hierarchy and native travel remain. The gate admits every applicable record
-before writes and defers ability switches until idle. Existing source
-licenses/notices are preserved in licenses. Nine Styles / Dual Wield is not
-included or required. Format reference:
-https://openkh.dev/bbs/file/type/pam.html
+Existing upstream licenses and notices are retained in licenses.
+Format reference: https://openkh.dev/bbs/file/type/pam.html

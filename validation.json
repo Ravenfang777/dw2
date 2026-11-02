@@ -1,31 +1,39 @@
 {
-  "version": 8,
+  "version": 9,
   "offline_checks_passed": true,
   "game_runtime_tested": false,
-  "normal_motion_records": 47,
-  "olympus_motion_records": 46,
-  "hair_bind_rotation_joints": 39,
-  "inherited_hair_bends_reset": 5,
-  "pose_samples": 10427,
-  "max_pose_position_fit_error": 3.5552780190773796,
+  "abilities": [
+    "aqua",
+    "aqua 1",
+    "aqua 2",
+    "aqua 3",
+    "aqua 4"
+  ],
+  "ability_ids": [
+    117,
+    118,
+    119,
+    120,
+    121
+  ],
+  "normal_motion_records_per_profile": 47,
+  "olympus_motion_records_per_profile": 46,
+  "unique_generated_records": 75,
+  "actual_pe_mock_tests": 34,
+  "geometry_transition_tests": 12,
+  "pose_samples": 16391,
+  "max_pose_position_fit_error": 4.0448012958590915,
   "max_non_root_attachment_translation_error": 0.0,
   "max_scale_error": 0.0,
   "native_travel_error": 0.0,
   "original_motion_lengths_headers_and_counts_preserved": true,
   "helper_slots": 11,
   "original_msets_on_disk": true,
-  "actual_pe_mock_tests": 27,
-  "geometry_transition_tests": 11,
-  "native_attachment_hooks": 2,
-  "hand_magic_game_rendering_verified": false,
-  "unique_inventory_clips": 349,
-  "source_occurrences": 739,
-  "dll_sha256": "acf354c150eb54034c39c086b967a92a5a3433d8b31487de2bfd1567ab97cb42",
+  "left_palm_magic": 206,
+  "dll_sha256": "1409d67eebb5171958d4e6a25a0233a8a5243a2845aea5b70582f2d334d04d83",
   "limitations": [
-    "Windows/KH1 rendering of v8 pending",
-    "Clearance uses joint/capsule proxies, not full mesh collision",
-    "Hand routing handles attachment 0x30 in eligible native casts; per-spell use requires live confirmation",
-    "Shared casting poses; per-spell BBS choreography not separated",
-    "Unassigned records remain native"
+    "Windows/KH1 rendering of v9 pending",
+    "Arm separation uses joint/capsule checks; some mesh clipping may remain",
+    "Numbered clips use native KH1 durations and hit events; BBS commands/effects are not imported"
   ]
 }

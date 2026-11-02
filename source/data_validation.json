@@ -1,7 +1,8 @@
 {
   "passed": true,
   "motions": 47,
-  "source": "Packaged full-byte original and Aqua fixtures",
+  "profiles": 5,
   "all_headers_and_motion_sizes_identical": true,
-  "all_changes_inside_existing_body_and_helper_tables": true
+  "all_changes_inside_existing_body_and_helper_tables": true,
+  "unique_data_blocks": 490
 }

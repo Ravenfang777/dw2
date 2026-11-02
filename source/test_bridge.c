@@ -30,7 +30,7 @@ static void* ABI valloc(void*p,size_t n,uint32_t kind,uint32_t protect){(void)p;
 static int ABI vfree(void*p,size_t n,uint32_t kind){(void)n;(void)kind;return munmap(p,4096)==0;}
 static int ABI vprotect(void*p,size_t n,uint32_t protect,uint32_t*old){(void)p;(void)n;(void)protect;if(protect_failure)return 0;*old=0x20;return 1;}
 static int ABI flush(uintptr_t process,const void*p,size_t n){(void)process;(void)p;(void)n;return 1;}
-static void ABI native_matrix(uintptr_t actor,uint32_t code,float*out){(void)actor;matrix_code=code;memset(out,0,16*sizeof(float));out[0]=out[5]=out[10]=out[15]=1;out[12]=code==0x2065?11:100;out[13]=code==0x2065?22:200;out[14]=code==0x2065?33:300;}
+static void ABI native_matrix(uintptr_t actor,uint32_t code,float*out){(void)actor;matrix_code=code;memset(out,0,16*sizeof(float));out[0]=out[5]=out[10]=out[15]=1;out[12]=code==0x20ce?-11:code==0x2065?11:100;out[13]=(code==0x20ce||code==0x2065)?22:200;out[14]=(code==0x20ce||code==0x2065)?33:300;}
 static void ABI native_point(uintptr_t actor,uint32_t code,float fraction,float*out){(void)actor;point_code=code;point_fraction=fraction;out[0]=100;out[1]=200;out[2]=300;out[3]=1;}
 void bridge_matrix(uintptr_t f,uintptr_t actor,uint32_t code,float*out){((void(ABI*)(uintptr_t,uint32_t,float*))f)(actor,code,out);}
 void bridge_point(uintptr_t f,uintptr_t actor,uint32_t code,float fraction,float*out){((void(ABI*)(uintptr_t,uint32_t,float,float*))f)(actor,code,fraction,out);}

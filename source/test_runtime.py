@@ -104,12 +104,14 @@ class Host:
         bridge.bridge_init(self.exports['OnInit'])
     def frame(self):bridge.bridge_call0(self.exports['OnFrame'])
     def abilities(self):return C.string_at(self.save+0x44,48)
-    def equip(self,on):
-        data=bytearray(self.abilities());i=next(i for i,v in enumerate(data) if v&127==117);data[i]=117 if on else 245;put(self.save+0x44,bytes(data))
+    def equip(self,on,profile=0):
+        id_=117+profile;data=bytearray(self.abilities());i=next(i for i,v in enumerate(data) if v&127==id_);data[i]=id_ if on else id_|128;put(self.save+0x44,bytes(data))
     def decode(self,h):return r64(self.game+0x2ee3980+((h&0x7fffffff)>>25)*8)+(h&0x1ffffff)
     def body(self,slot=98):return C.string_at(self.motions[slot],len(self.runtime_originals[slot]))
     def expected(self,slot,on):
-        r=self.record_by_slot[slot];data=bytearray((ROOT/f"fixtures/{'aqua' if on else 'original'}_{r['fixture_stem']}.bin").read_bytes())
+        r=self.record_by_slot[slot];folder=ROOT/'fixtures'
+        if int(on)>1 and 98<=slot<=104:folder=ROOT/f'sets/p{int(on)-1}/fixtures'
+        data=bytearray((folder/f"{'aqua' if on else 'original'}_{r['fixture_stem']}.bin").read_bytes())
         data[:80]=self.runtime_originals[slot][:80];return bytes(data)
     def assert_all(self,test,on):
         for r in self.records:test.assertEqual(self.body(r['normal_slot']),self.expected(r['normal_slot'],on),r['action'])
@@ -120,10 +122,52 @@ class Host:
         out=(C.c_float*4)();bridge.bridge_point(self.game+0x29eb20,self.actor if actor is None else actor,code,fraction,out);return list(out)
 
 class RuntimeTests(unittest.TestCase):
+    def test_all_five_lowercase_names_are_registered_with_zero_ap(self):
+        h=Host();h.frame();table=r64(h.game+0x2d36d48)
+        expected=[b'\x45\x55\x59\x45\0']+[b'\x45\x55\x59\x45\x01'+bytes([0x21+i])+b'\0' for i in range(1,5)]
+        for i,name in enumerate(expected):
+            row=table+(116+i)*12;self.assertEqual(C.c_ubyte.from_address(row).value,0)
+            self.assertEqual(C.string_at(h.decode(r32(row+4)),len(name)),name)
+        self.assertEqual(C.string_at(table,65*12),h.native_table)
+    def test_exact_profiles_cycle_in_both_banks_and_only_selected_aqua_entry_stays_enabled(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True);h.frame()
+            for profile in [0,1,2,3,4,2,0]:
+                h.equip(True,profile);h.frame();h.assert_all(self,profile+1)
+                own=[v for v in h.abilities() if 117<=(v&127)<=121]
+                self.assertEqual(len(own),5);self.assertEqual([v for v in own if not v&128],[117+profile])
+                self.assertEqual(h.abilities()[:2],b'\x81\x82')
+            h.equip(False,0);h.frame();h.assert_all(self,False)
+    def test_switch_between_test_sets_defers_all_motion_writes_until_idle(self):
+        h=Host();h.frame();h.equip(True,1);h.frame();h.assert_all(self,2)
+        w32(h.actor+0x164,0xc8);h.equip(True,4);before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
+        w32(h.actor+0x164,0);h.frame();h.assert_all(self,5)
+        w32(h.actor+0x164,0xcc);h.equip(False,4);before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
+        w32(h.actor+0x164,0);h.frame();h.assert_all(self,False)
+    def test_saved_fourth_test_selection_is_respected_and_missing_entries_granted_off(self):
+        h=Host();put(h.save+0x44,b'\x81\x79\x82\0');h.frame();h.assert_all(self,5)
+        own=[v for v in h.abilities() if 117<=(v&127)<=121]
+        self.assertEqual(sorted(own),sorted([121,245,246,247,248]));self.assertEqual(h.abilities()[:3],b'\x81\x79\x82')
+    def test_insufficient_tail_space_never_evicts_native_abilities(self):
+        h=Host();saved=bytes([117]+list(range(1,45))+[0,0,0]);put(h.save+0x44,saved);h.frame()
+        self.assertEqual(h.abilities(),saved);h.assert_all(self,True)
+        self.assertIn('AQUA ABILITY SLOTS FULL',bridge.bridge_log().decode())
+    def test_uninstall_removes_all_five_own_ids_and_restores_fourth_test_payload(self):
+        h=Host(remove=1);put(h.save+0x44,b'\x81\x75\xf6\x77\xf8\x79\x82\0')
+        for r in h.records:put(h.motions[r['normal_slot']],h.expected(r['normal_slot'],5))
+        h.frame();self.assertEqual(h.abilities()[:8],b'\x81\x82\0\0\0\0\0\0');h.assert_all(self,False)
+    def test_left_palm_magic_applies_in_all_five_profiles_with_distinct_right_hand_mock(self):
+        h=Host(magic=True);h.frame()
+        for profile in range(5):
+            w32(h.actor+0x164,0);h.equip(True,profile);h.frame();h.assert_all(self,profile+1)
+            for action in [0x36,0x83]:
+                w32(h.actor+0x164,action);self.assertEqual(h.point(),[-11,22,33,1]);self.assertEqual(h.matrix()[12:],[-11,22,33,1])
+                self.assertEqual(bridge.bridge_matrix_code(),0x20ce)
+
     def test_actual_pe_registers_lowercase_zero_ap_aqua_unequipped_and_preserves_native_table(self):
         h=Host();before=h.abilities();h.frame();table=r64(h.game+0x2d36d48)
         self.assertEqual(C.string_at(table,65*12),h.native_table)
-        self.assertEqual(h.abilities()[:3],b'\x81\x82\xf5');self.assertEqual(h.abilities()[3:],before[3:])
+        self.assertEqual(h.abilities()[:7],b'\x81\x82\xf5\xf6\xf7\xf8\xf9');self.assertEqual(h.abilities()[7:],before[7:])
         row=table+116*12;self.assertEqual(C.c_ubyte.from_address(row).value,0)
         self.assertEqual(C.string_at(h.decode(r32(row+4)),5),b'\x45\x55\x59\x45\x00');h.assert_all(self,False)
     def test_normal_all_47_exact_on_and_off_including_idle_and_normal_only_ledge_recovery(self):
@@ -175,7 +219,7 @@ class RuntimeTests(unittest.TestCase):
     def test_invalid_table_pointer_cannot_patch_any_other_valid_record(self):
         h=Host();h.frame();h.equip(True);w32(h.motions[79]+40,0);before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
     def test_saved_equipped_aqua_is_respected_without_duplicate_grant(self):
-        h=Host();put(h.save+0x44,b'\x81\x75\x82\x00');before=h.abilities();h.frame();self.assertEqual(h.abilities(),before);h.assert_all(self,True)
+        h=Host();put(h.save+0x44,b'\x81\x75\x82\x00');h.frame();self.assertEqual(h.abilities()[:7],b'\x81\x75\x82\xf6\xf7\xf8\xf9');h.assert_all(self,True)
     def test_no_stale_writes_after_actor_unload(self):
         h=Host();h.frame();h.equip(True);h.frame();w64(h.game+0x2537e48,0);h.equip(False);h.frame();h.assert_all(self,True)
         w64(h.game+0x2537e48,h.actor);h.frame();h.assert_all(self,False)
@@ -206,7 +250,7 @@ class RuntimeTests(unittest.TestCase):
         h.equip(True);h.frame()
         for action in list(range(0x36,0x3e))+list(range(0x83,0x8b)):
             w32(h.actor+0x164,action)
-            self.assertEqual(h.point(),[11,22,33,1]);self.assertEqual(h.matrix()[12:],[11,22,33,1]);self.assertEqual(bridge.bridge_matrix_code(),0x2065)
+            self.assertEqual(h.point(),[-11,22,33,1]);self.assertEqual(h.matrix()[12:],[-11,22,33,1]);self.assertEqual(bridge.bridge_matrix_code(),0x20ce)
         self.assertIn('AQUA HAND MAGIC ORIGIN',bridge.bridge_log().decode());self.assertIn('AQUA HAND MAGIC MATRIX',bridge.bridge_log().decode())
     def test_hand_magic_excludes_other_actors_attachments_actions_events_and_unloaded_banks(self):
         h=Host(magic=True);h.frame();h.equip(True);h.frame();w32(h.actor+0x164,0x36)
@@ -222,9 +266,9 @@ class RuntimeTests(unittest.TestCase):
         old=r32(h.actor+0x1d4);w32(h.actor+0x1d4,0);self.assertEqual(h.point(),[100,200,300,1]);w32(h.actor+0x1d4,old)
         w32(h.actor+0x374,0);self.assertEqual(h.point(),[100,200,300,1])
     def test_hand_magic_returns_to_native_on_ability_off_and_reenables_on_new_bank(self):
-        h=Host(magic=True);h.frame();h.equip(True);h.frame();w32(h.actor+0x164,0x36);self.assertEqual(h.point(),[11,22,33,1])
+        h=Host(magic=True);h.frame();h.equip(True);h.frame();w32(h.actor+0x164,0x36);self.assertEqual(h.point(),[-11,22,33,1])
         h.equip(False);w32(h.actor+0x164,0);h.frame();w32(h.actor+0x164,0x36);self.assertEqual(h.point(),[100,200,300,1]);h.assert_all(self,False)
-        w32(h.actor+0x164,0);h.activate_bank(True,True);h.equip(True);h.frame();w32(h.actor+0x164,0x83);self.assertEqual(h.point(),[11,22,33,1]);h.assert_all(self,True)
+        w32(h.actor+0x164,0);h.activate_bank(True,True);h.equip(True);h.frame();w32(h.actor+0x164,0x83);self.assertEqual(h.point(),[-11,22,33,1]);h.assert_all(self,True)
     def test_magic_hooks_admit_both_exact_prologues_before_any_code_write(self):
         for offset in [0x29ea00,0x29eb20]:
             h=Host(magic=True);C.c_ubyte.from_address(h.game+offset+8).value^=1
