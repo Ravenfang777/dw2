@@ -1,0 +1,20 @@
+{
+  "user_supplied_executable_sha256": "d790746245d26159f3ee0e1060e33b2fa2de06941850a4ac724f598722884bac",
+  "executable_bytes": 7490832,
+  "timestamp": 1721645006,
+  "matrix_rva": "0x29EA00",
+  "matrix_stolen_bytes": "48895c24084889742410574883ec20",
+  "position_rva": "0x29EB20",
+  "position_stolen_bytes": "405355574881ec800000000f29742460",
+  "stolen_instructions_complete_and_without_rip_relative_operands": true,
+  "logical_weapon_attachment": "0x30",
+  "direct_right_palm_matrix_selector": "0x2065",
+  "right_palm_index": 101,
+  "event_rva": "0x298C9A0",
+  "cast_requests": [
+    "0x36..0x3D",
+    "0x83..0x8A"
+  ],
+  "runtime_mock_routes_both_attachments": true,
+  "windows_or_game_executed": false
+}

@@ -1,10 +1,10 @@
 {
-  "version": 7,
+  "version": 8,
   "assets": [
     {
       "name": "dll/kh1-aqua.dll",
-      "sha256": "9b4ff2dce210eb45ca9dd5a232f94e324e0bc8c9039a65774b2e3f96138dee45",
-      "bytes": 2002727
+      "sha256": "acf354c150eb54034c39c086b967a92a5a3433d8b31487de2bfd1567ab97cb42",
+      "bytes": 2005697
     },
     {
       "name": "xa_ex_0010.mset",

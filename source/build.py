@@ -6,7 +6,7 @@ COFF import descriptors, emitted explicitly so the build has no SDK dependency.
 from pathlib import Path
 import struct,subprocess,json,hashlib
 ROOT=Path(__file__).resolve().parent
-IMPORTS=['GetModuleHandleA','GetModuleFileNameW','VirtualQuery','CreateFileW','WriteFile','CloseHandle','GetPrivateProfileIntW']
+IMPORTS=['GetModuleHandleA','GetModuleFileNameW','VirtualQuery','CreateFileW','WriteFile','CloseHandle','GetPrivateProfileIntW','VirtualAlloc','VirtualFree','VirtualProtect','FlushInstructionCache']
 
 def elf_to_coff(source,target):
     """Translate ELF RELA semantics to AMD64 COFF, including implicit addends.

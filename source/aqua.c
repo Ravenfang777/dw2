@@ -1,5 +1,5 @@
 /* Standalone Panacea ability gate for compact Aqua FK motion tests.
- * No code hooks, motion allocations or actor-state writes.
+ * Compact motion tables plus two checked native attachment function hooks.
  * Scope: Steam Global build identified by the user's existing v52 reference.
  */
 typedef unsigned char u8;
@@ -256,13 +256,17 @@ static void motion_gate(uptr actor,int choice){
     log_number("AQUA verified motion count=",cache_count);
 }
 
+#include "aqua_magic.h"
+
 EXPORT void ABI OnInit(const w16 *mod_path){
     (void)mod_path;
     path_for(log_path,"kh1-aqua.log");path_for(ini_path,"kh1-aqua.ini");
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'a','q','u','a',0},key[]={'r','e','m','o','v','e','_', 'a','q','u','a',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    log_text("KH1FM AQUA ANIMATION TEST v7 loaded by Panacea; ability name=aqua; corrected attachments and expanded common motions");
+    static const w16 magic_key[]={'h','a','n','d','_','m','a','g','i','c',0};
+    magic_disabled=!kGetPrivateProfileIntW(section,magic_key,1,ini_path);
+    log_text("KH1FM AQUA ANIMATION TEST v8 loaded by Panacea; ability name=aqua; hair rest shape, limb clearance and hand magic attachment test");
     log_text("On disk: original Sora/Olympus MSETs. All mapped records must verify before body writes. Native defensive behavior is unchanged.");
     if(remove_mode)log_text("AQUA UNINSTALL MODE: id117 will be removed from the loaded ability list");
 }
@@ -277,9 +281,11 @@ EXPORT void ABI OnFrame(void){
     }
     if(!ready)return;
     if(kGetModuleHandleA("kh1-dual-wield.dll")){
+        magic_conflict=1;
         if(!conflict_reported){log_text("AQUA SUSPENDED: disable Nine Styles / Dual Wield for this standalone ability test");conflict_reported=1;}
         return;
     }
+    magic_conflict=0;magic_install();
     uptr actor=(uptr)r64(base+SORA_RVA);
     if(!memory(actor,0x378,0)||(r32(actor+0x374)&3u)!=1u){clear_binding();return;}
     uptr save=save_block();if(!save){clear_binding();return;}

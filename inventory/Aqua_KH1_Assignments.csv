@@ -1,0 +1,48 @@
+﻿normal_slot,olympus_slot,request_hex,kh1_action,clip_id,aqua_name,aqua_bank,source_start_frame,source_end_frame,kh1_frames,kh1_fps,pose_loop,root_policy
+0,0,0x00,idle,AQ-30537d7626df,001,base,0,59,120,60,True,travel
+1,1,0x00,combat idle,AQ-be856951d6d5,002,base,0,87,170,60,True,travel
+2,2,0x01,walk,AQ-829a540dce9f,003,base,0,31,60,60,True,travel
+3,3,0x01,walk,AQ-829a540dce9f,003,base,0,31,60,60,True,travel
+4,4,0x01,combat walk,AQ-d0ecb702d173,012,base,0,31,48,60,True,travel
+5,5,0x02,run,AQ-c99172b5ada6,004,base,0,15,36,60,True,travel
+6,6,0x02,run,AQ-c99172b5ada6,004,base,0,15,36,60,True,travel
+7,7,0x02,combat run,AQ-77ecf75f5b4e,013,base,0,19,36,60,True,travel
+8,8,0x04,jump takeoff,AQ-dee3038ee962,005,base,0,9,26,60,False,travel
+9,9,0x05,jump rise,AQ-dee3038ee962,005,base,9,12,14,60,False,travel
+10,10,0x06,fall,AQ-7fbabada027b,006,base,7,15,40,60,True,travel
+11,11,0x07,landing,AQ-91e8d27e209d,007,base,0,15,28,60,False,travel
+12,12,0x09,high jump takeoff,AQ-cec5d0a8c306,014,base,0,16,34,60,False,travel
+13,13,0x0A,high jump rise,AQ-cec5d0a8c306,014,base,16,31,26,60,False,travel
+14,14,0x0D,ledge hang,AQ-4208240a6297,020,base,55,94,120,60,True,hand_anchor
+15,15,0x0E,ledge climb start,AQ-1c7c15cde2e0,021,base,0,4,68,60,False,hand_anchor
+16,16,0x0F,ledge climb finish,AQ-1c7c15cde2e0,021,base,4,13,28,60,False,climb
+17,Not present,0x10,ledge landing recovery,AQ-91e8d27e209d,007,base,0,15,40,60,False,native
+54,17,0x36,ground cast release,AQ-b2177097d33e,354,base,0,23,28,60,False,travel
+55,18,0x37,ground overhead cast,AQ-3e993e2a0113,320,base,0,51,86,60,False,travel
+56,19,0x38,ground support cast,AQ-b2177097d33e,354,base,0,35,68,60,False,travel
+57,20,0x3D,ground cast recovery,AQ-b2177097d33e,354,base,23,35,60,60,False,travel
+58,21,0x3E,ground item use,AQ-dce9dd55e06f,600,base,0,40,82,60,False,travel
+59,22,0x3F,air item use,AQ-8f29557ee40a,601,p02ex_628.arc,0,40,72,60,False,travel
+61,24,0x48,front high flinch,AQ-6638be867d96,200,base,0,34,70,60,False,native
+62,25,0x49,front low flinch,AQ-6638be867d96,200,base,0,34,70,60,False,native
+63,26,0x4A,back high flinch,AQ-b2ecb437a1a3,202,base,0,34,70,60,False,native
+64,27,0x4B,back low flinch,AQ-b2ecb437a1a3,202,base,0,34,70,60,False,native
+65,28,0x4C,heavy front reaction,AQ-0b311562a749,204,base,0,15,72,60,False,native
+66,29,0x4D,heavy back reaction,AQ-1db1a9428f84,206,base,0,15,72,60,False,native
+67,30,0x4E,air front reaction,AQ-d68ead78dd24,214,base,0,18,30,60,False,native
+68,31,0x4F,air back reaction,AQ-7a663088986a,215,base,0,18,30,60,False,native
+69,32,0x50,air front recovery,AQ-d68ead78dd24,214,base,0,18,38,60,False,native
+70,33,0x51,air back recovery,AQ-7a663088986a,215,base,0,18,38,60,False,native
+79,41,0x83,air cast release,AQ-76ffd74d2056,355,base,0,21,28,60,False,travel
+80,42,0x84,air overhead cast,AQ-3e993e2a0113,320,base,0,51,78,60,False,travel
+81,43,0x85,air support cast,AQ-76ffd74d2056,355,base,0,33,68,60,False,travel
+82,44,0x8A,air cast recovery,AQ-76ffd74d2056,355,base,21,33,52,60,False,travel
+98,60,0xC8,ground first,AQ-2ed6582d0361,300,base,0,30,48,60,False,travel
+99,61,0xC9,ground second,AQ-b3c79bf3aac2,301,base,0,40,48,60,False,travel
+100,62,0xCA,ground alternate,AQ-b70ccd301fb9,302,base,0,31,64,60,False,travel
+101,63,0xCB,ground finisher,AQ-440a8cfac80c,304,base,0,42,80,60,False,travel
+102,64,0xCC,air first,AQ-3fb40ee6ec04,305,base,0,22,40,60,False,travel
+103,65,0xCD,air second,AQ-5eaf4e1fa83d,306,base,0,33,42,60,False,travel
+104,66,0xCE,air finisher,AQ-a0d04a78c487,309,base,0,32,56,60,False,travel
+110,72,0xD4,Guard / Barrier pose,AQ-b447900485d3,400,base,0,39,54,60,False,travel
+117,79,0xDC,Dodge Roll / Cartwheel pose,AQ-bad188200247,009,base,0,29,38,60,False,travel

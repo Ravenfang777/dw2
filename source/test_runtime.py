@@ -10,6 +10,8 @@ subprocess.run(['gcc','-std=c11','-O2','-shared','-fPIC','test_bridge.c','-o','t
 bridge=C.CDLL(str(ROOT/'test_bridge.so'))
 for name,args,ret in [('bridge_reset',[C.c_size_t],None),('bridge_range',[C.c_size_t,C.c_size_t,C.c_uint],None),('bridge_modes',[C.c_int,C.c_int],None),('bridge_log',[],C.c_char_p),('bridge_queries',[],C.c_uint),('bridge_encode',[C.c_size_t],C.c_uint),('bridge_symbol',[C.c_char_p],C.c_size_t),('bridge_call0',[C.c_size_t],None),('bridge_init',[C.c_size_t],None)]:
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
+for name,args,ret in [('bridge_magic_modes',[C.c_int,C.c_int,C.c_int],None),('bridge_matrix',[C.c_size_t,C.c_size_t,C.c_uint,C.POINTER(C.c_float)],None),('bridge_point',[C.c_size_t,C.c_size_t,C.c_uint,C.c_float,C.POINTER(C.c_float)],None),('bridge_matrix_code',[],C.c_uint),('bridge_point_code',[],C.c_uint),('bridge_point_fraction',[],C.c_float)]:
+    f=getattr(bridge,name);f.argtypes=args;f.restype=ret
 libc=C.CDLL(None);libc.mmap.argtypes=[C.c_void_p,C.c_size_t,C.c_int,C.c_int,C.c_int,C.c_long];libc.mmap.restype=C.c_void_p
 
 def allocate(n):
@@ -23,7 +25,7 @@ def w32(p,v):C.c_uint.from_address(p).value=v
 def w64(p,v):C.c_uint64.from_address(p).value=v
 
 class Host:
-    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0):
+    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0):
         self.game=allocate(0x3000000);bridge.bridge_reset(self.game);bridge.bridge_range(self.game,0x3000000,0x40);bridge.bridge_modes(remove,conflict)
         w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp)
         self.buffers=[]
@@ -34,6 +36,13 @@ class Host:
         self.activate_bank(slot==60,encoded_fields)
         # Native pointer-to-handle helper uses the ABI of the existing reference.
         put(self.game+0x38ad90,b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(b'NativeHandle'))+b'\xff\xe0')
+        bridge.bridge_magic_modes(hand_magic,fail_alloc,fail_protect)
+        if magic:
+            self.matrix_prefix=bytes.fromhex('48895c24084889742410574883ec20')
+            self.point_prefix=bytes.fromhex('405355574881ec800000000f29742460')
+            call=lambda n:b'\x48\xb8'+struct.pack('<Q',bridge.bridge_symbol(n))+b'\xff\xd0'
+            put(self.game+0x29ea00,self.matrix_prefix+call(b'NativeMatrix')+bytes.fromhex('4883c4205f488b5c2408488b742410c3'))
+            put(self.game+0x29eb20,self.point_prefix+call(b'NativePoint')+bytes.fromhex('0f287424604881c4800000005f5d5bc3'))
         self.load_pe()
     def activate_bank(self,olympus,encoded_fields=False):
         self.slot=60 if olympus else 98
@@ -105,6 +114,10 @@ class Host:
     def assert_all(self,test,on):
         for r in self.records:test.assertEqual(self.body(r['normal_slot']),self.expected(r['normal_slot'],on),r['action'])
     def snapshot(self):return {r['normal_slot']:self.body(r['normal_slot']) for r in self.records}
+    def matrix(self,actor=None,code=0x30):
+        out=(C.c_float*16)();bridge.bridge_matrix(self.game+0x29ea00,self.actor if actor is None else actor,code,out);return list(out)
+    def point(self,actor=None,code=0x30,fraction=.75):
+        out=(C.c_float*4)();bridge.bridge_point(self.game+0x29eb20,self.actor if actor is None else actor,code,fraction,out);return list(out)
 
 class RuntimeTests(unittest.TestCase):
     def test_actual_pe_registers_lowercase_zero_ap_aqua_unequipped_and_preserves_native_table(self):
@@ -186,6 +199,43 @@ class RuntimeTests(unittest.TestCase):
     def test_foreign_nonsentinel_key_change_is_rejected_when_restoring(self):
         h=Host();h.frame();h.equip(True);h.frame();p=h.motions[104];offset=struct.unpack_from('<I',h.runtime_originals[104],40)[0]
         w32(p+offset+80,0x7f123456);h.equip(False);before=h.snapshot();h.frame();self.assertEqual(h.snapshot(),before)
+
+    def test_hand_magic_executes_actual_entry_detours_and_both_native_trampolines(self):
+        h=Host(magic=True);h.frame();self.assertIn('AQUA HAND MAGIC READY',bridge.bridge_log().decode())
+        self.assertEqual(h.point(),[100,200,300,1]);self.assertEqual(h.matrix()[12:],[100,200,300,1])
+        h.equip(True);h.frame()
+        for action in list(range(0x36,0x3e))+list(range(0x83,0x8b)):
+            w32(h.actor+0x164,action)
+            self.assertEqual(h.point(),[11,22,33,1]);self.assertEqual(h.matrix()[12:],[11,22,33,1]);self.assertEqual(bridge.bridge_matrix_code(),0x2065)
+        self.assertIn('AQUA HAND MAGIC ORIGIN',bridge.bridge_log().decode());self.assertIn('AQUA HAND MAGIC MATRIX',bridge.bridge_log().decode())
+    def test_hand_magic_excludes_other_actors_attachments_actions_events_and_unloaded_banks(self):
+        h=Host(magic=True);h.frame();h.equip(True);h.frame();w32(h.actor+0x164,0x36)
+        companion=h.buffer(bytes(0x800));w32(companion+0x164,0x36);w32(companion+0x374,1)
+        self.assertEqual(h.point(actor=companion),[100,200,300,1]);self.assertEqual(h.matrix(actor=companion)[12:],[100,200,300,1])
+        for code in [0,0x31,0x2030,0x4065,0x8003]:
+            self.assertEqual(h.point(code=code),[100,200,300,1]);self.assertEqual(bridge.bridge_point_code(),code);self.assertAlmostEqual(bridge.bridge_point_fraction(),.75)
+        for action in [0,1,6,0x3e,0x71,0x72,0xc8,0xd4,0xdc]:
+            w32(h.actor+0x164,action);self.assertEqual(h.point(),[100,200,300,1])
+        w32(h.actor+0x164,0x36)
+        for address in [h.actor+0x440,h.actor+0x444,h.game+0x298c9a0]:
+            w32(address,1);self.assertEqual(h.point(),[100,200,300,1]);self.assertEqual(h.matrix()[12:],[100,200,300,1]);w32(address,0)
+        old=r32(h.actor+0x1d4);w32(h.actor+0x1d4,0);self.assertEqual(h.point(),[100,200,300,1]);w32(h.actor+0x1d4,old)
+        w32(h.actor+0x374,0);self.assertEqual(h.point(),[100,200,300,1])
+    def test_hand_magic_returns_to_native_on_ability_off_and_reenables_on_new_bank(self):
+        h=Host(magic=True);h.frame();h.equip(True);h.frame();w32(h.actor+0x164,0x36);self.assertEqual(h.point(),[11,22,33,1])
+        h.equip(False);w32(h.actor+0x164,0);h.frame();w32(h.actor+0x164,0x36);self.assertEqual(h.point(),[100,200,300,1]);h.assert_all(self,False)
+        w32(h.actor+0x164,0);h.activate_bank(True,True);h.equip(True);h.frame();w32(h.actor+0x164,0x83);self.assertEqual(h.point(),[11,22,33,1]);h.assert_all(self,True)
+    def test_magic_hooks_admit_both_exact_prologues_before_any_code_write(self):
+        for offset in [0x29ea00,0x29eb20]:
+            h=Host(magic=True);C.c_ubyte.from_address(h.game+offset+8).value^=1
+            before_a=C.string_at(h.game+0x29ea00,32);before_b=C.string_at(h.game+0x29eb20,32)
+            h.frame();self.assertEqual(C.string_at(h.game+0x29ea00,32),before_a);self.assertEqual(C.string_at(h.game+0x29eb20,32),before_b)
+            self.assertIn('attachment function bytes differ',bridge.bridge_log().decode());h.equip(True);h.frame();h.assert_all(self,True)
+    def test_magic_allocation_protection_and_user_disable_fail_without_partial_hook_writes(self):
+        for kwargs in [dict(fail_alloc=1),dict(fail_protect=1),dict(hand_magic=0)]:
+            h=Host(magic=True,**kwargs);before_a=C.string_at(h.game+0x29ea00,32);before_b=C.string_at(h.game+0x29eb20,32)
+            h.frame();self.assertEqual(C.string_at(h.game+0x29ea00,32),before_a);self.assertEqual(C.string_at(h.game+0x29eb20,32),before_b)
+            h.equip(True);h.frame();h.assert_all(self,True)
 
 if __name__=='__main__':
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(RuntimeTests))

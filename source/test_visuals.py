@@ -1,7 +1,9 @@
-"""Independent checks of serialized V7 geometry constraints and transitions."""
+"""Independent checks of serialized V8 geometry constraints and transitions."""
 from pathlib import Path
 import json,sys,unittest
 import numpy as np
+from scipy.spatial.transform import Rotation
+from functools import lru_cache
 ROOT=Path(__file__).resolve().parent
 TOOLS=ROOT/'retargeting/tools'
 if not TOOLS.exists():TOOLS=ROOT.parent/'tools'
@@ -15,7 +17,39 @@ records=report['motions'];by_slot={r['normal_slot']:r for r in records}
 original={r['normal_slot']:parse_motion((ROOT/f"fixtures/original_{r['fixture_stem']}.bin").read_bytes()) for r in records}
 converted={r['normal_slot']:parse_motion((ROOT/f"fixtures/aqua_{r['fixture_stem']}.bin").read_bytes()) for r in records}
 
+@lru_cache(maxsize=1)
+def clearance_samples():
+    data=np.load(ROOT/'fixtures/v7_clearance_reference.npz');actual=[]
+    for slot in data['slots']:
+        m=converted[int(slot)]
+        actual.append(np.array([pose(model,m,float(f))[data['joints'],:3,3] for f in np.linspace(0,m.frames-1,21)]))
+    return data['positions'],np.array(actual)
+
+def capsule_overlap(points,pair,radius):
+    a=points[:,:,0,:];d=points[:,:,1,:]-a;total=0.
+    for i in pair:
+        p=points[:,:,i,:];t=np.clip(np.sum((p-a)*d,axis=2)/np.sum(d*d,axis=2),0,1)
+        gap=np.linalg.norm(p-(a+d*t[:,:,None]),axis=2);total+=float(np.maximum(0,radius-gap).sum())
+    return total
+
 class VisualTests(unittest.TestCase):
+    def test_joint_capsule_overlap_reduces_against_frozen_v7_reference(self):
+        before,after=clearance_samples()
+        for pair,radius in [([2,3],17.),([4,5],16.)]:
+            self.assertLess(capsule_overlap(after,pair,radius),capsule_overlap(before,pair,radius))
+    def test_limb_clearance_keeps_wrist_and_ankle_displacements_bounded(self):
+        before,after=clearance_samples()
+        self.assertLess(float(np.max(np.linalg.norm(after[:,:,[2,3],:]-before[:,:,[2,3],:],axis=3))),5.)
+        self.assertLess(float(np.max(np.linalg.norm(after[:,:,[6,7],:]-before[:,:,[6,7],:],axis=3))),2.)
+    def test_hair_chains_keep_model_bind_rotations_through_all_actions(self):
+        expected=Rotation.from_euler('xyz',model.local[155:194,3:6]).as_matrix()
+        for slot,m in converted.items():
+            for f in np.linspace(0,m.frames-1,7):
+                local=model.local.copy()
+                for b,k,v in m.constants:local[b,k-1]=v
+                apply(m.channels,local,float(f))
+                actual=Rotation.from_euler('xyz',local[155:194,3:6]).as_matrix()
+                np.testing.assert_allclose(actual,expected,atol=1e-6,rtol=0,err_msg=(slot,f))
     def test_every_motion_keeps_original_header_length_and_helper_hierarchy(self):
         for slot,m in converted.items():
             o=original[slot];self.assertEqual(len(m.raw),len(o.raw));self.assertEqual(m.raw[:80],o.raw[:80]);self.assertEqual(m.helper_parents,o.helper_parents)

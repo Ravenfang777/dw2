@@ -1,12 +1,11 @@
-title: KH1FM Aqua Animation Test v7
+title: KH1FM Aqua Animation Test v8
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  The 0 AP ability aqua selects corrected Aqua body motions, expanded to
-  idle, movement, jumps, ledges, casting, items, reactions, combos, Guard
-  and Dodge Roll. Unequipping restores the original records. Normal Sora
-  and Olympus; native KH1 combat rules retained. Requires Panacea and
-  Steam Global. Disable older Aqua packages and Nine Styles / Dual Wield.
+  The 0 AP ability aqua selects Aqua motions with restored hair rest shape,
+  bounded limb clearance and experimental right-hand native spell attachments.
+  Includes the 349-clip Aqua inventory. Steam Global / Panacea; disable older
+  Aqua packages and Nine Styles / Dual Wield.
 assets:
 - name: dll/kh1-aqua.dll
   method: copy
