@@ -1,4 +1,4 @@
-LIBRARY kh1-aqua.dll
+LIBRARY kh1-terra.dll
 EXPORTS
   DllMain
   OnInit

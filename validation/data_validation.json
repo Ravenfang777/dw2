@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "motions": 37,
+  "profiles": 11,
+  "headers_counts_and_capacities_unchanged": true,
+  "native_event_and_request_bytes_unchanged": true,
+  "all_changes_inside_existing_body_helper_tables": true,
+  "unique_data_blocks": 546
+}

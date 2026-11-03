@@ -1,12 +1,9 @@
 {
   "passed": true,
   "motions": 37,
-  "profiles": 5,
-  "all_headers_and_motion_sizes_identical": true,
-  "all_changes_inside_existing_body_and_helper_tables": false,
-  "all_changes_inside_existing_body_helper_and_event_key_tables": true,
-  "event_descriptor_counts_pointers_and_payloads_preserved": true,
-  "air_dodge_extra_pose": true,
-  "default_glide_records_unmapped_and_unmodified": true,
-  "unique_data_blocks": 456
+  "profiles": 11,
+  "headers_counts_and_capacities_unchanged": true,
+  "native_event_and_request_bytes_unchanged": true,
+  "all_changes_inside_existing_body_helper_tables": true,
+  "unique_data_blocks": 546
 }

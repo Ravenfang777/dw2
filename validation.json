@@ -1,77 +1,49 @@
 {
-  "version": 21,
-  "offline_checks_passed": true,
-  "game_runtime_tested": false,
-  "abilities": [
-    "aqua",
-    "aqua 1",
-    "aqua 2",
-    "aqua 3",
-    "aqua 4"
-  ],
+  "name": "KH1FM Terra Animation Test v1",
+  "standalone": true,
+  "main_ability": "terra",
+  "numbered_tests": 10,
+  "total_abilities": 11,
   "ability_ids": [
+    116,
     117,
     118,
     119,
     120,
-    121
+    121,
+    122,
+    123,
+    124,
+    125,
+    126
   ],
-  "main_ground_combo": [
+  "AP": 0,
+  "main_ground": [
     "300",
     "301",
-    "366"
+    "303"
   ],
-  "main_air_combo": [
+  "main_air": [
     "305",
-    "407",
-    "353"
+    "306",
+    "307"
   ],
-  "main_idle_skull_roll_right_degrees": 20.0,
-  "jump_height_multiplier": 1.25,
-  "dodge_animation_and_travel_rate": 1.5,
-  "dodge_duration_native_ticks": 26.0,
-  "dodge_distance": 546.0,
-  "dodge_lift": 29.25,
-  "dodge_uses_per_airtime": 1,
-  "dodge_rearm": "landing",
-  "second_pose_hold_rate_multiplier": 2.0,
-  "main_second_source_range": [
-    0,
-    30
-  ],
-  "main_finisher_source_range": [
-    15,
-    47
-  ],
-  "main_second_real_contact_ticks": 6.4,
-  "main_second_real_chain_open_ticks": 24.0,
-  "main_air_chain_windows": {
-    "102": [
-      18,
-      40
-    ],
-    "103": [
-      22,
-      42
-    ]
-  },
-  "guard": "400 forward/reverse source30fps; wider body-centered native capsule radius50;12-tick parry/release grace",
-  "glide": "ordinary Glide replaced by one504 per airtime; native Superglide retained",
-  "binding": "already-applied bank readmits without body writes while moving; failed admission retried every8 frames",
-  "numbered_profiles_preserved_from_v20": true,
-  "numbered_active_records_compared": 148,
-  "native_installed_msets_unchanged": true,
-  "native_headers_counts_sizes_and_travel_preserved": true,
-  "normal_motion_records": 37,
-  "olympus_motion_records": 36,
-  "runtime_pe_tests": 110,
-  "geometry_tests": 29,
-  "dll_sha256": "a0696e0ab2e070bc6713104cb3eca24101bb42021a5d9d8627be37a4c227a998",
-  "keyblade_tip_magic": true,
-  "reaction_animations": "native KH1 Sora; KH2 source still pending",
-  "limitations": [
-    "No live Windows/KH1 playtest or rendered-mesh test.",
-    "Native allocation, clash and movement callbacks are mocked in the PE host; anchor bytes verified against supplied Steam executable.",
-    "Offline memory-query reductions are not game-FPS measurements."
-  ]
+  "source_files_verified": 48,
+  "decoded_source_entries": 149,
+  "unique_source_variants": 137,
+  "fitted_records": 107,
+  "mapped_native_normal_records": 37,
+  "mapped_native_olympus_records": 36,
+  "runtime_pe_tests": 27,
+  "geometry_tests": 13,
+  "native_headers_counts_allocations_events_requests_and_travel_unchanged": true,
+  "no_native_input_or_attack_hooks_added": true,
+  "native_ability_records_preserved": 65,
+  "windows_or_game_executed": false,
+  "dll_sha256": "a574aed652134e7f6d147746cbbdb3ad55a6f3ca7993798cab5adfcd190c7149",
+  "dll_bytes": 3170203,
+  "clean_export_rebuild_pending": false,
+  "clean_export_dll_byte_identical": true,
+  "clean_export_runtime_tests_passed": 27,
+  "clean_export_geometry_tests_passed": 13
 }

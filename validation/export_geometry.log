@@ -1,0 +1,18 @@
+test_all48_original_source_hashes_match (__main__.GeometryTests.test_all48_original_source_hashes_match) ... ok
+test_bone_offsets_lengths_and_scales_never_stretch (__main__.GeometryTests.test_bone_offsets_lengths_and_scales_never_stretch) ... ok
+test_embedded_models_match_the_original_terra_skeleton (__main__.GeometryTests.test_embedded_models_match_the_original_terra_skeleton) ... ok
+test_fit_errors_obey_original_quality_limits (__main__.GeometryTests.test_fit_errors_obey_original_quality_limits) ... ok
+test_fractional_poses_are_finite_and_bounded (__main__.GeometryTests.test_fractional_poses_are_finite_and_bounded) ... ok
+test_hair_shape_uses_native_bind_rotations (__main__.GeometryTests.test_hair_shape_uses_native_bind_rotations) ... ok
+test_looping_body_poses_close_without_resetting_travel (__main__.GeometryTests.test_looping_body_poses_close_without_resetting_travel) ... ok
+test_main_and_ten_profiles_have_exact_record_counts (__main__.GeometryTests.test_main_and_ten_profiles_have_exact_record_counts) ... ok
+test_native_event_descriptors_keys_and_payloads_unchanged (__main__.GeometryTests.test_native_event_descriptors_keys_and_payloads_unchanged) ... ok
+test_native_headers_allocations_and_helpers_unchanged (__main__.GeometryTests.test_native_headers_allocations_and_helpers_unchanged) ... ok
+test_native_travel_helpers_stay_exact (__main__.GeometryTests.test_native_travel_helpers_stay_exact) ... ok
+test_skull150_is_skinned_and_hair151_is_helper (__main__.GeometryTests.test_skull150_is_skinned_and_hair151_is_helper) ... ok
+test_terra_original_named_anatomy_maps_to_sora (__main__.GeometryTests.test_terra_original_named_anatomy_maps_to_sora) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 4.031s
+
+OK

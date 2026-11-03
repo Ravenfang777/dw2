@@ -1,0 +1,13 @@
+Source: Terra_Source_Capture_20261102_215737_3f15ed.zip
+Library ID: libfile_8678b602421c8191b37d0af99e7670b2
+All48 source-file hashes verified.149 decoded entries,136 numeric labels,
+137 source variants. Terra has51 bones; original named anatomical mapping
+is used, not Aqua's54-bone numeric mapping. Both embedded models match the
+loose model's named bind skeleton within float precision.
+
+The standalone gate, capacity fitter, readers and shared Sora bind/wrist/hair/
+clearance calibration derive from the user's Aqua v21 project. Terra motion
+data/mappings and the11 profiles are separate. No Dual Wield DLL/repo changed.
+OpenKH ARC/PAM/PMO format documentation and notices: Apache-2.0; see licenses.
+Project/runtime/retarget code prepared by OpenAI Codex for Raven Fang.
+Original Kingdom Hearts assets remain Disney / Square Enix material.

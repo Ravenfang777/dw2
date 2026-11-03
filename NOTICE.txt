@@ -1,0 +1,4 @@
+Unofficial Terra animation test prepared for Raven Fang with OpenAI Codex.
+Shared runtime/fitter infrastructure derives from the user's Aqua v21 project.
+OpenKH format-reader notices and supplied licenses are retained.
+Original game assets remain Disney/Square Enix material; no ownership is claimed.

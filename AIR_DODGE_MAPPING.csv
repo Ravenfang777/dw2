@@ -1,6 +1,0 @@
-﻿Ability,Clip,Speed,Lift per tick,Duration ticks,Animation rate,Distance,Lift,Uses per airtime,Rearm,Superglide
-aqua,504,21.0,1.125,26.0,1.5,546.0,29.25,1,landing,native retained
-aqua 1,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained
-aqua 2,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained
-aqua 3,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained
-aqua 4,504,14.0,0.75,39.0,1.0,546.0,29.25,1,prior v18 controls,native retained

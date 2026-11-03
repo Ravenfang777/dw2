@@ -1,16 +1,15 @@
-title: KH1FM Aqua Animation Test v21
+title: KH1FM Terra Animation Test v1
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Main Aqua v21: tap504 at1.5x speed with the same distance, once per airtime;
-  native Superglide retained; jump height+25 percent; air305/407/353;
-  shorter301 recovery and366 opening. Numbered tests retained. Original MSETs.
-  Steam Global/Panacea.
+  Standalone Terra main plus10 zero-AP animation test abilities.
+  Main ground300/301/303 and air305/306/307, movement, Guard, slide,
+  item and casting poses. Native controllers/events retained. Steam Global/Panacea.
 assets:
-- name: dll/kh1-aqua.dll
+- name: dll/kh1-terra.dll
   method: copy
   source:
-  - name: dll/kh1-aqua.dll
+  - name: dll/kh1-terra.dll
 - name: xa_ex_0010.mset
   method: copy
   source:

@@ -1,0 +1,21 @@
+TERRA ANIMATION TEST v1 -- PROFILE MAP
+Native KH1 combo/hit logic retained. Numeric labels are original BBS source IDs.
+
+Ability       Ground combo         Air combo
+terra         300 / 301 / 303      305 / 306 / 307
+terra 1       045 / 217 / 218      332 / 357 / 361
+terra 2       362 / 363 / 350      370 / 371 / 372
+terra 3       373 / 315 / 316      317 / 318 / 391
+terra 4       390 / 427 / 392      393 / 428 / 399
+terra 5       411 / 352 / 353      351 / 304 / 308
+terra 6       500 / 501 / 503      510 / 511 / 512
+terra 7       513 / 514 / 507      508 / 517 / 518
+terra 8       519 / 550 / 650      557 / 405 / 616
+terra 9       618 / 619 / 613      602 / 603 / 604
+terra 10      605 / 606 / 617      614 / 615 / 620
+
+Main Guard400; Dodge Roll/Slide009. Native Guard and Dodge Roll abilities must be equipped.
+Movement001..014, ledges020/021; items600/601; generic casts354/355/320.
+Native Glide, Superglide, input, jump height, damage reactions and keyblade-tip magic are unchanged.
+Clip519 has two different original bank variants; terra8 uses p03ex_511.arc (the earlier canonical bank).
+See TERRA_MOVE_INVENTORY.csv for137 unique source variants, frame counts and hashes.

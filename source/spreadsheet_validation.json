@@ -1,6 +1,0 @@
-{
-  "uniqueClips": 349,
-  "assignments": 47,
-  "formulaErrorScan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
-  "sample": "{\"kind\":\"table\",\"sheet\":\"Aqua clips\",\"address\":\"F6:H11\",\"rows\":6,\"cols\":3,\"values\":[[\"Frames\",\"FPS\",\"Duration (s)\"],[60,30,2],[88,30,2.933333333333333],[32,30,1.0666666666666667],[16,30,0.5333333333333333],[13,30,0.43333333333333335]]}"
-}

@@ -1,0 +1,242 @@
+[
+    {
+        "Path":  "arc\\pc\\p03base.arc",
+        "Bytes":  804416,
+        "SHA256":  "EB89A0B1A883D7FE90B112F1EB748D6A56B435C472B2F2E7CD25454B9E928587"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_004.arc",
+        "Bytes":  11472,
+        "SHA256":  "0384CBFC6660A0F079C76B083DB037F4DA8CECDDE27465E09072B1FAD8059E9D"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_009.arc",
+        "Bytes":  42320,
+        "SHA256":  "3CF3BD8CD9AB5D8CF22F75D7C08DC063DB5D449460C92299925A07833BD86EDF"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_101.arc",
+        "Bytes":  16032,
+        "SHA256":  "38AC408E47DF02A2AB4679F6AA042C5C42B35530B7A8602C996AE4139FA3E22B"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_102.arc",
+        "Bytes":  17824,
+        "SHA256":  "C53FF649F117E668C665E182E5518E13C071E5A1E17D2BDA7C9EE8762272242E"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_105.arc",
+        "Bytes":  11072,
+        "SHA256":  "0CAF665056492BF43C3950CE1E4CB9E908796476521817CCB093A23452BF758C"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_108.arc",
+        "Bytes":  32160,
+        "SHA256":  "48AC14C0E04F4D86E9BCB28453687B229DEF28AE744979F10C791F85F937F5CB"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_111.arc",
+        "Bytes":  30144,
+        "SHA256":  "6C7EC31C45DB5B2E45E2FB72C085E57F027D5A428C9E259F9ECE113A66B003AC"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_116.arc",
+        "Bytes":  13808,
+        "SHA256":  "FBC17B3D6C2F71FF2F3EAC6C9C27797FEB4229A2E11994DD4DE33FF5769349E7"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_120.arc",
+        "Bytes":  39472,
+        "SHA256":  "C33EEF4AC400F3ADF0C2682CEEA2C77CE029DDEF11AC129A07B3701264448A1E"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_133.arc",
+        "Bytes":  30832,
+        "SHA256":  "E499612425C305B837A6B55CA603BA5263FB591F6967FB0DE7368207E6E59658"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_137.arc",
+        "Bytes":  21952,
+        "SHA256":  "89EA97D74540B5400228216D2A030904253BF1657D918CE03DA67BD21D24AAEE"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_140.arc",
+        "Bytes":  11968,
+        "SHA256":  "8F20AAACB1FFBFB5CF9FEA38EF47C8202B9C3BF989A4B922960E7FF961262B4F"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_150.arc",
+        "Bytes":  14032,
+        "SHA256":  "A881A7DB8A055A7EC3A3C44F9D3BFC3A319733FEE33BE4FC2147906D3C1FDA50"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_151.arc",
+        "Bytes":  27216,
+        "SHA256":  "44D1DE623DE60BDA2C968C7E7782E28946BFA2F76FAE7A90A0259C64838135D7"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_152.arc",
+        "Bytes":  27744,
+        "SHA256":  "B2CFA437D590F97DFCC66E36B308F16422B78EC9501134DD3D3B028D633F4238"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_153.arc",
+        "Bytes":  16816,
+        "SHA256":  "F2238C56EF632DF27088085D9BD89912839D0C2E6BE5CE585F97588CC33FDB68"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_154.arc",
+        "Bytes":  34448,
+        "SHA256":  "A2ACBAC80A65A4DC6CFAC68D1A178C8A970CC208491C5426C216DFB26B54D06B"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_155.arc",
+        "Bytes":  28720,
+        "SHA256":  "3FB1DC118CB1CA7D07C6DC9D683F3FFDC22ADDBF70B21FB0A66985B75D7129C7"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_156.arc",
+        "Bytes":  21664,
+        "SHA256":  "01D0111A9C36F587DEFE84C6E841750EF8167C91376F0284F3262EE8ADA01907"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_157.arc",
+        "Bytes":  20288,
+        "SHA256":  "0E25A326EFC660F6EC4D5841E8EEE1B9CDFFC200265B684E4950357B96762E38"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_200.arc",
+        "Bytes":  12800,
+        "SHA256":  "81E84D08E2F4327AB7FF3E995B02FF19E478D8AD8FF38E23B728FBE002BAFF22"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_204.arc",
+        "Bytes":  29328,
+        "SHA256":  "A1C8F3743BF9003D15BFD968610D8047B568A68FAFA0060578517A0DCD0E7ADA"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_205.arc",
+        "Bytes":  20064,
+        "SHA256":  "5B4CB067349CAE53059E5034313C06E4454F4932E4D385A961D486898BA9CB99"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_206.arc",
+        "Bytes":  22032,
+        "SHA256":  "4B35C3141D3EADA7A354BADE1BD73E5A3FF9CDD3771B49489907DC5B7E0C5291"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_301.arc",
+        "Bytes":  24912,
+        "SHA256":  "48D6A09A222391E2CA1E723010A7494E7393EB09C1AD4631FBDF0B0C150C5D7B"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_313.arc",
+        "Bytes":  14144,
+        "SHA256":  "CD97E8C1F48D24B1FE4E21CC49C314F48459DB152B5C2A452A986DDC7C93AEC4"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_346.arc",
+        "Bytes":  32592,
+        "SHA256":  "8DFAFDE016C099FF08D502D545A5B8F75C3405CF36DF412B5F7E3E1BC21C6CEB"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_352.arc",
+        "Bytes":  26768,
+        "SHA256":  "C43BAD8EA79D1338BAEEAAF635A063D9BA92214A694081A4678B86AEF022030F"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_501.arc",
+        "Bytes":  71536,
+        "SHA256":  "A759A8176A349D7387786D5E3E4375A66C51A1A8072CEC9587F375A55891D0E2"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_506.arc",
+        "Bytes":  27472,
+        "SHA256":  "B40662C96166EA7CA36F5064D955AAA76383E1B33990DDDDF9C81631CDB9E2A9"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_511.arc",
+        "Bytes":  34256,
+        "SHA256":  "19654FB973DBE4A4E764293AA47DC6F49E6E9ED26898C657A6EFC01DC68DECC5"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_605.arc",
+        "Bytes":  27856,
+        "SHA256":  "2E7889E1619A6A8A02AD0440CBF584743899B86149EBF132A0E181A8C13BEE06"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_609.arc",
+        "Bytes":  25408,
+        "SHA256":  "B42FE5C0EBB057A86D9C8763570A3FCC425B041418210B29253FA775E1051675"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_612.arc",
+        "Bytes":  8704,
+        "SHA256":  "FA91E4F625BFA5CE616D91533FA4ACDDB12C35034CFCC0B0FE4E606C538C20C7"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_621.arc",
+        "Bytes":  59248,
+        "SHA256":  "32FAB74D99A6D0E0809A2DF02CA9452D43BBF70114564087B7008433B2C011A3"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_622.arc",
+        "Bytes":  22112,
+        "SHA256":  "50C9ED6F12A87D5FC0D668762635D521E4C627319CAC085C3C862AF65082F2E5"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_624.arc",
+        "Bytes":  22752,
+        "SHA256":  "8C12EEB935B942F83D9C2DF45F94E31AF83E257E727FA5FAAE88591E026D65A5"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_626.arc",
+        "Bytes":  6944,
+        "SHA256":  "8808CABA424DB8597764E38BC691939FFC1BA2A580933A4C17FE508E041728DA"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_628.arc",
+        "Bytes":  13952,
+        "SHA256":  "E1DAAB2D42BDF7C6D9298E05FBAA258F137F97DD441756AF76D27275A4DFCE9F"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_629.arc",
+        "Bytes":  52032,
+        "SHA256":  "144F503AD5D13B144FFDB32BCC9D787BC2193AC9A0B3CBAE30C2ACDB6A223DBB"
+    },
+    {
+        "Path":  "arc\\pc\\p03ex_710.arc",
+        "Bytes":  158528,
+        "SHA256":  "F55924974479D9F77AAA5ADE261E4A1615B47E9FF3DC89FAFC661A7B6103C6E1"
+    },
+    {
+        "Path":  "arc\\pc\\xaa007te.arc",
+        "Bytes":  31280,
+        "SHA256":  "4F5196081525363949795B1BC7BC55DAB4F20F0C1E4CCDFCEA9FE0EA4F44366A"
+    },
+    {
+        "Path":  "arc\\pc_terra\\p03ex_711.arc",
+        "Bytes":  8560,
+        "SHA256":  "163F61E55C9B47D109D1E69F28DACAB31ED8703819A698DC53A16D4F5E3E0FB1"
+    },
+    {
+        "Path":  "arc\\pc_terra\\xaa002te.arc",
+        "Bytes":  48656,
+        "SHA256":  "F2AD2AD774A164CADAD1DDF4A681441ADDBDD509EDF77489DB35C3AE066F7019"
+    },
+    {
+        "Path":  "arc\\pc_terra\\xaa003te.arc",
+        "Bytes":  29392,
+        "SHA256":  "8E0624AD4A6CFA0F7901E303E3628CE323005F8ECAD7DD87FED137F230D2FCB4"
+    },
+    {
+        "Path":  "arc\\pc_terra\\xaa005te.arc",
+        "Bytes":  12464,
+        "SHA256":  "4EA34ADA13BF7AA600C9D9C7CEE6383756BB293E215C86FEFBCD3252CB355441"
+    },
+    {
+        "Path":  "chara\\pc\\p03ex\\00\\p03ex00.pmo",
+        "Bytes":  147632,
+        "SHA256":  "6802BE70CEEB4384114A2E5B6EC27D986CE20D1F5A0002A83235EA53FC53833E"
+    }
+]

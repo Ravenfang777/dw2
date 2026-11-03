@@ -1,0 +1,41 @@
+{
+    "Purpose":  "Terra source file locator and verified collector",
+    "DirectoriesScanned":  3241,
+    "CandidateFilesLocated":  54,
+    "PossiblePackedArchives":  [
+
+                               ],
+    "MainAbility":  "terra",
+    "TestAbilityCount":  10,
+    "TotalAbilityCount":  11,
+    "FilesCopied":  48,
+    "BytesCopied":  2265824,
+    "AnimationHeaderEntries":  149,
+    "ModelEntries":  3,
+    "HasMainBaseBank":  true,
+    "HasTerraModel":  true,
+    "ReadyForRetargetInspection":  true,
+    "MissingExpectedBanks":  [
+                                 "data/bbs/arc/pc/p43base.arc",
+                                 "data/bbs/arc/pc/xcs01te.arc",
+                                 "data/bbs/arc/pc/xcs04te.arc",
+                                 "data/bbs/arc/pc/xcs05te.arc",
+                                 "data/bbs/arc/pc/xcs06te.arc",
+                                 "data/bbs/arc/pc/xcs08te.arc",
+                                 "data/bbs/arc/pc/xcs10te.arc",
+                                 "data/bbs/arc/pc/xcs12te.arc",
+                                 "data/bbs/arc/pc/xcs13te.arc",
+                                 "data/bbs/arc/pc/xcs15te.arc",
+                                 "data/bbs/arc/pc/xdc104te.arc",
+                                 "data/bbs/arc/pc/xdc110te.arc",
+                                 "data/bbs/arc/pc/xdc119te.arc",
+                                 "data/bbs/arc/pc/xdc241te.arc",
+                                 "data/bbs/arc/pc/xdc257te.arc",
+                                 "data/bbs/arc/pc/xdc258te.arc",
+                                 "data/bbs/arc/pc/xdl27te.arc",
+                                 "data/bbs/arc/pc/xsl16te.arc"
+                             ],
+    "NotesCount":  6,
+    "NoGameOrSaveFilesChanged":  true,
+    "AnimationChannelDataNotDecoded":  true
+}

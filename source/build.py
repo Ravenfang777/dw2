@@ -70,11 +70,11 @@ def import_object(path):
     symbols=[]
     def sym(name,section,value=0,storage=2):
         symbols.append((name,value,section,storage));return len(symbols)-1
-    ilt=sym('aqua_ilt',2);iat=sym('aqua_iat',3);dll=sym('aqua_kernel32_name',4)
+    ilt=sym('terra_ilt',2);iat=sym('terra_iat',3);dll=sym('terra_kernel32_name',4)
     names[0][2].extend([(0,ilt,3),(12,dll,3),(16,iat,3)])
     for i,name in enumerate(IMPORTS):
         if len(names[3][1])%2:names[3][1].append(0)
-        hint=sym('aqua_hint_'+name,4,len(names[3][1]),3)
+        hint=sym('terra_hint_'+name,4,len(names[3][1]),3)
         names[3][1].extend(b'\0\0'+name.encode()+b'\0')
         sym('k'+name,3,i*8)
         names[1][2].append((i*8,hint,3));names[2][2].append((i*8,hint,3))
@@ -104,11 +104,11 @@ def run(argv):
 
 def build():
     import_object(ROOT/'imports.obj')
-    (ROOT/'exports.def').write_text('LIBRARY kh1-aqua.dll\nEXPORTS\n  DllMain\n  OnInit\n  OnFrame\n')
-    run(['gcc','-std=c11','-O2','-m64','-mabi=ms','-maccumulate-outgoing-args','-mno-red-zone','-fPIC','-fvisibility=hidden','-fno-strict-aliasing','-fno-stack-protector','-fno-builtin','-fno-tree-loop-distribute-patterns','-fno-asynchronous-unwind-tables','-fno-unwind-tables','-ffreestanding','-Wall','-Wextra','-Werror','-Wno-misleading-indentation','-c','aqua.c','-o','aqua.elf.o'])
-    elf_to_coff(ROOT/'aqua.elf.o',ROOT/'aqua.obj')
-    run(['ld','-mi386pep','--dll','--entry','DllMain','--image-base','0x180000000','--dynamicbase','--nxcompat','--enable-reloc-section','--no-insert-timestamp','--subsystem','windows','-o','kh1-aqua.dll','aqua.obj','imports.obj','exports.def'])
-    dll=(ROOT/'kh1-aqua.dll').read_bytes()
-    print(json.dumps({'dll':str(ROOT/'kh1-aqua.dll'),'bytes':len(dll),'sha256':hashlib.sha256(dll).hexdigest()},indent=2))
+    (ROOT/'exports.def').write_text('LIBRARY kh1-terra.dll\nEXPORTS\n  DllMain\n  OnInit\n  OnFrame\n')
+    run(['gcc','-std=c11','-O2','-m64','-mabi=ms','-maccumulate-outgoing-args','-mno-red-zone','-fPIC','-fvisibility=hidden','-fno-strict-aliasing','-fno-stack-protector','-fno-builtin','-fno-tree-loop-distribute-patterns','-fno-asynchronous-unwind-tables','-fno-unwind-tables','-ffreestanding','-Wall','-Wextra','-Werror','-Wno-misleading-indentation','-c','terra.c','-o','terra.elf.o'])
+    elf_to_coff(ROOT/'terra.elf.o',ROOT/'terra.obj')
+    run(['ld','-mi386pep','--dll','--entry','DllMain','--image-base','0x180000000','--dynamicbase','--nxcompat','--enable-reloc-section','--no-insert-timestamp','--subsystem','windows','-o','kh1-terra.dll','terra.obj','imports.obj','exports.def'])
+    dll=(ROOT/'kh1-terra.dll').read_bytes()
+    print(json.dumps({'dll':str(ROOT/'kh1-terra.dll'),'bytes':len(dll),'sha256':hashlib.sha256(dll).hexdigest()},indent=2))
 
 if __name__=='__main__':build()

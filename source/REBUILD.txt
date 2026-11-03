@@ -1,0 +1,16 @@
+TERRA v1 REBUILD
+Linux build: run from this source directory with Python3.12, GCC and GNU binutils:
+  python generate_data.py
+  python build.py
+  python test_runtime.py
+The linker needs i386pep support. No Windows SDK is required. Runtime tests
+execute the actual PE under a Linux Win64 ABI/API mock, not the live game.
+
+Geometry and a complete retarget require requirements.txt:
+  python test_geometry.py
+  OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python tools/build_terra.py --workers 4 --force
+Then regenerate/rebuild. --force clears derived sampling caches and recomputes
+all107 fits from the original Terra banks. Caches are excluded from delivery.
+Target Sora MDLS and normal/Olympus MSETs are included as rebuild inputs.
+No original game executable is included. Original game assets retain their
+owners' rights; they are not freely licensed project code.

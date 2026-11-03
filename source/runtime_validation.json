@@ -1,9 +1,9 @@
 {
   "passed": true,
-  "tests": 110,
+  "tests": 27,
   "failures": 0,
   "errors": 0,
-  "executed_actual_pe_dll": true,
+  "executed_actual_terra_pe_dll": true,
   "win64_abi_and_imports_mocked": true,
   "windows_or_game_executed": false
 }

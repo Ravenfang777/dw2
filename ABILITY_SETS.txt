@@ -1,6 +1,0 @@
-MAIN aqua (117,0AP): Ground300/301/366; Air305/407/353; Dodge504 once per airtime at1.5x rate; native Superglide; jump height1.25
-Aqua1 (118): Ground371/365/366 Air218/332/393
-Aqua2 (119): Ground352/353/407 Air351/304/303
-Aqua3 (120): Ground300/301/302 Air616/407/351
-Aqua4 (121): Ground510/511/512 Air504/514/399
-Numbered tests retain v20/v18.

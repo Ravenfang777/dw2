@@ -1,90 +1,67 @@
-KH1FM AQUA ANIMATION TEST v21
+KH1FM TERRA ANIMATION TEST v1 -- STANDALONE
 Steam Global / OpenKH Panacea
 
 INSTALL
-Fully close KH1. Disable v20/older Aqua tests and conflicting Nine Styles /
-Dual Wield or combat builds. Install this ZIP in OpenKH, enable it, then Build
-and Run. Equip MAIN aqua while idle. The log banner must say v21.
-CHECK_AQUA_V21.cmd checks the compiled installation hashes if needed.
+1. Close KH1. Disable Dual Wield/Nine Styles, standalone Aqua, older moveset
+   DLLs and the full KH2 Combat overhaul. Enable this separate Terra test.
+2. Import this ZIP into OpenKH Mods Manager, then Build and Run.
+3. Load a save, stand idle and equip terra. Missing entries start unequipped.
+   Ten numbered test entries are terra 1 through terra 10; all cost0 AP.
+4. Confirm TERRA ANIMATION TEST v1 in kh1-terra.log beside the game EXE.
+   Restart for DLL changes; F1 cannot reload a DLL.
 
-MAIN AQUA CHANGES
-AERIAL DODGE
-Tap Circle airborne after releasing it following takeoff.504 and its movement
-run at1.5x the previous rate:26 native ticks instead of39 (two-thirds the time).
-The complete unobstructed burst still requests546 horizontal units and29.25
-units of lift. Direction stays locked to the tap's movement direction, with
-the prior neutral momentum/facing fallback. Collision, ceilings, landing and
-native interruptions still apply. Native fall handoff speed matches v20 to
-avoid adding extra drift after the faster burst.
+MAIN PROFILE
+Ground300 ->301 ->303; air305 ->306 ->307.
+Both native second-ground variants use301.
+Includes Terra idle/combat idle, walk/run, jump/fall/landing, ledges,
+Guard400, Dodge Roll/Slide009, items600/601 and casting354/355/320.
+Terra's original51-bone skeleton is mapped by original bone names to Sora's
+293-bone model. Limb lengths/scales, skinned skull150 and hair shape retain
+native Sora anatomy. Sora's outfit, stats and equipped keyblade remain.
 
-ONE DODGE PER AIRTIME. Completing504, releasing/repressing Circle, changing
-Aqua abilities, recovering animation bindings or using Superglide do not grant
-another dodge. Land to rearm. A new actor identity starts a new budget.
+TEN TESTS
+Each numbered ability selects three ground and three air source animations.
+TERRA_ANIMATION_MAP.txt lists all11 profiles. TERRA_MOVE_INVENTORY.csv lists
+137 source variants with frame counts, FPS, banks and hashes. Numeric labels
+are original BBS source IDs; official command names remain unverified.
+Clip519 has two original variants; terra8 uses p03ex_511.arc.
 
-SUPERGLIDE
-Native Superglide is usable again with its own normal button/ability checks.
-Only ordinary Glide is replaced by tap504. A successful native Superglide can
-interrupt504; a rejected Superglide does not cancel the dodge. It does not
-reset the dodge's spent use. Native Glide/Superglide animation records remain
-original. air_dodge=0 restores native air controls; the jump boost remains.
-The1.5x dodge rate requires the verified actor-motion hook. If that hook cannot
-be admitted, the controller logs and keeps the old matched movement/visual
-rate rather than accelerating movement alone.
+CONTROLS AND TIMING
+KH1 retains input, native combo progression/hit/chain timing, collision,
+Guard defense, magic/item logic and keyblade-tip effects. Equip native Guard
+and Dodge Roll to use those actions. Native attack abilities such as
+Slapshot/Vortex retain priority; unequip them to isolate the basic combos.
+Combo Plus can extend the native chain. Test poses do not add their BBS
+commands, extra hit events, projectiles or invulnerability.
+Glide, Superglide, jump height and damage/knockback reactions remain original.
+Aqua's custom aerial dodge, jump boost and all-angle Barrier are not imported.
+Finish the current action and stand idle before switching/unequipping.
 
-JUMP HEIGHT
-Normal and High Jump receive25 percent more native launch height in MAIN.
-The native launch runs first. Only its private arc height and ascent duration
-are scaled (1.25 and sqrt1.25), leaving launch origin, global gravity, stats,
-actor positions, native collision and ceiling handling untouched.
+ABILITY STORAGE
+Testing IDs116..126 reuse the private prototype range, including older
+Aqua/Style entries. First setup leaves reused custom tests unequipped.
+The65 native ability records, AP and native equipped flags are untouched.
+No native ability is evicted if the48-byte list lacks room. If the log says
+TERRA ABILITY SLOTS FULL, remove obsolete test entries using their original
+mod's uninstall mode before retrying. Do not edit saves manually.
 
-COMBOS
-Ground remains300 ->301 ->366.
--301 retains source0..30, trimming7 more end frames compared with v20.
-- Both second-attack variants enable the finisher at24 real native ticks
-  instead of30. Their completed-pose recovery advances twice as fast.
--366 retains source15..47, removing3 more opening frames compared with v20.
-  Its native hit/effect timing and playback duration follow that trim.
-- First ground attack and its contact timing remain unchanged.
-Air is now305 ->407 ->353. Native contact windows follow the swapped poses.
-The first/second follow-up windows run18..40 and22..42 native clock units.
-Native event counts, payloads, pointers, headers and allocation sizes remain.
-
-RETAINED
-Main Guard400 full forward/reverse at source30fps, wider native body capsule
-and12-tick grace; combat-idle skull tilt right20 degrees; aerial Fire/Blizzard
-right-facing head adjustment; swapped run loops; keyblade-tip magic; native
-Blizzard spell logic; original KH1 Sora damage reactions. KH2 reaction source
-assets are still pending. Installed Sora/Olympus MSETs stay original.
-
-NUMBERED TEST ABILITIES RETAIN v20/v18
- aqua1 ground371365366 / air218332393
- aqua2 ground352353407 / air351304303
- aqua3 ground300301302 / air616407351
- aqua4 ground510511512 / air504514399
-All148 active numbered records match v20 byte-for-byte. Numbered jump heights,
-dodge rate/controls, casts and Guard behavior remain as before. All five
-abilities retain0AP and IDs117..121. Switch profiles while idle.
-
-IN-GAME TEST
-1. Compare jump and High Jump height with main equipped/unequipped.
-2. Tap airborne Circle and check faster504 with the same travel distance.
-3. After504, release and tap again: no second dodge until landing. Land and
-   repeat. Check that attacks, ability toggles and Superglide do not rearm it.
-4. Use native Superglide with its ability equipped, including after504.
-5. Check ground300/301/366 flow and air305/407/353 during combat.
-Return kh1-aqua.log and a short clip if a visual, timing or movement issue
-remains. The wider Guard and previous poses are unchanged in this test.
+FIRST PLAYTEST
+Check idle/run, jump/fall, ground/air combos, Guard and Dodge Roll. Try
+numbered entries, then unequip to verify original Sora restoration. Repeat
+with normal/Olympus saves and a room change. Send kh1-terra.log and a short
+video for visual or timing issues. Some test clips are spells or movement.
 
 VALIDATION
-110 actual-PE runtime tests and29 serialized-pose tests pass offline. Jump
-checks execute the supplied game's actual launch and arc code in the mock
-host. Faster-dodge distance is checked with both callback orders and several
-timesteps. Native hook anchors match the supplied Steam executable. No live
-Windows/KH1 playtest or rendered-mesh check was performed. Native collision,
-allocation and input calls are mocked; in-game feel still needs testing.
-Source, fixtures, reports and REBUILD_V21.txt are included in source/.
+107 fitted records pass existing quality limits over23,127 fractional-frame
+samples.27 actual-PE runtime checks plus13 geometry checks pass, including
+all11 profiles/both banks, unchanged native headers/events/travel, restoration,
+full ability lists, stale-pointer rejection and conflicting DLL admission.
+These are offline checks; actual Windows loading and gameplay are untested.
+Original Terra sources were used; no Aqua pose is substituted.
 
-ROLLBACK / REMOVE
-Close KH1, disable v21, enable the previous package and rebuild to roll back.
-For complete ability removal, use REMOVE_AQUA_kh1-aqua.ini as kh1-aqua.ini next
-to the game EXE, load a save and save again, then remove the config/mod.
+UNINSTALL / RETURN TO OTHER MODS
+Create kh1-terra.ini beside the game EXE with:
+[terra]
+remove_terra=1
+Launch/load, stand idle and save, then close the game, disable Terra and Build
+again. Only custom IDs116..126 are removed; native abilities are retained.
