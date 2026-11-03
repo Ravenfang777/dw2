@@ -21,6 +21,10 @@ extern uptr (ABI *kCreateFileW)(const w16*,u32,u32,void*,u32,u32,uptr) HIDDEN;
 extern int (ABI *kWriteFile)(uptr,const void*,u32,u32*,void*) HIDDEN;
 extern int (ABI *kCloseHandle)(uptr) HIDDEN;
 extern u32 (ABI *kGetPrivateProfileIntW)(const w16*,const w16*,int,const w16*) HIDDEN;
+extern void* (ABI *kVirtualAlloc)(void*,usize,u32,u32) HIDDEN;
+extern int (ABI *kVirtualFree)(void*,usize,u32) HIDDEN;
+extern int (ABI *kVirtualProtect)(void*,usize,u32,u32*) HIDDEN;
+extern int (ABI *kFlushInstructionCache)(uptr,const void*,usize) HIDDEN;
 
 #include "terra_data.h"
 #define TERRA_ID 116u
@@ -46,7 +50,7 @@ static u32 name_handle[TERRA_ABILITIES],help_handle[TERRA_ABILITIES];
 static uptr choice_save;
 static u32 previous_equipped_mask;
 static const char *profile_names[TERRA_ABILITIES]={"terra","terra 1","terra 2","terra 3","terra 4","terra 5","terra 6","terra 7","terra 8","terra 9","terra 10"};
-static const char *profile_help[TERRA_ABILITIES]={"Terra Ground 300 301 303 Air 305 306 307","Terra Ground 045 217 218 Air 332 357 361","Terra Ground 362 363 350 Air 370 371 372","Terra Ground 373 315 316 Air 317 318 391","Terra Ground 390 427 392 Air 393 428 399","Terra Ground 411 352 353 Air 351 304 308","Terra Ground 500 501 503 Air 510 511 512","Terra Ground 513 514 507 Air 508 517 518","Terra Ground 519 550 650 Air 557 405 616","Terra Ground 618 619 613 Air 602 603 604","Terra Ground 605 606 617 Air 614 615 620"};
+static const char *profile_help[TERRA_ABILITIES]={"Terra Ground 300 411 332 Air 305 306 353","Terra Ground 045 217 218 Air 332 357 361","Terra Ground 362 363 350 Air 370 371 372","Terra Ground 373 315 316 Air 317 318 391","Terra Ground 390 427 392 Air 393 428 399","Terra Ground 411 352 353 Air 351 304 308","Terra Ground 500 501 503 Air 510 511 512","Terra Ground 513 514 507 Air 508 517 518","Terra Ground 519 550 650 Air 557 405 616","Terra Ground 618 619 613 Air 602 603 604","Terra Ground 605 606 617 Air 614 615 620"};
 static int table_reported;
 static w16 log_path[1024],ini_path[1024];
 /* A real DIR64 relocation keeps the PE image independently relocatable. */
@@ -56,6 +60,12 @@ static Binding cached[TERRA_MOTION_COUNT];
 static uptr cache_actor,cache_array,reported_wait_array,cache_low,cache_high;
 static u32 cache_array_bytes,cache_count;
 static int cache_choice=-1,pending_reported,last_choice=-1;
+static int action_choice,slide_active;
+static u32 action_variant_mask;
+static void actions_install(void);
+static void actions_prepare(uptr actor,int choice);
+static void actions_tick(uptr actor);
+static void actions_forget(void);
 static u32 frame_serial,admission_due,admission_scans,rebind_notes,suspend_notes;
 static int admission_waiting_idle;
 static uptr admission_actor,admission_array;static int admission_choice=-1;
@@ -147,6 +157,7 @@ static const u8 *part_data(const TerraPart *part,int choice){return choice>0?par
 static int part_known(uptr p,const TerraPart *part){
     if(equal((void*)p,part->before,part->size))return 1;
     for(unsigned i=0;i<TERRA_PROFILE_COUNT;i++)if(equal((void*)p,part->after[i],part->size))return 1;
+    if(part->variant&&equal((void*)p,part->variant,part->size))return 1;
     return 0;
 }
 static int ensure_table(void){
@@ -279,7 +290,8 @@ static int valid_motion(uptr motion,const TerraMotion *d,Binding *out,int *failu
    afterwards; an active attack, jump, cast or reaction completes first. */
 static int test_action(u32 action){return action!=0;}
 static const u8 *active_part(const TerraMotion*d,const TerraPart*p,int choice){
-    (void)d;return part_data(p,choice);
+    u32 bit=d->normal_slot==10u?1u:d->normal_slot==57u?2u:d->normal_slot==82u?4u:0u;
+    return choice==1&&(action_variant_mask&bit)&&p->variant?p->variant:part_data(p,choice);
 }
 static int fast_binding(uptr actor,uptr array,int choice){
     if(cache_actor!=actor||cache_array!=array||cache_choice!=choice||!cache_array_bytes||!memory(array,cache_array_bytes,0))return 0;
@@ -354,12 +366,12 @@ static void motion_gate(uptr actor,int choice){
         for(unsigned j=0;j<terra_motions[i].part_count;j++)if(again.parts[j]!=found[i].parts[j])return;
     }
     for(unsigned i=0;!already_applied&&i<TERRA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<terra_motions[i].part_count;j++){
-        const TerraPart *part=terra_motions[i].parts+j;const u8 *desired=part_data(part,choice);
+        const TerraPart *part=terra_motions[i].parts+j;const u8 *desired=active_part(terra_motions+i,part,choice);
         if(!equal((void*)found[i].parts[j],desired,part->size))copy((void*)found[i].parts[j],desired,part->size);
     }
     for(unsigned i=0;i<TERRA_MOTION_COUNT;i++)if(found[i].motion)for(unsigned j=0;j<terra_motions[i].part_count;j++){
         const TerraPart *part=terra_motions[i].parts+j;
-        if(!equal((void*)found[i].parts[j],already_applied?active_part(terra_motions+i,part,choice):part_data(part,choice),part->size)){clear_binding();return;}
+        if(!equal((void*)found[i].parts[j],active_part(terra_motions+i,part,choice),part->size)){clear_binding();return;}
     }
     cache_low=(uptr)-1;cache_high=0;cache_array_bytes=cache_count=0;
     for(unsigned i=0;i<TERRA_MOTION_COUNT;i++){
@@ -381,6 +393,8 @@ static void motion_gate(uptr actor,int choice){
     log_number("TERRA active profile 0 native 1 main 2..11 tests=",(uptr)choice);
 }
 
+#include "terra_actions.h"
+
 EXPORT void ABI OnInit(const w16 *mod_path){
     (void)mod_path;
     path_for(log_path,"kh1-terra.log");path_for(ini_path,"kh1-terra.ini");
@@ -390,8 +404,8 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
     requested_page=kGetPrivateProfileIntW(section,page_key,1,ini_path);if(requested_page<1u||requested_page>10u)requested_page=1u;
     profile_override=kGetPrivateProfileIntW(section,override_key,0,ini_path);if(profile_override>TERRA_ABILITIES)profile_override=0u;
-    log_text("KH1FM TERRA ANIMATION TEST v2 loaded: main-first adaptive ability pages; standalone main terra plus10 numbered tests; main ground300/301/303 air305/306/307; Terra51-bone source mapped by original bone names; skinned skull150 and native hair/limb lengths; no Aqua poses");
-    log_text("TERRA NATIVE LOGIC: original Sora/Olympus MSETs on disk; body tables only; native combo/contact/Guard/magic/item/input/travel unchanged; original Glide, Superglide and damage reactions");
+    log_text("KH1FM TERRA ANIMATION TEST v3 loaded: main ground300/411/332 air305/306/353; ground Fire/Blizzard/Gravity315 air316; main tap Superglide uses slide009; ten numbered tests retained");
+    log_text("TERRA NATIVE LOGIC: original Sora/Olympus MSETs on disk; original combo/contact/Guard/spell events and keyblade-tip magic retained; ordinary Glide and damage reactions unchanged; main-only finite Superglide replacement");
     if(remove_mode)log_text("TERRA UNINSTALL MODE: only custom ids116..126 removed from loaded ability list");
     else if(profile_override){log_number("TERRA CONFIG PROFILE OVERRIDE=",profile_override);log_text("TERRA CONFIG: override replaces the ability gate for this run; set profile_override=0 to return to ability selection");}
 }
@@ -407,21 +421,25 @@ EXPORT void ABI OnFrame(void){
     if(!ready)return;
     frame_serial++;
     if(kGetModuleHandleA("kh1-dual-wield.dll")||kGetModuleHandleA("kh1-aqua.dll")||kGetModuleHandleA("kh1-kh2.dll")){
+        actions_forget();
         if(!conflict_reported){log_text("TERRA SUSPENDED: disable Dual Wield/Nine Styles, standalone Aqua and the full KH2 Combat DLL for this separate test");conflict_reported=1;}
         return;
     }
+    actions_install();
     uptr actor=(uptr)r64(base+SORA_RVA);
     if(!memory(actor,0x378,0)||actor!=cache_actor){
         if(cache_actor&&actor!=cache_actor){if(suspend_notes++<12u)log_text("TERRA BINDING RESET: actor identity changed");clear_binding();}
-        if(!memory(actor,0x378,0)){clear_binding();return;}
+        if(!memory(actor,0x378,0)){actions_forget();clear_binding();return;}
     }
-    if((r32(actor+0x374)&3u)!=1u){cache_choice=-1;return;}
-    uptr save=save_block();if(!save){cache_choice=-1;return;}
+    if((r32(actor+0x374)&3u)!=1u){actions_forget();cache_choice=-1;return;}
+    uptr save=save_block();if(!save){actions_forget();cache_choice=-1;return;}
     int choice=0;
     if(remove_mode){remove_ability(save);choice=0;}
-    else {if(!ensure_table())return;choice=choice_and_learn(save,actor);if(choice<0){if(!full_reported){log_text("TERRA WAITING: stand idle for stable ability setup; existing entries retained");full_reported=1;}return;}full_reported=0;if(profile_override)choice=(int)profile_override;}
+    else {if(!ensure_table()){actions_forget();return;}choice=choice_and_learn(save,actor);if(choice<0){actions_forget();if(!full_reported){log_text("TERRA WAITING: stand idle for stable ability setup; existing entries retained");full_reported=1;}return;}full_reported=0;if(profile_override)choice=(int)profile_override;}
+    actions_prepare(actor,choice);
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"TERRA UNEQUIPPED");last_choice=choice;}
     motion_gate(actor,choice);
+    actions_tick(actor);
     u32 action=r32(actor+0x164)&0xfffu;
     if(choice&&action!=last_action&&action_logs<192){log_number("TERRA native action request=",action);action_logs++;}
     last_action=action;

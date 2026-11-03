@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "changed_main_body_slots": [
+    54,
+    55,
+    79,
+    80,
+    99,
+    100,
+    101,
+    104
+  ],
+  "numbered_test_payloads_unchanged": 70,
+  "numbered_v2_cast_payloads_preserved": 4,
+  "main_dynamic_body_variants": 3,
+  "fitted_records": 114,
+  "runtime_tests": 57,
+  "geometry_tests": 13,
+  "clean_export_dll_byte_identical": true
+}

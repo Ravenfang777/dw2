@@ -2,14 +2,17 @@
   "main": {
     "ground": [
       "300",
-      "301",
-      "303"
+      "411",
+      "332"
     ],
     "air": [
       "305",
       "306",
-      "307"
-    ]
+      "353"
+    ],
+    "ground_fire_blizzard_gravity": "315",
+    "air_fire_blizzard_gravity": "316",
+    "superglide": "single tap slide009"
   },
   "tests": [
     {
@@ -158,7 +161,7 @@
   ],
   "ap_cost": 0,
   "native_logic": "retained",
-  "new_custom_air_dodge": false,
+  "new_custom_air_dodge": true,
   "terra_specific_guard_logic": false,
-  "native_glide_and_superglide": "unchanged"
+  "native_glide_and_superglide": "ordinary Glide unchanged; main Superglide replaced with tap009"
 }

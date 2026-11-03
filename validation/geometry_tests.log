@@ -13,6 +13,6 @@ test_skull150_is_skinned_and_hair151_is_helper (__main__.GeometryTests.test_skul
 test_terra_original_named_anatomy_maps_to_sora (__main__.GeometryTests.test_terra_original_named_anatomy_maps_to_sora) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 4.098s
+Ran 13 tests in 4.377s
 
 OK

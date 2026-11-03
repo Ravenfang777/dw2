@@ -218,12 +218,17 @@ class Host:
         if int(on)>1:
             candidate=ROOT/f'sets/p{int(on)-1}/fixtures'
             if (candidate/f"terra_{r['fixture_stem']}.bin").exists():folder=candidate
-        data=bytearray((folder/f"{'terra' if on else 'original'}_{r['fixture_stem']}.bin").read_bytes())
+            elif slot in [54,55,79,80]:folder=ROOT/'sets/shared_v2/fixtures'
+        return self.expected_from(slot,folder/f"{'terra' if on else 'original'}_{r['fixture_stem']}.bin")
+    def expected_from(self,slot,path):
+        r=self.record_by_slot[slot];data=bytearray(path.read_bytes())
         data[:80]=self.runtime_originals[slot][:80]
         event_at=struct.unpack_from('<I',(ROOT/f"fixtures/original_{r['fixture_stem']}.bin").read_bytes(),60)[0]
         while struct.unpack_from('<I',data,event_at)[0]!=0xffffffff:
             data[event_at+8:event_at+12]=self.runtime_originals[slot][event_at+8:event_at+12];event_at+=12
         return bytes(data)
+    def expected_variant(self,slot):
+        return self.expected_from(slot,ROOT/f"overlays/fixtures/terra_{self.record_by_slot[slot]['fixture_stem']}.bin")
     def assert_all(self,test,on):
         for r in self.records:test.assertEqual(self.body(r['normal_slot']),self.expected(r['normal_slot'],on),r['action'])
         test.assertEqual(r32(self.actor+0x1d8),self.original_request_handle)
@@ -241,7 +246,9 @@ class Host:
         put(self.dir,struct.pack('<4f',x,0,z,tilt))
         bridge.bridge_control(self.game+0x2a6220,a,self.dir)
     def move(self,dt=1.):
-        put(self.game+0x233fbdc,struct.pack('<f',dt));out=self.buffer(bytes(16))
+        put(self.game+0x233fbdc,struct.pack('<f',dt))
+        if not hasattr(self,'move_output'):self.move_output=self.buffer(bytes(16))
+        out=self.move_output
         result=bridge.bridge_move(self.game+0x2af6a0,self.actor,C.cast(out,C.POINTER(C.c_float)))
         return list((C.c_float*4).from_address(out)),result
     def blizzard_body(self,slot):
@@ -256,6 +263,11 @@ class Host:
         p=bridge.bridge_event(self.game+0x394770,self.motions[slot],(kind<<16)|track,frame)
         return None if not p else r32(p+4)
     def native_glide(self):bridge.bridge_glide(self.game+0x2b26c0,self.actor)
+    def native_super_glide(self):bridge.bridge_glide(self.game+0x2b2750,self.actor)
+    def prepare_slide(self,profile=0):
+        self.frame();self.equip(True,profile);self.frame();w32(self.game+0x2d5ec10,0x180)
+        self.control(state=0,request=0,height=0);self.control(state=2,request=6)
+    def tap_slide(self,x=1,z=0):self.control(down=0x10,pressed=0x10,state=2,request=6,height=100,tilt=1,x=x,z=z)
     def queue(self,request,frame=0):
         w32(self.actor+0x178,1);w32(self.actor+0x17c,request);put(self.actor+0x184,struct.pack('<f',frame))
     def clock(self,value):put(self.actor+0x16c,struct.pack('<f',value))
@@ -390,6 +402,123 @@ class RuntimeTests(unittest.TestCase):
         h=Host();put(h.save+0x44,bytes(range(1,38))+bytes(11));h.frame();original=h.abilities();logged=bridge.bridge_log()
         for _ in range(30):h.frame()
         self.assertEqual(h.abilities(),original);self.assertEqual(bridge.bridge_log(),logged)
+    def test_v3_main_sources_are_requested_combos_and_spell_clips(self):
+        rows={r['normal_slot']:r for r in json.loads((ROOT/'curve_validation.json').read_text())['motions']}
+        self.assertEqual([rows[s]['donor'] for s in [98,99,100,101,102,103,104]],['300','411','411','332','305','306','353'])
+        self.assertEqual([rows[s]['donor'] for s in [54,55,79,80]],['315','315','316','316'])
+        overlays={r['normal_slot']:r for r in json.loads((ROOT/'overlays/curve_validation.json').read_text())['motions']}
+        self.assertEqual([overlays[s]['donor'] for s in [10,57,82]],['009','315','316'])
+    def test_main_fire_blizzard_gravity_have_matching_recovery_and_other_spells_keep_v2(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True,air=True);h.prepare_slide()
+            for start,recovery,slot in [(0x36,0x3d,57),(0x37,0x3d,57),(0x3a,0x3d,57),(0x83,0x8a,82),(0x84,0x8a,82),(0x87,0x8a,82)]:
+                h.control(state=0,request=start);w32(h.actor+0x178,1);w32(h.actor+0x17c,recovery);h.control(state=0,request=start)
+                self.assertEqual(h.body(slot),h.expected_variant(slot));w32(h.actor+0x178,0)
+                h.control(state=0,request=recovery);self.assertEqual(h.body(slot),h.expected_variant(slot))
+                h.control(state=0,request=0);self.assertEqual(h.body(slot),h.expected(slot,1))
+            for start,recovery,slot in [(0x38,0x3d,57),(0x39,0x3d,57),(0x3b,0x3d,57),(0x3c,0x3d,57),(0x85,0x8a,82),(0x86,0x8a,82),(0x88,0x8a,82),(0x89,0x8a,82)]:
+                h.control(state=0,request=start);h.control(state=0,request=recovery);self.assertEqual(h.body(slot),h.expected(slot,1))
+    def test_numbered_profiles_keep_v2_casts_and_native_superglide(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True,air=True);h.frame()
+            for profile in range(1,11):
+                w32(h.actor+0x164,0);h.equip(True,profile);h.frame();h.assert_all(self,profile+1)
+                for start,slot in [(0x36,57),(0x37,57),(0x3a,57),(0x83,82),(0x84,82),(0x87,82)]:
+                    h.control(state=2,request=start);h.control(state=2,request=0x3d if slot==57 else 0x8a)
+                    self.assertEqual(h.body(slot),h.expected(slot,profile+1))
+                h.control(state=2,request=6);h.native_super_glide();self.assertEqual(r32(h.actor+0x70),21)
+    def test_slide_fresh_square_plays009_and_release_does_not_shorten_it(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True,air=True);h.prepare_slide();h.tap_slide()
+            self.assertEqual(h.body(10),h.expected_variant(10));self.assertEqual(r32(h.actor+0x164),6)
+            self.assertEqual(bridge.bridge_queue_calls(),1)
+            for i in range(5):
+                h.clock(float(i));h.control(state=2,request=6);delta,_=h.move()
+                self.assertEqual(delta,[16.,0.,0.,16.]);self.assertEqual(h.body(10),h.expected_variant(10))
+            self.assertEqual(bridge.bridge_control_word(0)&0x16,0)
+    def test_slide_distance_is_finite_and_independent_of_tick_size(self):
+        for dt in [0.25,0.5,1.,1.25,2.5]:
+            h=Host(air=True);h.prepare_slide();h.tap_slide();elapsed=0.;total=[0.,0.,0.]
+            while elapsed<39.-1e-5:
+                h.clock(elapsed);delta,_=h.move(dt)
+                for i in range(3):total[i]+=delta[i]
+                elapsed+=min(dt,39.-elapsed)
+            self.assertEqual(total,[624.,0.,0.]);self.assertEqual(h.body(10),h.expected(10,1))
+            delta,_=h.move();self.assertEqual(delta,[1.,2.,3.,4.])
+    def test_native_animation_clock_completion_restores_fall_and_release_velocity(self):
+        h=Host(air=True);h.prepare_slide();h.tap_slide();h.move();h.clock(39.);h.control(state=2,request=6)
+        self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(struct.unpack('<f',C.string_at(h.actor+0x3c0,4))[0],8.)
+        self.assertEqual(h.move()[0],[1.,2.,3.,4.])
+    def test_slide_locks_initial_analog_direction_and_does_not_write_actor_position(self):
+        h=Host(air=True);h.prepare_slide();put(h.actor+0x10,struct.pack('<4f',12.,13.,14.,1.));h.tap_slide(.6,.8)
+        h.control(state=2,request=6,tilt=1,x=-1,z=0);delta,_=h.move()
+        self.assertAlmostEqual(delta[0],9.6,places=5);self.assertAlmostEqual(delta[2],12.8,places=5)
+        self.assertEqual(C.string_at(h.actor+0x10,16),struct.pack('<4f',12.,13.,14.,1.))
+        self.assertEqual(delta[1],0.)
+    def test_slide_neutral_stick_uses_character_facing(self):
+        h=Host(air=True);h.prepare_slide();put(h.actor+0x30,struct.pack('<3f',0.,0.,-1.));h.tap_slide(0,0)
+        self.assertEqual(h.move()[0],[0.,0.,-16.,16.])
+    def test_holding_square_never_starts_or_restarts_slide(self):
+        h=Host(air=True);h.prepare_slide()
+        for _ in range(3):h.control(down=0x10,pressed=0,state=2,request=6)
+        self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(bridge.bridge_queue_calls(),0)
+        h.tap_slide()
+        for _ in range(39):h.move()
+        for _ in range(3):h.control(down=0x10,pressed=0,state=2,request=6)
+        self.assertEqual(bridge.bridge_queue_calls(),1);self.assertEqual(h.body(10),h.expected(10,1))
+        h.control(state=2,request=6);h.tap_slide();self.assertEqual(bridge.bridge_queue_calls(),2)
+    def test_native_regular_glide_still_works_but_deferred_superglide_is_blocked(self):
+        h=Host(air=True);h.prepare_slide();h.native_glide();self.assertEqual(r32(h.actor+0x70),21)
+        h.control(state=2,request=6);calls=bridge.bridge_native_glide_calls();h.native_super_glide()
+        self.assertEqual(bridge.bridge_native_glide_calls(),calls);self.assertEqual(r32(h.actor+0x70),2)
+        bridge.bridge_air_modes(1,4);h.control(down=6,pressed=6,state=2,request=6)
+        self.assertEqual(r32(h.actor+0x70),21);self.assertEqual(bridge.bridge_control_word(0)&6,6)
+        bridge.bridge_air_modes(1,6);h.control(state=2,request=6);h.tap_slide()
+        self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(h.body(10),h.expected_variant(10))
+    def test_slide_requires_superglide_ability_airborne_height_and_free_action(self):
+        cases=[{'state':0,'request':0},{'state':2,'request':0xcc},{'height':50},{'height':float('nan')},{'x':float('nan')},{'x':3},{'down':0x140010}]
+        for extra in cases:
+            h=Host(air=True);h.prepare_slide();args=dict(down=0x10,pressed=0x10,state=2,request=6,height=100,tilt=1,x=1,z=0);args.update(extra);h.control(**args)
+            self.assertEqual(bridge.bridge_queue_calls(),0);self.assertEqual(h.body(10),h.expected(10,1))
+        h=Host(air=True);h.prepare_slide();w32(h.game+0x2d5ec10,0x80);h.tap_slide();self.assertEqual(bridge.bridge_queue_calls(),0)
+        h=Host(air=True);h.prepare_slide();put(h.glide_work+0x100,struct.pack('<f',24.));h.tap_slide();self.assertEqual(bridge.bridge_queue_calls(),0)
+    def test_slide_does_not_replace_queued_attack_or_spell_command(self):
+        for queued in [0xcc,0x36,0x40000000]:
+            h=Host(air=True);h.prepare_slide();w32(h.actor+0x178,1);w32(h.actor+0x17c,queued);h.tap_slide()
+            self.assertEqual(bridge.bridge_queue_calls(),0);self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(r32(h.actor+0x17c),queued)
+        h=Host(air=True);h.prepare_slide();w32(h.game+0x2d53a40,0x36);h.tap_slide();self.assertEqual(bridge.bridge_queue_calls(),0)
+    def test_slide_waits_for_native_queue_commit_before_movement(self):
+        h=Host(air=True,control_mode=3);h.prepare_slide();h.tap_slide();self.assertEqual(h.move()[0],[1.,2.,3.,4.])
+        bridge.bridge_commit(h.actor);h.clock(0.);self.assertEqual(h.move()[0],[16.,0.,0.,16.])
+    def test_slide_pauses_at_zero_delta_and_aborts_invalid_delta(self):
+        h=Host(air=True);h.prepare_slide();h.tap_slide();self.assertEqual(h.move(0.)[0],[0.,0.,0.,0.]);self.assertEqual(h.body(10),h.expected_variant(10))
+        self.assertEqual(h.move()[0],[16.,0.,0.,16.])
+        for dt in [-1.,float('nan'),5.]:
+            h=Host(air=True);h.prepare_slide();h.tap_slide();self.assertEqual(h.move(dt)[0],[1.,2.,3.,4.]);self.assertEqual(h.body(10),h.expected(10,1))
+    def test_damage_landing_and_unequip_cancel_slide_without_granting_defense(self):
+        for state,request,height in [(0,7,0),(2,0x48,100),(3,0x4c,100),(2,0xcc,100)]:
+            h=Host(air=True);h.prepare_slide();h.tap_slide();flags=r32(h.actor);h.control(state=state,request=request,height=height)
+            self.assertEqual(h.move()[0],[1.,2.,3.,4.]);self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(r32(h.actor),flags)
+        h=Host(air=True);h.prepare_slide();h.tap_slide();h.equip(False);h.frame();self.assertEqual(h.move()[0],[1.,2.,3.,4.])
+        w32(h.actor+0x164,0);h.frame();h.assert_all(self,False);h.native_super_glide();self.assertEqual(r32(h.actor+0x70),21)
+    def test_temporary_model_unload_cannot_resume_old_slide_travel(self):
+        h=Host(air=True);h.prepare_slide();h.tap_slide();w32(h.actor+0x374,0);h.frame();w32(h.actor+0x374,1);h.frame()
+        self.assertEqual(h.body(10),h.expected(10,1));self.assertEqual(h.move()[0],[1.,2.,3.,4.])
+    def test_slide_and_spell_recovery_keep_native_events_headers_glide_and_reactions(self):
+        h=Host(air=True,encoded_fields=True);h.prepare_slide();h.tap_slide()
+        for slot in [10,54,55,57,79,80,82]:
+            raw=h.body(slot);original=h.runtime_originals[slot]
+            self.assertEqual(raw[:80],original[:80]);source=(ROOT/f"fixtures/original_{h.record_by_slot[slot]['fixture_stem']}.bin").read_bytes();at=struct.unpack_from('<I',source,60)[0];self.assertEqual(raw[at:],original[at:])
+        for slot,p in h.native_glide_motions.items():self.assertEqual(C.string_at(p,len(h.native_glide_originals[slot])),h.native_glide_originals[slot])
+        for slot,(p,raw) in h.native_reactions.items():self.assertEqual(C.string_at(p,len(raw)),raw)
+        self.assertEqual(r32(h.actor+0x1d8),h.original_request_handle)
+    def test_hook_admission_and_allocation_failures_leave_all_three_native_functions(self):
+        locations=[(0x2a6220,17),(0x2b2d30,15),(0x2af6a0,16)]
+        for args in [{'fail_alloc':1},{'fail_protect':1},{'fail_protect':2},{'fail_protect':3},{'fail_protect':4},{'conflict':1},{'stamp':0},{'remove':1}]:
+            h=Host(air=True,**args);before=[C.string_at(h.game+p,n) for p,n in locations];h.frame()
+            self.assertEqual([C.string_at(h.game+p,n) for p,n in locations],before,args)
+        h=Host(air=True);put(h.game+0x2a6220,b'\xcc');before=[C.string_at(h.game+p,n) for p,n in locations];h.frame()
+        self.assertEqual([C.string_at(h.game+p,n) for p,n in locations],before)
     def test_unstable_ability_tail_causes_no_save_or_body_write(self):
         h=Host();data=bytes([1,0,2])+bytes(45);put(h.save+0x44,data);h.frame();self.assertEqual(h.abilities(),data);h.assert_all(self,False)
     def test_all_profile_switches_wait_for_idle_during_combat_cast_jump_and_walk(self):

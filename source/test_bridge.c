@@ -48,6 +48,7 @@ void bridge_air_modes(int enabled,unsigned mode){air_enabled=enabled;control_mod
 void bridge_control(uintptr_t f,uintptr_t actor,uintptr_t dir){
     ((void(ABI*)(uintptr_t,uintptr_t))f)(actor,dir);
     if(control_mode==5&&(*(uint32_t*)(game_base+0x2d5ec10)&0x80u))((void(ABI*)(uintptr_t))(game_base+0x2b26c0))(actor);
+    if(control_mode==6&&(*(uint32_t*)(game_base+0x2d5ec10)&0x100u))((void(ABI*)(uintptr_t))(game_base+0x2b2750))(actor);
 }
 void bridge_glide_eligible(int enabled){glide_eligible=enabled;}
 unsigned bridge_native_glide_calls(void){return native_glide_calls;}

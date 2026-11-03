@@ -15,6 +15,11 @@ for profile,report in enumerate(reports):
   folder=ROOT if profile==0 else ROOT/f'sets/p{profile}'
   before=parse_motion((folder/f"fixtures/original_{row['fixture_stem']}.bin").read_bytes());after=parse_motion((folder/f"fixtures/terra_{row['fixture_stem']}.bin").read_bytes())
   records.append((profile,row,before,after))
+for profile,folder in [(-1,ROOT/'overlays'),(11,ROOT/'sets/shared_v2')]:
+ report=json.loads((folder/'curve_validation.json').read_text());assert report['passed']
+ for row in report['motions']:
+  before=parse_motion((folder/f"fixtures/original_{row['fixture_stem']}.bin").read_bytes());after=parse_motion((folder/f"fixtures/terra_{row['fixture_stem']}.bin").read_bytes())
+  records.append((profile,row,before,after))
 @lru_cache(maxsize=1)
 def samples():
  data=[]
@@ -51,7 +56,7 @@ class GeometryTests(unittest.TestCase):
    p=ROOT/'terra_source'/Path(row['Path'].replace('\\','/')).name
    self.assertEqual(p.stat().st_size,row['Bytes']);self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest().upper(),row['SHA256'])
  def test_main_and_ten_profiles_have_exact_record_counts(self):
-  self.assertEqual([len(r['motions']) for r in reports],[37]+[7]*10);self.assertEqual(len(records),107);self.assertTrue(all(r['passed'] for r in reports))
+  self.assertEqual([len(r['motions']) for r in reports],[37]+[7]*10);self.assertEqual(len(records),114);self.assertTrue(all(r['passed'] for r in reports))
  def test_native_headers_allocations_and_helpers_unchanged(self):
   for profile,row,before,after in records:
    self.assertEqual(len(before.raw),len(after.raw));self.assertEqual(before.raw[:80],after.raw[:80]);self.assertEqual(before.helper_parents,after.helper_parents)

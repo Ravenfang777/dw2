@@ -2,8 +2,10 @@
   "passed": true,
   "motions": 37,
   "profiles": 11,
+  "main_only_body_variants": 3,
+  "numbered_cast_payloads_retained_from_v2": 4,
   "headers_counts_and_capacities_unchanged": true,
   "native_event_and_request_bytes_unchanged": true,
   "all_changes_inside_existing_body_helper_tables": true,
-  "unique_data_blocks": 546
+  "unique_data_blocks": 572
 }

@@ -1,14 +1,14 @@
 {
   "passed": true,
-  "fitted_records": 107,
+  "fitted_records": 114,
   "profiles": 11,
   "source_bones": 51,
   "target_bones": 293,
   "max_pose_position_error": 4.954905932279431,
   "max_basis_error": 0.08171922392770098,
-  "max_segment_length_error": 3.603517484407348e-11,
+  "max_segment_length_error": 3.3367086871294305e-11,
   "max_native_travel_helper_error": 0.0,
-  "validated_fractional_frame_pose_samples": 23127,
-  "source_identity": "original Terra model/banks,48 manifest hashes verified",
+  "validated_fractional_frame_pose_samples": 24594,
+  "source_identity": "original Terra model/banks, 48 manifest hashes verified",
   "actual_game_tested": false
 }

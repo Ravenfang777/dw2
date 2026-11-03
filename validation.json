@@ -1,5 +1,5 @@
 {
-  "name": "KH1FM Terra Animation Test v2",
+  "name": "KH1FM Terra Animation Test v3",
   "standalone": true,
   "main_ability": "terra",
   "numbered_tests": 10,
@@ -20,33 +20,37 @@
   "AP": 0,
   "main_ground": [
     "300",
-    "301",
-    "303"
+    "411",
+    "332"
   ],
   "main_air": [
     "305",
     "306",
-    "307"
+    "353"
   ],
   "source_files_verified": 48,
   "decoded_source_entries": 149,
   "unique_source_variants": 137,
-  "fitted_records": 107,
+  "fitted_records": 114,
   "mapped_native_normal_records": 37,
   "mapped_native_olympus_records": 36,
-  "runtime_pe_tests": 39,
+  "runtime_pe_tests": 57,
   "geometry_tests": 13,
   "native_headers_counts_allocations_events_requests_and_travel_unchanged": true,
-  "no_native_input_or_attack_hooks_added": true,
   "native_ability_records_preserved": 65,
   "windows_or_game_executed": false,
-  "dll_sha256": "15a2a1dd1063b18277c8363417257f9faa00f9df1c2b11a6baac795688e7d888",
-  "dll_bytes": 3173121,
+  "dll_sha256": "fd245c52f74e73d7a0208747303fdf98b5e2f5f1c65b7a77c194397f1ea36672",
+  "dll_bytes": 3339585,
   "clean_export_rebuild_pending": false,
   "clean_export_dll_byte_identical": true,
-  "all_fitted_motion_payloads_unchanged_from_v1": true,
-  "geometry_validation_reused_for_byte_identical_payloads": true,
   "native_ability_zero_terminator_preserved": true,
   "ability_setup_main_first_with_adaptive_test_pages": true,
-  "profile_override_available_without_ability_space": true
+  "profile_override_available_without_ability_space": true,
+  "main_ground_fire_blizzard_gravity": "315",
+  "main_air_fire_blizzard_gravity": "316",
+  "main_superglide": "single tap slide009, speed16, duration39 native ticks",
+  "scoped_input_glide_and_fall_displacement_hooks": 3,
+  "ordinary_glide_retained": true,
+  "numbered_profiles_unchanged_from_v2": true,
+  "native_attack_and_spell_event_tables_unchanged": true
 }

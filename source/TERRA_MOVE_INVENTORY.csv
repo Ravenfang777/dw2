@@ -1,138 +1,138 @@
 ﻿Clip,Frames,FPS,DurationSeconds,Bones,SourceBanks,Assignments,Status,AnimationSHA256
 001,70,30,2.333333,51,p03base.arc,all profiles: idle,Source label; full semantic action name unverified,e62850cb677f07873a36a7c781e8cf76b80cfdf484f10f3fb76845fd3f421e9e
 002,95,30,3.166667,51,p03base.arc,all profiles: combat idle,Source label; full semantic action name unverified,4793712168b9506562ffe51689dc3cb69b11b39184beaa9b465e0368869a26cf
-003,40,30,1.333333,51,p03base.arc,all profiles: walk; all profiles: walk,Source label; full semantic action name unverified,e3a5e55655d4ba82307843195b22e6193f04e703944f088cbf9c131da3c77f04
-004,18,30,0.6,51,p03base.arc,all profiles: run; all profiles: run,Source label; full semantic action name unverified,2ce00924ee0e89353161e2a0f19babc4b7748e8292615405a974ab8b7d79ea16
+003,40,30,1.333333,51,p03base.arc,all profiles: walk,Source label; full semantic action name unverified,e3a5e55655d4ba82307843195b22e6193f04e703944f088cbf9c131da3c77f04
+004,18,30,0.6,51,p03base.arc,all profiles: run,Source label; full semantic action name unverified,2ce00924ee0e89353161e2a0f19babc4b7748e8292615405a974ab8b7d79ea16
 005,16,30,0.533333,51,p03base.arc,all profiles: jump takeoff; all profiles: jump rise,Source label; full semantic action name unverified,ec1a993208ad23a3face649565da447fe90477bddfaa4be799228b8c27c23917
 006,21,30,0.7,51,p03base.arc,all profiles: fall,Source label; full semantic action name unverified,58466fd8f090fe282b4c928b1ff186e18cbe76be635581e707faeb49f817660c
 007,13,30,0.433333,51,p03base.arc,all profiles: landing; all profiles: ledge landing recovery,Source label; full semantic action name unverified,b1132dce4fb8f0612c7cfc04de10e34c49b704145ee81efb8aa38d3070998ff8
-008,17,30,0.566667,51,p03base.arc,,Source label; full semantic action name unverified,945118b298b9079825e6033d8a0791d164ecbdc0986f1d020cadbe9eaacd5e39
-009,19,30,0.633333,51,p03base.arc,all profiles: Dodge Roll / Terra slide pose,Source label; full semantic action name unverified,50d59186bcb4381232486ece23ed4ff91d3a70662937db3ba13523e17781b2d4
-010,14,30,0.466667,51,p03base.arc,,Source label; full semantic action name unverified,daa54020bbba387ca9897d79aa3807036cb38a6b7deb3573d6d40d2f26365906
-011,31,30,1.033333,51,p03base.arc,,Source label; full semantic action name unverified,21f3b444c35a973f2cf01684baea1aa1c5acf948a2e6183d7b21b7fd67d968b9
+008,17,30,0.566667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,945118b298b9079825e6033d8a0791d164ecbdc0986f1d020cadbe9eaacd5e39
+009,19,30,0.633333,51,p03base.arc,all profiles: Dodge Roll / Terra slide pose; terra only: Superglide tap slide during native fall,Source label; full semantic action name unverified,50d59186bcb4381232486ece23ed4ff91d3a70662937db3ba13523e17781b2d4
+010,14,30,0.466667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,daa54020bbba387ca9897d79aa3807036cb38a6b7deb3573d6d40d2f26365906
+011,31,30,1.033333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,21f3b444c35a973f2cf01684baea1aa1c5acf948a2e6183d7b21b7fd67d968b9
 012,32,30,1.066667,51,p03base.arc,all profiles: combat walk,Source label; full semantic action name unverified,2b21438ab86bb8d8b29e397ff2ccb67f1a7fcc487c437b0d77cbdd0c17dd0847
 013,20,30,0.666667,51,p03base.arc,all profiles: combat run,Source label; full semantic action name unverified,412f7a0e3be4b2ca41db6497a8cd6955296ee62baf6d51c93d50cef4dbf8cf5e
 014,33,30,1.1,51,p03base.arc,all profiles: high jump takeoff; all profiles: high jump rise,Source label; full semantic action name unverified,a67e3c0b697e2daf75f1f81e8f951afe040c9085aee653875557c96e884be837
-015,29,30,0.966667,51,p03base.arc,,Source label; full semantic action name unverified,b36734ad4bb1daa5ebf2f7ffc448ffd340440e3b780b8e1ec7b885e0198ef6b0
+015,29,30,0.966667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,b36734ad4bb1daa5ebf2f7ffc448ffd340440e3b780b8e1ec7b885e0198ef6b0
 020,95,30,3.166667,51,p03base.arc,all profiles: ledge hang,Source label; full semantic action name unverified,3359dd5b46321e9b8b92118b8b1163cf9b3541379b2960b0b066be781ecadc1b
 021,14,30,0.466667,51,p03base.arc,all profiles: ledge climb start; all profiles: ledge climb finish,Source label; full semantic action name unverified,45c62139ac0b92c809eb96458dce90bb2c1fd800c623decde25053eb29cda949
-022,31,30,1.033333,51,xaa002te.arc,,Source label; full semantic action name unverified,38980899c2c4aa3c06d3531b64fab4cef2a397d64637498471d3ca2468348c13
-023,122,30,4.066667,51,xaa002te.arc,,Source label; full semantic action name unverified,15d6c6c35996e6a7dd012729be55597f79d98f4d63a8eb8618f1a063a2228c9a
-024,151,30,5.033333,51,p03base.arc,,Source label; full semantic action name unverified,40bc554c3b0ad08dcea6e5debd43b2b067a13af5ea23b5086943b6c3609e02f2
-025,61,30,2.033333,51,xaa003te.arc,,Source label; full semantic action name unverified,00925ae81998ace03b8f680de0b0e745f14aac79ccb6f24d5de9c058c4d5f7c7
-026,40,30,1.333333,51,xaa003te.arc,,Source label; full semantic action name unverified,194be94a6faa660033468f70f24cd4a3208c4f6871dd2e47f202ddc6bb8e6395
-045,61,30,2.033333,51,p03ex_004.arc; p03ex_710.arc,terra 1 ground 1,Source label; full semantic action name unverified,a58e2371f19bd33f7c6aba486e4ce9c6a8ca99e16637ba9aec80f2832e6efb40
-051,16,30,0.533333,51,xaa005te.arc,,Source label; full semantic action name unverified,fa6a8fcc81e1d2196dd01efccdc8029cae7356b6393e193e624d8ce9cb173331
-052,20,30,0.666667,51,xaa005te.arc,,Source label; full semantic action name unverified,11a107f29f6ee1955c0ef9e4024f29695c05e584ff870ac794fdbedce37120cc
-060,40,30,1.333333,51,p03ex_711.arc,,Source label; full semantic action name unverified,6aaee3be9d0341234e08c3cafea8c7c98f5c049cfe63501760f00fbe2a75c406
-200,35,30,1.166667,51,p03base.arc,,Source label; full semantic action name unverified,8eeaf86594af6eec8ffee8d5829b5db2118381e736c7e062ebf60f7594c408fe
-202,32,30,1.066667,51,p03base.arc,,Source label; full semantic action name unverified,f7ec2d2080fc90f1d922096edb20b352c9cc6d2ff6d98e5b4a647c12daf4f9a5
-204,17,30,0.566667,51,p03base.arc,,Source label; full semantic action name unverified,b78cb2b2b2f0839aa25e03ada637814fe26eb2a3e93741ad66b17c963f797a9e
-205,34,30,1.133333,51,p03base.arc,,Source label; full semantic action name unverified,1f78a214f8f75b3cb9682e858a901f732a43862a9c22473189aa20e22a1f5918
-206,14,30,0.466667,51,p03base.arc,,Source label; full semantic action name unverified,ab04ccd5cbe1bcff5548aec99f0875b02aa7dcc3841b2a6a609af1ed1f8fd924
-207,28,30,0.933333,51,p03base.arc,,Source label; full semantic action name unverified,d40c6a76cc752b7bdbee863bd005b9c80c9bb1429d87897e0e6a426ca8caa591
-208,31,30,1.033333,51,p03base.arc,,Source label; full semantic action name unverified,98a722256400b3f740f77334b95725fa1929661008b2f6d96950a5f26a7db6e3
-209,31,30,1.033333,51,p03base.arc,,Source label; full semantic action name unverified,b96e9fb2e25547529216dde82f3a98c2aa7174f7b7c5d3bc9a16b6c9b3152280
-212,105,30,3.5,51,p03base.arc,,Source label; full semantic action name unverified,ceb2bb32e496473430f48a6e7245cee76fd3285e4c3b2f458e8d8abbe57fd1ae
-213,29,30,0.966667,51,p03base.arc,,Source label; full semantic action name unverified,3f6fe4f5ae0adb50d1899aa06e7cef88ec93a26131ca558f65d5ccd65dfaa505
-214,20,30,0.666667,51,p03base.arc,,Source label; full semantic action name unverified,07d655205323c5ccf541edf76ae76244ddae30f909de095ca88a3ae5804a00bb
-215,20,30,0.666667,51,p03base.arc,,Source label; full semantic action name unverified,41eb25ffa8896b5b4538144159e149c7a7bf97b3f131416610c32fe08c88b8f7
-216,55,30,1.833333,51,p03base.arc,,Source label; full semantic action name unverified,7560f01db5f9ef3e687347ad93ee258bafacb739631e6b694675f484981fd5cd
-217,105,30,3.5,51,p03ex_009.arc,terra 1 ground 2,Source label; full semantic action name unverified,639e88771d2a933f3816528bb5f6724ca5f191cbcf6b53a2a358ae1cdfb6ec50
-218,45,30,1.5,51,p03ex_009.arc,terra 1 ground 3,Source label; full semantic action name unverified,fe5fddcf6ced8e29f517d16713bd7e0308971088dd3fd8208a5b63a92c540960
-220,62,30,2.066667,51,p03ex_710.arc,,Source label; full semantic action name unverified,d56c4b72453a149cac32835da8afc37ffc3344c493475dc1666790be14db8f84
-221,21,30,0.7,51,p03ex_710.arc,,Source label; full semantic action name unverified,fb6f7e2cb4790560dc889aa720a7a9140989da2f3d56990574c88f33890de414
-222,40,30,1.333333,51,xaa007te.arc,,Source label; full semantic action name unverified,913aafae161a6e6e30be76f272d15e585629302a31ccfe2449e44ba88ba83495
-223,60,30,2.0,51,xaa007te.arc,,Source label; full semantic action name unverified,ac925b994108101afe7486bb81e783c0c1d9cb3e0e1f02b1f860fb27f597d968
-300,34,30,1.133333,51,p03base.arc,terra ground 1,Source label; full semantic action name unverified,675c6eb65cd7ed3efa762eccf6ac10bf96f5f30d1214c7ecd7b54068f40be8df
-301,41,30,1.366667,51,p03base.arc,terra ground 2,Source label; full semantic action name unverified,b0d7651c79b0facfd8e9f0d974eeaa2cc5d8c551b33faa3e647cbfb4a2c6caae
-303,50,30,1.666667,51,p03base.arc,terra ground 3,Source label; full semantic action name unverified,9fe1b19834828f7c6d99f85021e8578b901e05e11b732b9f85ed67f77a6cccea
-304,50,30,1.666667,51,p03base.arc,terra 5 air 2,Source label; full semantic action name unverified,c3892cdd9bb3237195478b46fc675cb330e579d0517ee16ef878b6dc0e47bab2
-305,25,30,0.833333,51,p03base.arc,terra air 1,Source label; full semantic action name unverified,1ab4bcad6c723bed3461fe2bdd55f2cd1b0d5aed9305bdb473c87b925c3f4755
-306,31,30,1.033333,51,p03base.arc,terra air 2,Source label; full semantic action name unverified,476ffde5baa5dc65efe38afdb0ce35f8e890585054d5180f849766937b1d2ea3
-307,30,30,1.0,51,p03base.arc,terra air 3,Source label; full semantic action name unverified,e45b4b85a9982316f91955f671a9e1c222730e5169c4d9c9506621b79e65be8f
-308,37,30,1.233333,51,p03base.arc,terra 5 air 3,Source label; full semantic action name unverified,6d34f59aeb044b271d3d7e2daff672a8c437e0a89eb3903e484c7fba70ba329f
-315,36,30,1.2,51,p03ex_151.arc,terra 3 ground 2,Source label; full semantic action name unverified,c94c49add194d1c36d1c7ce7e26c4e3598418a0dc38522ef024773351d47738c
-316,36,30,1.2,51,p03ex_151.arc,terra 3 ground 3,Source label; full semantic action name unverified,a1b70c934dc930a8ccdfd8b5b6c713a31323be54df0c838655e2a9d0c17c0fa6
-317,37,30,1.233333,51,p03ex_152.arc,terra 3 air 1,Source label; full semantic action name unverified,d53319a920d135e22535a416e0563074bdabcaaa7ae2dd09a6a5c35bd999ba74
-318,37,30,1.233333,51,p03ex_152.arc,terra 3 air 2,Source label; full semantic action name unverified,cef10e2bc52d1c431426dd86a0c6036549e29a05ed9ab0f82a71587cbfdae0f9
-320,59,30,1.966667,51,p03base.arc,all profiles: ground overhead cast; all profiles: air overhead cast,Source label; full semantic action name unverified,f133d23825f107803012c7d00f680c71d6b483473a208170dbd5262b7ccec365
-330,31,30,1.033333,51,p03ex_105.arc,,Source label; full semantic action name unverified,4153500a65b5c9ff56e23b2f6dddfacaa2ec977af645b5bb5517f1b810f6a33a
-332,41,30,1.366667,51,p03ex_101.arc,terra 1 air 1,Source label; full semantic action name unverified,53ce3242d713324168372b0905280e0abce6c6b558e352a8fa1f8c323483af5f
-350,41,30,1.366667,51,p03ex_116.arc,terra 2 ground 3,Source label; full semantic action name unverified,835c45180e1edcfa2280bb4a6c9e17f1d4f0de66efca0df9d2725deeb7aba4df
-351,35,30,1.166667,51,p03ex_710.arc,terra 5 air 1,Source label; full semantic action name unverified,c87c9b54719e398ffefc6164ae14caa97454f64f49c2aa3f1d41c3daf2e634b1
-352,36,30,1.2,51,p03ex_352.arc,terra 5 ground 2,Source label; full semantic action name unverified,926a63334e9f03316fd303f2edeaeb96a5ee8a26d9f2c6dabe7e8d9d54f2dbf0
-353,44,30,1.466667,51,p03ex_352.arc; p03ex_710.arc,terra 5 ground 3,Source label; full semantic action name unverified,55878be510c09cc0ff075f08ece9530226a8b6e4911cfcf704bccc078654bc23
-354,36,30,1.2,51,p03base.arc,all profiles: ground cast release; all profiles: ground support cast; all profiles: ground cast recovery,Source label; full semantic action name unverified,2540ecf6ab18255a550e0a54e1b574071d567a5c9acb868aabd277d24ff411c7
-355,51,30,1.7,51,p03base.arc,all profiles: air cast release; all profiles: air support cast; all profiles: air cast recovery,Source label; full semantic action name unverified,7eadfb651fca859afd08750d322eee0d7b2d07221c1da3fbe02e5e595ed5c297
-356,35,30,1.166667,51,p03base.arc,,Source label; full semantic action name unverified,9a507c17322b25c9065c12ac29566af2d49d53038495b1e9c8281b1fed4425bb
-357,47,30,1.566667,51,p03ex_102.arc,terra 1 air 2,Source label; full semantic action name unverified,d7131c6728099a2bb2299113cf6812f469bee4c84453f3b0a4f62d77c2186bb1
-358,15,30,0.5,51,p03ex_108.arc,,Source label; full semantic action name unverified,a86fd6706e3a805c0b8d0202a29918452e689624fc003606a604cb8d3ebfc612
-359,28,30,0.933333,51,p03ex_108.arc,,Source label; full semantic action name unverified,11cf7aca2a66d97dcdcfe46cabc592680858f1a8af9a97a9e74cf700ad3a446b
-360,36,30,1.2,51,p03ex_108.arc,,Source label; full semantic action name unverified,f1cd7316849c98478b565130fa5390458e4fc8abc9fa2e352e3c4ab684e21f86
-361,20,30,0.666667,51,p03ex_111.arc,terra 1 air 3,Source label; full semantic action name unverified,9b8b3f120027dbd01a4be0255f84b0024b65d498ae510a9213b5f68ef4fb1ee4
-362,37,30,1.233333,51,p03ex_111.arc,terra 2 ground 1,Source label; full semantic action name unverified,f4d4b6eb0fa7c14b814050a402562bbbb2c990770895b7ae18fd205bf1615349
-363,26,30,0.866667,51,p03ex_111.arc,terra 2 ground 2,Source label; full semantic action name unverified,8277f67e078eba6b2735e34ff4219504f16fb120f96f477810f6e1d2d3fa48c4
-370,22,30,0.733333,51,p03ex_133.arc; p03ex_204.arc,terra 2 air 1,Source label; full semantic action name unverified,2f30866167fd8bbd5b4f24b48df3b6bf88dbe2769e5780589f365818d922acca
-371,65,30,2.166667,51,p03ex_133.arc,terra 2 air 2,Source label; full semantic action name unverified,804664a32e13a20dac97bbed78689a55d32dfcf7b7905ef34ce4c6bdcd01d807
-372,22,30,0.733333,51,p03ex_137.arc,terra 2 air 3,Source label; full semantic action name unverified,a072b0bb3fef4bc60767fdc0a999fa74c6527cfb97023aedb7ede4f3dddb780f
-373,40,30,1.333333,51,p03ex_137.arc,terra 3 ground 1,Source label; full semantic action name unverified,84957a9485060e2f5917759e47266b01054e319eadb97dbd416a69109362868c
-377,82,30,2.733333,51,p03ex_120.arc,,Source label; full semantic action name unverified,cff264138bf066ee0106d40e653813478df63acfd414f60ea8d1765b6e2f09dd
-378,40,30,1.333333,51,p03ex_301.arc,,Source label; full semantic action name unverified,ec6f9c4da2f30e184752c15c374d3a3ab673bba92790fa1d1f62c664f8cf03e3
-379,35,30,1.166667,51,p03ex_301.arc,,Source label; full semantic action name unverified,0cc7a0b413aa1362e44b1b279a497db3fd16e308fcc750696b3e54ecd55ed823
-380,44,30,1.466667,51,p03ex_120.arc,,Source label; full semantic action name unverified,8c7ecdf68bb8367cdfd5771e32a55ac1eb26222fe98d5c086e950e97cb16a654
-390,51,30,1.7,51,p03ex_154.arc,terra 4 ground 1,Source label; full semantic action name unverified,4113fb35c3d7caf5f5e62f17d0996f0c238db762ae70b3c69910a9af3e57a97b
-391,51,30,1.7,51,p03ex_153.arc,terra 3 air 3,Source label; full semantic action name unverified,2c35ce1d03f994784f47160cfb062124f7472b650bd05b84d10f13011461938b
-392,51,30,1.7,51,p03ex_155.arc,terra 4 ground 3,Source label; full semantic action name unverified,fc5a27204d62ec77b1ed119465936979df8833eebdfa67d8a5e0bf5512f8961c
-393,43,30,1.433333,51,p03ex_155.arc,terra 4 air 1,Source label; full semantic action name unverified,f7e2c91839b3095885b4b66725590c54ac3bf96761b1c457f1d4d71f0b0ed3ee
-395,33,30,1.1,51,p03ex_200.arc,,Source label; full semantic action name unverified,a0c45b1dbaf0d1d57d33cb8499637ae7828ddf4a4cca1645421e550cfd71ea68
-399,119,30,3.966667,51,p03ex_346.arc; p03ex_710.arc,terra 4 air 3,Source label; full semantic action name unverified,64ff082004490219763f14875da1536d59174a3fce892d525b2fe8836b49f152
+022,31,30,1.033333,51,xaa002te.arc,Unassigned,Source label; full semantic action name unverified,38980899c2c4aa3c06d3531b64fab4cef2a397d64637498471d3ca2468348c13
+023,122,30,4.066667,51,xaa002te.arc,Unassigned,Source label; full semantic action name unverified,15d6c6c35996e6a7dd012729be55597f79d98f4d63a8eb8618f1a063a2228c9a
+024,151,30,5.033333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,40bc554c3b0ad08dcea6e5debd43b2b067a13af5ea23b5086943b6c3609e02f2
+025,61,30,2.033333,51,xaa003te.arc,Unassigned,Source label; full semantic action name unverified,00925ae81998ace03b8f680de0b0e745f14aac79ccb6f24d5de9c058c4d5f7c7
+026,40,30,1.333333,51,xaa003te.arc,Unassigned,Source label; full semantic action name unverified,194be94a6faa660033468f70f24cd4a3208c4f6871dd2e47f202ddc6bb8e6395
+045,61,30,2.033333,51,p03ex_004.arc; p03ex_710.arc,terra 1: ground first,Source label; full semantic action name unverified,a58e2371f19bd33f7c6aba486e4ce9c6a8ca99e16637ba9aec80f2832e6efb40
+051,16,30,0.533333,51,xaa005te.arc,Unassigned,Source label; full semantic action name unverified,fa6a8fcc81e1d2196dd01efccdc8029cae7356b6393e193e624d8ce9cb173331
+052,20,30,0.666667,51,xaa005te.arc,Unassigned,Source label; full semantic action name unverified,11a107f29f6ee1955c0ef9e4024f29695c05e584ff870ac794fdbedce37120cc
+060,40,30,1.333333,51,p03ex_711.arc,Unassigned,Source label; full semantic action name unverified,6aaee3be9d0341234e08c3cafea8c7c98f5c049cfe63501760f00fbe2a75c406
+200,35,30,1.166667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,8eeaf86594af6eec8ffee8d5829b5db2118381e736c7e062ebf60f7594c408fe
+202,32,30,1.066667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,f7ec2d2080fc90f1d922096edb20b352c9cc6d2ff6d98e5b4a647c12daf4f9a5
+204,17,30,0.566667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,b78cb2b2b2f0839aa25e03ada637814fe26eb2a3e93741ad66b17c963f797a9e
+205,34,30,1.133333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,1f78a214f8f75b3cb9682e858a901f732a43862a9c22473189aa20e22a1f5918
+206,14,30,0.466667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,ab04ccd5cbe1bcff5548aec99f0875b02aa7dcc3841b2a6a609af1ed1f8fd924
+207,28,30,0.933333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,d40c6a76cc752b7bdbee863bd005b9c80c9bb1429d87897e0e6a426ca8caa591
+208,31,30,1.033333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,98a722256400b3f740f77334b95725fa1929661008b2f6d96950a5f26a7db6e3
+209,31,30,1.033333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,b96e9fb2e25547529216dde82f3a98c2aa7174f7b7c5d3bc9a16b6c9b3152280
+212,105,30,3.5,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,ceb2bb32e496473430f48a6e7245cee76fd3285e4c3b2f458e8d8abbe57fd1ae
+213,29,30,0.966667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,3f6fe4f5ae0adb50d1899aa06e7cef88ec93a26131ca558f65d5ccd65dfaa505
+214,20,30,0.666667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,07d655205323c5ccf541edf76ae76244ddae30f909de095ca88a3ae5804a00bb
+215,20,30,0.666667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,41eb25ffa8896b5b4538144159e149c7a7bf97b3f131416610c32fe08c88b8f7
+216,55,30,1.833333,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,7560f01db5f9ef3e687347ad93ee258bafacb739631e6b694675f484981fd5cd
+217,105,30,3.5,51,p03ex_009.arc,terra 1: ground second; terra 1: ground alternate second,Source label; full semantic action name unverified,639e88771d2a933f3816528bb5f6724ca5f191cbcf6b53a2a358ae1cdfb6ec50
+218,45,30,1.5,51,p03ex_009.arc,terra 1: ground finisher,Source label; full semantic action name unverified,fe5fddcf6ced8e29f517d16713bd7e0308971088dd3fd8208a5b63a92c540960
+220,62,30,2.066667,51,p03ex_710.arc,Unassigned,Source label; full semantic action name unverified,d56c4b72453a149cac32835da8afc37ffc3344c493475dc1666790be14db8f84
+221,21,30,0.7,51,p03ex_710.arc,Unassigned,Source label; full semantic action name unverified,fb6f7e2cb4790560dc889aa720a7a9140989da2f3d56990574c88f33890de414
+222,40,30,1.333333,51,xaa007te.arc,Unassigned,Source label; full semantic action name unverified,913aafae161a6e6e30be76f272d15e585629302a31ccfe2449e44ba88ba83495
+223,60,30,2.0,51,xaa007te.arc,Unassigned,Source label; full semantic action name unverified,ac925b994108101afe7486bb81e783c0c1d9cb3e0e1f02b1f860fb27f597d968
+300,34,30,1.133333,51,p03base.arc,terra: ground first,Source label; full semantic action name unverified,675c6eb65cd7ed3efa762eccf6ac10bf96f5f30d1214c7ecd7b54068f40be8df
+301,41,30,1.366667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,b0d7651c79b0facfd8e9f0d974eeaa2cc5d8c551b33faa3e647cbfb4a2c6caae
+303,50,30,1.666667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,9fe1b19834828f7c6d99f85021e8578b901e05e11b732b9f85ed67f77a6cccea
+304,50,30,1.666667,51,p03base.arc,terra 5: air second,Source label; full semantic action name unverified,c3892cdd9bb3237195478b46fc675cb330e579d0517ee16ef878b6dc0e47bab2
+305,25,30,0.833333,51,p03base.arc,terra: air first,Source label; full semantic action name unverified,1ab4bcad6c723bed3461fe2bdd55f2cd1b0d5aed9305bdb473c87b925c3f4755
+306,31,30,1.033333,51,p03base.arc,terra: air second,Source label; full semantic action name unverified,476ffde5baa5dc65efe38afdb0ce35f8e890585054d5180f849766937b1d2ea3
+307,30,30,1.0,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,e45b4b85a9982316f91955f671a9e1c222730e5169c4d9c9506621b79e65be8f
+308,37,30,1.233333,51,p03base.arc,terra 5: air finisher,Source label; full semantic action name unverified,6d34f59aeb044b271d3d7e2daff672a8c437e0a89eb3903e484c7fba70ba329f
+315,36,30,1.2,51,p03ex_151.arc,terra: ground Fire release; terra: ground Blizzard/Gravity release; terra 3: ground second; terra 3: ground alternate second; terra only: ground Fire/Blizzard/Gravity recovery,Source label; full semantic action name unverified,c94c49add194d1c36d1c7ce7e26c4e3598418a0dc38522ef024773351d47738c
+316,36,30,1.2,51,p03ex_151.arc,terra: air Fire release; terra: air Blizzard/Gravity release; terra 3: ground finisher; terra only: air Fire/Blizzard/Gravity recovery,Source label; full semantic action name unverified,a1b70c934dc930a8ccdfd8b5b6c713a31323be54df0c838655e2a9d0c17c0fa6
+317,37,30,1.233333,51,p03ex_152.arc,terra 3: air first,Source label; full semantic action name unverified,d53319a920d135e22535a416e0563074bdabcaaa7ae2dd09a6a5c35bd999ba74
+318,37,30,1.233333,51,p03ex_152.arc,terra 3: air second,Source label; full semantic action name unverified,cef10e2bc52d1c431426dd86a0c6036549e29a05ed9ab0f82a71587cbfdae0f9
+320,59,30,1.966667,51,p03base.arc,terra 1..10: ground overhead cast; terra 1..10: air overhead cast,Source label; full semantic action name unverified,f133d23825f107803012c7d00f680c71d6b483473a208170dbd5262b7ccec365
+330,31,30,1.033333,51,p03ex_105.arc,Unassigned,Source label; full semantic action name unverified,4153500a65b5c9ff56e23b2f6dddfacaa2ec977af645b5bb5517f1b810f6a33a
+332,41,30,1.366667,51,p03ex_101.arc,terra: ground finisher; terra 1: air first,Source label; full semantic action name unverified,53ce3242d713324168372b0905280e0abce6c6b558e352a8fa1f8c323483af5f
+350,41,30,1.366667,51,p03ex_116.arc,terra 2: ground finisher,Source label; full semantic action name unverified,835c45180e1edcfa2280bb4a6c9e17f1d4f0de66efca0df9d2725deeb7aba4df
+351,35,30,1.166667,51,p03ex_710.arc,terra 5: air first,Source label; full semantic action name unverified,c87c9b54719e398ffefc6164ae14caa97454f64f49c2aa3f1d41c3daf2e634b1
+352,36,30,1.2,51,p03ex_352.arc,terra 5: ground second; terra 5: ground alternate second,Source label; full semantic action name unverified,926a63334e9f03316fd303f2edeaeb96a5ee8a26d9f2c6dabe7e8d9d54f2dbf0
+353,44,30,1.466667,51,p03ex_352.arc; p03ex_710.arc,terra: air finisher; terra 5: ground finisher,Source label; full semantic action name unverified,55878be510c09cc0ff075f08ece9530226a8b6e4911cfcf704bccc078654bc23
+354,36,30,1.2,51,p03base.arc,all profiles: ground support cast; all profiles: ground cast recovery; terra 1..10: ground cast release,Source label; full semantic action name unverified,2540ecf6ab18255a550e0a54e1b574071d567a5c9acb868aabd277d24ff411c7
+355,51,30,1.7,51,p03base.arc,all profiles: air support cast; all profiles: air cast recovery; terra 1..10: air cast release,Source label; full semantic action name unverified,7eadfb651fca859afd08750d322eee0d7b2d07221c1da3fbe02e5e595ed5c297
+356,35,30,1.166667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,9a507c17322b25c9065c12ac29566af2d49d53038495b1e9c8281b1fed4425bb
+357,47,30,1.566667,51,p03ex_102.arc,terra 1: air second,Source label; full semantic action name unverified,d7131c6728099a2bb2299113cf6812f469bee4c84453f3b0a4f62d77c2186bb1
+358,15,30,0.5,51,p03ex_108.arc,Unassigned,Source label; full semantic action name unverified,a86fd6706e3a805c0b8d0202a29918452e689624fc003606a604cb8d3ebfc612
+359,28,30,0.933333,51,p03ex_108.arc,Unassigned,Source label; full semantic action name unverified,11cf7aca2a66d97dcdcfe46cabc592680858f1a8af9a97a9e74cf700ad3a446b
+360,36,30,1.2,51,p03ex_108.arc,Unassigned,Source label; full semantic action name unverified,f1cd7316849c98478b565130fa5390458e4fc8abc9fa2e352e3c4ab684e21f86
+361,20,30,0.666667,51,p03ex_111.arc,terra 1: air finisher,Source label; full semantic action name unverified,9b8b3f120027dbd01a4be0255f84b0024b65d498ae510a9213b5f68ef4fb1ee4
+362,37,30,1.233333,51,p03ex_111.arc,terra 2: ground first,Source label; full semantic action name unverified,f4d4b6eb0fa7c14b814050a402562bbbb2c990770895b7ae18fd205bf1615349
+363,26,30,0.866667,51,p03ex_111.arc,terra 2: ground second; terra 2: ground alternate second,Source label; full semantic action name unverified,8277f67e078eba6b2735e34ff4219504f16fb120f96f477810f6e1d2d3fa48c4
+370,22,30,0.733333,51,p03ex_133.arc; p03ex_204.arc,terra 2: air first,Source label; full semantic action name unverified,2f30866167fd8bbd5b4f24b48df3b6bf88dbe2769e5780589f365818d922acca
+371,65,30,2.166667,51,p03ex_133.arc,terra 2: air second,Source label; full semantic action name unverified,804664a32e13a20dac97bbed78689a55d32dfcf7b7905ef34ce4c6bdcd01d807
+372,22,30,0.733333,51,p03ex_137.arc,terra 2: air finisher,Source label; full semantic action name unverified,a072b0bb3fef4bc60767fdc0a999fa74c6527cfb97023aedb7ede4f3dddb780f
+373,40,30,1.333333,51,p03ex_137.arc,terra 3: ground first,Source label; full semantic action name unverified,84957a9485060e2f5917759e47266b01054e319eadb97dbd416a69109362868c
+377,82,30,2.733333,51,p03ex_120.arc,Unassigned,Source label; full semantic action name unverified,cff264138bf066ee0106d40e653813478df63acfd414f60ea8d1765b6e2f09dd
+378,40,30,1.333333,51,p03ex_301.arc,Unassigned,Source label; full semantic action name unverified,ec6f9c4da2f30e184752c15c374d3a3ab673bba92790fa1d1f62c664f8cf03e3
+379,35,30,1.166667,51,p03ex_301.arc,Unassigned,Source label; full semantic action name unverified,0cc7a0b413aa1362e44b1b279a497db3fd16e308fcc750696b3e54ecd55ed823
+380,44,30,1.466667,51,p03ex_120.arc,Unassigned,Source label; full semantic action name unverified,8c7ecdf68bb8367cdfd5771e32a55ac1eb26222fe98d5c086e950e97cb16a654
+390,51,30,1.7,51,p03ex_154.arc,terra 4: ground first,Source label; full semantic action name unverified,4113fb35c3d7caf5f5e62f17d0996f0c238db762ae70b3c69910a9af3e57a97b
+391,51,30,1.7,51,p03ex_153.arc,terra 3: air finisher,Source label; full semantic action name unverified,2c35ce1d03f994784f47160cfb062124f7472b650bd05b84d10f13011461938b
+392,51,30,1.7,51,p03ex_155.arc,terra 4: ground finisher,Source label; full semantic action name unverified,fc5a27204d62ec77b1ed119465936979df8833eebdfa67d8a5e0bf5512f8961c
+393,43,30,1.433333,51,p03ex_155.arc,terra 4: air first,Source label; full semantic action name unverified,f7e2c91839b3095885b4b66725590c54ac3bf96761b1c457f1d4d71f0b0ed3ee
+395,33,30,1.1,51,p03ex_200.arc,Unassigned,Source label; full semantic action name unverified,a0c45b1dbaf0d1d57d33cb8499637ae7828ddf4a4cca1645421e550cfd71ea68
+399,119,30,3.966667,51,p03ex_346.arc; p03ex_710.arc,terra 4: air finisher,Source label; full semantic action name unverified,64ff082004490219763f14875da1536d59174a3fce892d525b2fe8836b49f152
 400,38,30,1.266667,51,p03base.arc,all profiles: Guard pose,Source label; full semantic action name unverified,f4c9f830863d49844fc8aa8fee101723a8ce709bc52e95b150a75d65625f2087
-405,34,30,1.133333,51,p03ex_605.arc,terra 8 air 2,Source label; full semantic action name unverified,b542c8a9a8a0130b12d25454b6e9a5948a7d66b05178a69942f45c0deceb2b4d
-408,18,30,0.6,51,p03base.arc,,Source label; full semantic action name unverified,ca1bf70ea2e22412612419b9fa8da269e9e2d5ddef01737f07f2e70e8384f0e5
-410,32,30,1.066667,51,p03ex_140.arc,,Source label; full semantic action name unverified,2c8a77292f2ae4bbdb26ea9a12caec4899e87eba94752f6769c1f27ff89b794a
-411,38,30,1.266667,51,p03ex_313.arc; p03ex_710.arc,terra 5 ground 1,Source label; full semantic action name unverified,af649c93c42ecd29a433b81f42c3e5bf958d812b9eafa3e783d953f5eedd6471
-427,51,30,1.7,51,p03ex_154.arc,terra 4 ground 2,Source label; full semantic action name unverified,6657443d2bddf6f423f83dd848d93ff694f87821a853a3c513d9ffb38856ed4a
-428,50,30,1.666667,51,p03ex_156.arc,terra 4 air 2,Source label; full semantic action name unverified,926eb2f4acddf3528345cbfa43cfbcc6701a266e2d7119fa5fce6bd258bf5e01
-429,13,30,0.433333,51,p03ex_156.arc,,Source label; full semantic action name unverified,ffcb3215ba3df8ffe511c33ee628e9ec67e1ac246551fae7573fb4697f252221
-500,12,30,0.4,51,p03ex_501.arc,terra 6 ground 1,Source label; full semantic action name unverified,7e27693484ad031b987477ccb47aefe58c4503a51440c504af484e931c012c53
-501,14,30,0.466667,51,p03ex_501.arc,terra 6 ground 2,Source label; full semantic action name unverified,314645de0704ded1d78c7a1e0b7e3c302394e93e3a892d508e9440c2a98a5213
-503,31,30,1.033333,51,p03ex_205.arc; p03ex_501.arc; p03ex_622.arc,terra 6 ground 3,Source label; full semantic action name unverified,81b1c3fed6424fb5cbf2216c677a4b91961f8d024403df14526838d5a698a705
-505,26,30,0.866667,51,p03ex_150.arc; p03ex_157.arc,,Source label; full semantic action name unverified,3ffd69af1690334fe78051ca09e9d6ec30fc6f31b2b43fc5673af51f0d8625ca
-506,12,30,0.4,51,p03ex_150.arc,,Source label; full semantic action name unverified,41f82e7c45efc73f487b41d31eefec123570337fe4a22cd1fe2b1fff44c43058
-507,26,30,0.866667,51,p03ex_506.arc,terra 7 ground 3,Source label; full semantic action name unverified,1cb6b506fc786208b6c62c6a4015c1d73b92251557e8180aa391a05e1ad4ba0b
-508,21,30,0.7,51,p03ex_506.arc,terra 7 air 1,Source label; full semantic action name unverified,e0d892cff31f026cedebafd9964ef1a59efe0d8b4cb9150a8325ce7650c0530f
-510,36,30,1.2,51,p03ex_501.arc,terra 6 air 1,Source label; full semantic action name unverified,15d26bf0630a6859a662380748c4ac4d9478908cb96577f1bf3022c2d4567223
-511,27,30,0.9,51,p03ex_501.arc,terra 6 air 2,Source label; full semantic action name unverified,96d0eeacee9edabff21a6c4007c724a11370b774d077b667ffba895e343c439a
-512,25,30,0.833333,51,p03ex_501.arc,terra 6 air 3,Source label; full semantic action name unverified,aa018a3f19c9212eb608878fcdf937519c37f563a89636f75f0ea3f9ada9055e
-513,26,30,0.866667,51,p03ex_501.arc,terra 7 ground 1,Source label; full semantic action name unverified,63882daea3642331cc149a3b4f068d460d7d37f0c169c50b59161866f0238d87
-514,34,30,1.133333,51,p03ex_157.arc; p03ex_501.arc; p03ex_506.arc,terra 7 ground 2,Source label; full semantic action name unverified,5e97622a74293c96237e8932ccf701f2c0bce200178b65a34fbbdb74512b4fd2
-515,5,30,0.166667,51,p03ex_204.arc; p03ex_511.arc,,Source label; full semantic action name unverified,544c49669d8773d6ecb3590eb7f4507923c59e84c510178b190e0c68de2be13b
-516,5,30,0.166667,51,p03ex_511.arc,,Source label; full semantic action name unverified,387dde577a4db28c71ed01c35ce5de99ba4926c82b976eca5851b6daf546b116
-517,17,30,0.566667,51,p03ex_204.arc; p03ex_511.arc,terra 7 air 2,Source label; full semantic action name unverified,ee94cc04860f978ed2da7abba5b494f144f07633140215364f26ae1e0d69a77e
-518,19,30,0.633333,51,p03ex_511.arc,terra 7 air 3,Source label; full semantic action name unverified,ae6e8876d1679a45d9abb33c492c5c0048c4ce6b9e4bafd423f0318688080fc5
-519,36,30,1.2,51,p03ex_511.arc,terra 8 ground 1,Source label; full semantic action name unverified,3f0d4e4a145882741a3aec807a0d6e80a76a5aa54098307b54f457f15468d573
+405,34,30,1.133333,51,p03ex_605.arc,terra 8: air second,Source label; full semantic action name unverified,b542c8a9a8a0130b12d25454b6e9a5948a7d66b05178a69942f45c0deceb2b4d
+408,18,30,0.6,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,ca1bf70ea2e22412612419b9fa8da269e9e2d5ddef01737f07f2e70e8384f0e5
+410,32,30,1.066667,51,p03ex_140.arc,Unassigned,Source label; full semantic action name unverified,2c8a77292f2ae4bbdb26ea9a12caec4899e87eba94752f6769c1f27ff89b794a
+411,38,30,1.266667,51,p03ex_313.arc; p03ex_710.arc,terra: ground second; terra: ground alternate second; terra 5: ground first,Source label; full semantic action name unverified,af649c93c42ecd29a433b81f42c3e5bf958d812b9eafa3e783d953f5eedd6471
+427,51,30,1.7,51,p03ex_154.arc,terra 4: ground second; terra 4: ground alternate second,Source label; full semantic action name unverified,6657443d2bddf6f423f83dd848d93ff694f87821a853a3c513d9ffb38856ed4a
+428,50,30,1.666667,51,p03ex_156.arc,terra 4: air second,Source label; full semantic action name unverified,926eb2f4acddf3528345cbfa43cfbcc6701a266e2d7119fa5fce6bd258bf5e01
+429,13,30,0.433333,51,p03ex_156.arc,Unassigned,Source label; full semantic action name unverified,ffcb3215ba3df8ffe511c33ee628e9ec67e1ac246551fae7573fb4697f252221
+500,12,30,0.4,51,p03ex_501.arc,terra 6: ground first,Source label; full semantic action name unverified,7e27693484ad031b987477ccb47aefe58c4503a51440c504af484e931c012c53
+501,14,30,0.466667,51,p03ex_501.arc,terra 6: ground second; terra 6: ground alternate second,Source label; full semantic action name unverified,314645de0704ded1d78c7a1e0b7e3c302394e93e3a892d508e9440c2a98a5213
+503,31,30,1.033333,51,p03ex_205.arc; p03ex_501.arc; p03ex_622.arc,terra 6: ground finisher,Source label; full semantic action name unverified,81b1c3fed6424fb5cbf2216c677a4b91961f8d024403df14526838d5a698a705
+505,26,30,0.866667,51,p03ex_150.arc; p03ex_157.arc,Unassigned,Source label; full semantic action name unverified,3ffd69af1690334fe78051ca09e9d6ec30fc6f31b2b43fc5673af51f0d8625ca
+506,12,30,0.4,51,p03ex_150.arc,Unassigned,Source label; full semantic action name unverified,41f82e7c45efc73f487b41d31eefec123570337fe4a22cd1fe2b1fff44c43058
+507,26,30,0.866667,51,p03ex_506.arc,terra 7: ground finisher,Source label; full semantic action name unverified,1cb6b506fc786208b6c62c6a4015c1d73b92251557e8180aa391a05e1ad4ba0b
+508,21,30,0.7,51,p03ex_506.arc,terra 7: air first,Source label; full semantic action name unverified,e0d892cff31f026cedebafd9964ef1a59efe0d8b4cb9150a8325ce7650c0530f
+510,36,30,1.2,51,p03ex_501.arc,terra 6: air first,Source label; full semantic action name unverified,15d26bf0630a6859a662380748c4ac4d9478908cb96577f1bf3022c2d4567223
+511,27,30,0.9,51,p03ex_501.arc,terra 6: air second,Source label; full semantic action name unverified,96d0eeacee9edabff21a6c4007c724a11370b774d077b667ffba895e343c439a
+512,25,30,0.833333,51,p03ex_501.arc,terra 6: air finisher,Source label; full semantic action name unverified,aa018a3f19c9212eb608878fcdf937519c37f563a89636f75f0ea3f9ada9055e
+513,26,30,0.866667,51,p03ex_501.arc,terra 7: ground first,Source label; full semantic action name unverified,63882daea3642331cc149a3b4f068d460d7d37f0c169c50b59161866f0238d87
+514,34,30,1.133333,51,p03ex_157.arc; p03ex_501.arc; p03ex_506.arc,terra 7: ground second; terra 7: ground alternate second,Source label; full semantic action name unverified,5e97622a74293c96237e8932ccf701f2c0bce200178b65a34fbbdb74512b4fd2
+515,5,30,0.166667,51,p03ex_204.arc; p03ex_511.arc,Unassigned,Source label; full semantic action name unverified,544c49669d8773d6ecb3590eb7f4507923c59e84c510178b190e0c68de2be13b
+516,5,30,0.166667,51,p03ex_511.arc,Unassigned,Source label; full semantic action name unverified,387dde577a4db28c71ed01c35ce5de99ba4926c82b976eca5851b6daf546b116
+517,17,30,0.566667,51,p03ex_204.arc; p03ex_511.arc,terra 7: air second,Source label; full semantic action name unverified,ee94cc04860f978ed2da7abba5b494f144f07633140215364f26ae1e0d69a77e
+518,19,30,0.633333,51,p03ex_511.arc,terra 7: air finisher,Source label; full semantic action name unverified,ae6e8876d1679a45d9abb33c492c5c0048c4ce6b9e4bafd423f0318688080fc5
+519,36,30,1.2,51,p03ex_511.arc,terra 8: ground first,Source label; full semantic action name unverified,3f0d4e4a145882741a3aec807a0d6e80a76a5aa54098307b54f457f15468d573
 519,36,30,1.2,51,p03ex_629.arc,Unassigned bank-specific variant,Source label; full semantic action name unverified,ec9c380fdfc94a809ef5e6d4e69e4e2108f4dcff1a09df8a0a218c6487196398
-550,34,30,1.133333,51,p03ex_204.arc,terra 8 ground 2,Source label; full semantic action name unverified,7d907a67d69ec000a393e5a0d7dce14c8ac065a006007b662fe87360e3f3e561
-557,71,30,2.366667,51,p03ex_206.arc,terra 8 air 1,Source label; full semantic action name unverified,6d8e81fe12f9e2f4522dd587e2ff5c0733ad82b8ecb8dbb0c5d7d8227e1f6990
+550,34,30,1.133333,51,p03ex_204.arc,terra 8: ground second; terra 8: ground alternate second,Source label; full semantic action name unverified,7d907a67d69ec000a393e5a0d7dce14c8ac065a006007b662fe87360e3f3e561
+557,71,30,2.366667,51,p03ex_206.arc,terra 8: air first,Source label; full semantic action name unverified,6d8e81fe12f9e2f4522dd587e2ff5c0733ad82b8ecb8dbb0c5d7d8227e1f6990
 600,42,30,1.4,51,p03base.arc,all profiles: ground item,Source label; full semantic action name unverified,c6b964a60e0cb79b5907c9873deffaf2630fbdc3951dd8661087600140fc64d3
 601,41,30,1.366667,51,p03ex_628.arc,all profiles: air item,Source label; full semantic action name unverified,08bacc18a45de012c538ea73b32b14aa7c3fca9de9c3248bfd333f8129d555c2
-602,32,30,1.066667,51,p03ex_621.arc,terra 9 air 1,Source label; full semantic action name unverified,b8b11db3a989bdd2875ad6bb72661a8130d9aa55dca62206eef10750624f612e
-603,64,30,2.133333,51,p03ex_621.arc,terra 9 air 2,Source label; full semantic action name unverified,02870f6026e0d572ecf6a9fb140acb3365a729075316e852bd98b53e61be60c4
-604,26,30,0.866667,51,p03ex_621.arc,terra 9 air 3,Source label; full semantic action name unverified,48530d415dbf1465b9f2916d1bd64014fdac71b55c2da7d69af2f690f2a092c8
-605,42,30,1.4,51,p03ex_621.arc,terra 10 ground 1,Source label; full semantic action name unverified,46d72954f6306098451382968af8d0f4c3e227e9378c032992bf4011043d8235
-606,15,30,0.5,51,p03ex_621.arc,terra 10 ground 2,Source label; full semantic action name unverified,ae66b00cba76234ec04d756cc7927f74fbe7951f575ca4bd755d05dbb7c6dfe5
-613,23,30,0.766667,51,p03ex_612.arc,terra 9 ground 3,Source label; full semantic action name unverified,a5e22c6e84ac7e8adeafc316d921198bd507e184b8d5d1b7152a1e41ab61c77c
-614,34,30,1.133333,51,p03ex_624.arc,terra 10 air 1,Source label; full semantic action name unverified,6e8123c0ab84bb5b15cd01c3af6f35eb8957433bcac6fc03cec23139dbf75146
-615,34,30,1.133333,51,p03ex_624.arc,terra 10 air 2,Source label; full semantic action name unverified,589850947a646200122b07222e64fc75917d64e471a9d38b89711f0d2e9d7a7a
-616,44,30,1.466667,51,p03ex_605.arc,terra 8 air 3,Source label; full semantic action name unverified,6419a9bb06384c61f7ad60a76fdd32dc5c67c6b98a3bca41be05b6343bcb22e5
-617,35,30,1.166667,51,p03ex_622.arc,terra 10 ground 3,Source label; full semantic action name unverified,88661670512857a2640c79ced035b5f7999dda1a8b281be02104eb35ce1017bd
-618,20,30,0.666667,51,p03ex_609.arc,terra 9 ground 1,Source label; full semantic action name unverified,79e47461a4a4262a4228bb9a62502bafd5d2921607aba595eda515390b94f91c
-619,52,30,1.733333,51,p03ex_609.arc,terra 9 ground 2,Source label; full semantic action name unverified,8afe351484f0a79a92ff8a30162cf1049d8551c9d1de481692bb2c06c97bdf0c
-620,18,30,0.6,51,p03ex_626.arc,terra 10 air 3,Source label; full semantic action name unverified,de120b715ee3aafe0ed17f32137a05d8c4dcbfec3054e6ded418933d0375c300
-621,56,30,1.866667,51,p03ex_629.arc,,Source label; full semantic action name unverified,c7c4d5447dc3ce93b7bfb5789083e882c007f63ad4984b965175558996e217e8
-622,56,30,1.866667,51,p03ex_629.arc,,Source label; full semantic action name unverified,800734012073e2900499d4722ad5ca47abd48731ebc2bcff231546196a175d88
-623,9,30,0.3,51,p03ex_629.arc,,Source label; full semantic action name unverified,e7e74e4583041d48fdf4e819cce616ab39b21eb3750306e49f9e7df4e909d19d
-650,28,30,0.933333,51,p03ex_205.arc,terra 8 ground 3,Source label; full semantic action name unverified,c6544a5123cdb4e4efa95a97f9e77013e8b23f0d01acef8bb63ada4a0cd28d07
-710,34,30,1.133333,51,p03ex_710.arc,,Source label; full semantic action name unverified,76291fc2b3a235abe43238cbcf5b907ded8d34356e14b291d652e3ca288b7e99
-711,30,30,1.0,51,p03ex_710.arc,,Source label; full semantic action name unverified,6c4243f8b4b0c010bb89cf3cd6647a15df722af494f315732a7a80a3ccf14a3f
+602,32,30,1.066667,51,p03ex_621.arc,terra 9: air first,Source label; full semantic action name unverified,b8b11db3a989bdd2875ad6bb72661a8130d9aa55dca62206eef10750624f612e
+603,64,30,2.133333,51,p03ex_621.arc,terra 9: air second,Source label; full semantic action name unverified,02870f6026e0d572ecf6a9fb140acb3365a729075316e852bd98b53e61be60c4
+604,26,30,0.866667,51,p03ex_621.arc,terra 9: air finisher,Source label; full semantic action name unverified,48530d415dbf1465b9f2916d1bd64014fdac71b55c2da7d69af2f690f2a092c8
+605,42,30,1.4,51,p03ex_621.arc,terra 10: ground first,Source label; full semantic action name unverified,46d72954f6306098451382968af8d0f4c3e227e9378c032992bf4011043d8235
+606,15,30,0.5,51,p03ex_621.arc,terra 10: ground second; terra 10: ground alternate second,Source label; full semantic action name unverified,ae66b00cba76234ec04d756cc7927f74fbe7951f575ca4bd755d05dbb7c6dfe5
+613,23,30,0.766667,51,p03ex_612.arc,terra 9: ground finisher,Source label; full semantic action name unverified,a5e22c6e84ac7e8adeafc316d921198bd507e184b8d5d1b7152a1e41ab61c77c
+614,34,30,1.133333,51,p03ex_624.arc,terra 10: air first,Source label; full semantic action name unverified,6e8123c0ab84bb5b15cd01c3af6f35eb8957433bcac6fc03cec23139dbf75146
+615,34,30,1.133333,51,p03ex_624.arc,terra 10: air second,Source label; full semantic action name unverified,589850947a646200122b07222e64fc75917d64e471a9d38b89711f0d2e9d7a7a
+616,44,30,1.466667,51,p03ex_605.arc,terra 8: air finisher,Source label; full semantic action name unverified,6419a9bb06384c61f7ad60a76fdd32dc5c67c6b98a3bca41be05b6343bcb22e5
+617,35,30,1.166667,51,p03ex_622.arc,terra 10: ground finisher,Source label; full semantic action name unverified,88661670512857a2640c79ced035b5f7999dda1a8b281be02104eb35ce1017bd
+618,20,30,0.666667,51,p03ex_609.arc,terra 9: ground first,Source label; full semantic action name unverified,79e47461a4a4262a4228bb9a62502bafd5d2921607aba595eda515390b94f91c
+619,52,30,1.733333,51,p03ex_609.arc,terra 9: ground second; terra 9: ground alternate second,Source label; full semantic action name unverified,8afe351484f0a79a92ff8a30162cf1049d8551c9d1de481692bb2c06c97bdf0c
+620,18,30,0.6,51,p03ex_626.arc,terra 10: air finisher,Source label; full semantic action name unverified,de120b715ee3aafe0ed17f32137a05d8c4dcbfec3054e6ded418933d0375c300
+621,56,30,1.866667,51,p03ex_629.arc,Unassigned,Source label; full semantic action name unverified,c7c4d5447dc3ce93b7bfb5789083e882c007f63ad4984b965175558996e217e8
+622,56,30,1.866667,51,p03ex_629.arc,Unassigned,Source label; full semantic action name unverified,800734012073e2900499d4722ad5ca47abd48731ebc2bcff231546196a175d88
+623,9,30,0.3,51,p03ex_629.arc,Unassigned,Source label; full semantic action name unverified,e7e74e4583041d48fdf4e819cce616ab39b21eb3750306e49f9e7df4e909d19d
+650,28,30,0.933333,51,p03ex_205.arc,terra 8: ground finisher,Source label; full semantic action name unverified,c6544a5123cdb4e4efa95a97f9e77013e8b23f0d01acef8bb63ada4a0cd28d07
+710,34,30,1.133333,51,p03ex_710.arc,Unassigned,Source label; full semantic action name unverified,76291fc2b3a235abe43238cbcf5b907ded8d34356e14b291d652e3ca288b7e99
+711,30,30,1.0,51,p03ex_710.arc,Unassigned,Source label; full semantic action name unverified,6c4243f8b4b0c010bb89cf3cd6647a15df722af494f315732a7a80a3ccf14a3f

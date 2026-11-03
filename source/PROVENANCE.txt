@@ -17,3 +17,10 @@ main, pages numbered tests and retains one zero terminator. Native/foreign
 ability bytes remain ordered with their multiplicity/equipped flags intact.
 Native ability-count fixture: Steam Global timestamp 1721645006, RVA 0x284be0.
 All fitted animation payloads are unchanged from v1.
+
+Terra v3: requested main ground300/411/332 and air305/306/353. Ground
+Fire/Blizzard/Gravity315, air316, with matching recovery body variants. The
+main-only Superglide replacement uses original Terra slide009, speed16 and
+39 native clock units in a checked fall/collision callback. Three exact
+native hooks are scoped to Sora/main Terra. Ordinary Glide, numbered casts,
+numbered Superglide and native event/request tables remain intact.

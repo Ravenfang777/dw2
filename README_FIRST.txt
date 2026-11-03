@@ -1,26 +1,51 @@
-KH1FM TERRA ANIMATION TEST v2 -- STANDALONE
+KH1FM TERRA ANIMATION TEST v3 -- STANDALONE
 KH1FM Steam Global / OpenKH Panacea
 
 INSTALL
-1. Close KH1. Disable Terra v1, standalone Aqua, Dual Wield/Nine Styles,
+1. Close KH1. Disable Terra v1/v2, standalone Aqua, Dual Wield/Nine Styles,
    other moveset DLLs and the full KH2 Combat overhaul.
 2. Import this ZIP into OpenKH Mods Manager, then Build and Run.
-3. Load a save and stand idle. Equip terra in the abilities menu.
-4. Check for TERRA ANIMATION TEST v2 in kh1-terra.log beside the game EXE.
-   DLL updates require a restart; F1 does not reload a DLL.
+3. Load your save, stand idle, then equip terra. All Terra entries cost 0 AP.
+4. Confirm TERRA ANIMATION TEST v3 in kh1-terra.log beside the game EXE.
+   Restart for DLL updates; F1 cannot reload a DLL.
 
-WHAT v2 FIXES
-The supplied v1 log stopped at TERRA ABILITY SLOTS FULL. v1 required room for
-all eleven entries before adding the main ability. v2 prioritizes terra and
-shows as many numbered tests as fit, using pages when necessary.
+MAIN TERRA CHANGES
+Ground combo: 300 -> 411 -> 332 (both native second-hit variants use 411).
+Air combo: 305 -> 306 -> 353.
+Ground Fire, Blizzard and Gravity: 315.
+Air Fire, Blizzard and Gravity: 316.
+The requested casts use matching recovery tails from the same source clip.
+Thunder, Cure, Aero and Stop retain their v2 cast poses. Native spell release
+events, projectiles, MP costs, hit logic and keyblade-tip effects are retained.
 
-Only custom IDs 116..126 are compacted or replaced. Existing learned native
-abilities, their copies, equipped flags and AP are preserved. Unknown custom
-entries outside that range are preserved too. A zero tail byte is retained
-because native ability readers scan to a terminator. The list is not enlarged.
-Saved Aqua/Style entries in this private range are reused and initially OFF.
-All visible Terra entries cost 0 AP; equipping one disables the other Terra
-entries. Page installation waits for idle. Stand idle to finish a switch.
+SINGLE-TAP SUPERGLIDE REPLACEMENT
+With main terra active and native Superglide enabled, tap your normal
+Superglide button (Square by default) in the air. Terra's current ground
+Slide/Dodge Roll source animation 009 plays as a finite aerial slide.
+Holding the button does not extend it; release does not shorten it.
+The move takes the stick direction at the tap, or character facing with a
+neutral stick. It travels horizontally for the animation, then returns to
+normal falling. Native Superglide's height threshold is retained (above 50
+native units); attack, spell, scripted-action and shortcut conflicts reject it.
+Native collision handles walls/floors. No damage protection or extra hitbox
+is granted. A new tap after completion can start another slide when eligible.
+Ordinary Glide remains usable. This replaces main Superglide only.
+
+TEN NUMBERED TESTS AND SHARED ACTIONS
+terra 1..10 retain their v2 combos, casts and native Superglide controls.
+All profiles retain the existing idle/walk/run/jump/fall/ledge animations,
+Guard400, ground Roll/Slide009 and items600/601. Damage reactions stay native.
+TERRA_ANIMATION_MAP.txt gives all eleven profiles. TERRA_MOVE_INVENTORY.csv
+lists 137 source variants with original frame counts, FPS, banks and hashes.
+Native attack abilities keep their priority. Unequip Slapshot/Vortex and
+similar abilities to isolate basic combos. KH1 combo/hit timing is retained.
+Finish the action and stand idle before switching or unequipping profiles.
+
+ABILITY STORAGE
+v2's main-first setup and adaptive pages are retained. Only custom IDs
+116..126 are compacted/replaced; native/foreign ability copies, equipped flags
+and AP are preserved. One zero tail byte remains for native list readers.
+Missing/reused custom entries initially start OFF. No native entry is evicted.
 
 NUMBERED TEST PAGES
 If there is room, terra and terra 1..10 all appear together.
@@ -45,42 +70,23 @@ Restart after changing it. While nonzero, this setting controls the profile
 instead of the equipped Terra ability. Set it back to 0 to use abilities.
 If only terra fits, the override also makes the numbered tests accessible.
 
-MAIN PROFILE AND TEN TESTS
-Main ground: 300 -> 301 -> 303. Main air: 305 -> 306 -> 307.
-Includes Terra idle/combat idle, walk/run, jump/fall/landing, ledges,
-Guard 400, Dodge Roll/Slide 009, items 600/601 and casting 354/355/320.
-TERRA_ANIMATION_MAP.txt lists all eleven profiles and common mappings.
-TERRA_MOVE_INVENTORY.csv lists 137 source variants, frame counts, FPS,
-source banks and hashes. Numeric labels are original BBS IDs; official
-command names have not been verified. Test 8 uses clip 519 from p03ex_511.arc.
-
-COMBAT AND VISUAL SCOPE
-Animation poses and fitting are unchanged from Terra v1. KH1 retains input,
-combo progression, hit/chain timing, collision, Guard defense, spell/item
-logic and keyblade-tip effects. Equip native Guard and Dodge Roll to use them.
-Unequip Slapshot/Vortex and similar attack abilities to isolate basic combos.
-Test poses do not import their BBS commands, hit events or projectiles.
-Glide, Superglide, jump height and damage/knockback reactions remain native.
-The mod retains Sora's model, native limb lengths, hair, outfit, stats and
-equipped keyblade. No Aqua poses or Dual Wield controller are imported.
-
 TEST AND REPORT
-Test main ground/air combos, movement, Guard, Roll, numbered entries and
-unequipping. Check normal/Olympus saves and room changes. For issues, send
-the new kh1-terra.log and a short video showing the selected ability/action.
-The new log identifies slot occupancy as well as profile and motion admission.
+Check the new main ground/air combos and all six requested ground/air casts.
+Test a Superglide tap, release, holding, neutral/directional stick, landing,
+walls, damage interruption and ordinary Glide. Then switch to a numbered
+ability and unequip to verify restoration. Try normal/Olympus saves and a
+room change. Send kh1-terra.log and a short video for visual/timing issues.
 
 VALIDATION
-39 checks execute the actual v2 PE DLL under a Win64 ABI/API mock. They cover
-near-full saves, legacy styles, all pages, duplicate native abilities, native
-zero-terminated counting, config overrides, idle setup, restoration, both
-banks and all eleven profiles. No actual Windows/game run is claimed for v2.
-All v1 fitted motion inputs and the generated motion header are byte-identical:
-107 records retain the existing 13 geometry checks and fitting validation.
-A clean exported-source rebuild must reproduce the delivered DLL exactly.
+57 tests execute the actual v3 PE DLL under a Win64 ABI/API mock. They cover
+all profiles/banks, native ability preservation/pages, spell recovery,
+tap/hold/release, finite travel, input conflicts, interruptions, zero-time
+pause, model unloads, native-event preservation and failed-hook rollback.
+13 geometry checks pass over 114 serialized fits. The exported source
+rebuild reproduces the delivered DLL exactly. Live Windows/gameplay testing
+is still required. All poses come from the original Terra source capture.
 
 UNINSTALL / RETURN TO OTHER MODS
 Set remove_terra=1 in kh1-terra.ini beside the game EXE. Launch/load, stand
-idle and save, then close KH1, disable Terra and Build again. This removes
-only custom IDs 116..126; native learned abilities and AP remain intact.
-Remove mode takes priority over page and profile override settings.
+idle and save, then close KH1, disable Terra and Build again. Only custom
+IDs116..126 are removed. Remove mode overrides page/profile selection.
