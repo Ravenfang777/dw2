@@ -31,7 +31,8 @@ def common_plan():
  rows=[]
  def add(slot,request,action,donor,source_range=None,loop=False,grounded=True,root='travel',normal_only=False):
   rows.append(dict(normal_slot=slot,request=request,action=action,donor=donor,source_range=source_range,loop=loop,grounded=grounded,root=root,normal_only=normal_only))
- add(0,0,'idle','001',loop=True);add(1,0,'combat idle','002',loop=True)
+ add(0,0,'idle','001',loop=True);rows[-1]['head_pitch_up_degrees']=15.
+ add(1,0,'combat idle','002',loop=True);rows[-1]['head_pitch_up_degrees']=15.
  for slot in [2,3]:add(slot,1,'walk','003',loop=True)
  add(4,1,'combat walk','012',loop=True)
  for slot in [5,6]:add(slot,2,'run','004',loop=True)
@@ -43,11 +44,11 @@ def common_plan():
  add(15,14,'ledge climb start','021',[0,4],grounded=False,root='hand_anchor');rows[-1]['anchor_hand']=206
  add(16,15,'ledge climb finish','021',[4,13],grounded=False,root='climb');rows[-1]['anchor_hand']=206
  add(17,16,'ledge landing recovery','007',root='native',normal_only=True)
- add(54,0x36,'ground Fire release','315',[0,23]);add(55,0x37,'ground Blizzard/Gravity release','315',[0,23]);add(56,0x38,'ground support cast','354')
- add(57,0x3d,'ground cast recovery','354',[23,35]);add(58,0x3e,'ground item','600');add(59,0x3f,'air item','601',grounded=False)
+ add(54,0x36,'ground Fire release','315',[0,23]);add(55,0x37,'ground Blizzard/Gravity release','315',[0,23]);add(56,0x38,'ground Cure/Thunder/Aero/Stop release','317',[0,24])
+ add(57,0x3d,'ground Cure/Thunder/Aero/Stop recovery','317',[24,36]);add(58,0x3e,'ground item','399');add(59,0x3f,'air item','399',grounded=False)
  add(79,0x83,'air Fire release','316',[0,23],grounded=False);add(80,0x84,'air Blizzard/Gravity release','316',[0,23],grounded=False)
- add(81,0x85,'air support cast','355',grounded=False);add(82,0x8a,'air cast recovery','355',[29,50],grounded=False)
- add(110,0xd4,'Guard pose','400');add(117,0xdc,'Dodge Roll / Terra slide pose','009')
+ add(81,0x85,'air Cure/Thunder/Aero/Stop release','318',[0,24],grounded=False);add(82,0x8a,'air Cure/Thunder/Aero/Stop recovery','318',[24,36],grounded=False)
+ add(110,0xd4,'Guard pose (former grounded Cure)','354');add(117,0xdc,'Dodge Roll / Terra slide pose','009')
  return rows
 
 def overlay_plan():
@@ -63,7 +64,14 @@ def numbered_cast_plan():
    (54,0x36,'ground cast release','354',[0,23],True),
    (55,0x37,'ground overhead cast','320',None,True),
    (79,0x83,'air cast release','355',[0,29],False),
-   (80,0x84,'air overhead cast','320',None,False)]]
+   (80,0x84,'air overhead cast','320',None,False),
+   (56,0x38,'ground support cast','354',None,True),
+   (57,0x3d,'ground cast recovery','354',[23,35],True),
+   (58,0x3e,'ground item','600',None,True),
+   (59,0x3f,'air item','601',None,False),
+   (81,0x85,'air support cast','355',None,False),
+   (82,0x8a,'air cast recovery','355',[29,50],False),
+   (110,0xd4,'Guard pose','400',None,True)]]
 
 def combo_plan(ground,air):
  return [dict(normal_slot=slot,request=request,action=action,donor=clip,source_range=None,loop=False,grounded=slot<102,root='travel',normal_only=False)

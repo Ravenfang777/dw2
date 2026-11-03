@@ -56,7 +56,21 @@ class GeometryTests(unittest.TestCase):
    p=ROOT/'terra_source'/Path(row['Path'].replace('\\','/')).name
    self.assertEqual(p.stat().st_size,row['Bytes']);self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest().upper(),row['SHA256'])
  def test_main_and_ten_profiles_have_exact_record_counts(self):
-  self.assertEqual([len(r['motions']) for r in reports],[37]+[7]*10);self.assertEqual(len(records),114);self.assertTrue(all(r['passed'] for r in reports))
+  self.assertEqual([len(r['motions']) for r in reports],[37]+[7]*10);self.assertEqual(len(records),121);self.assertTrue(all(r['passed'] for r in reports))
+ def test_idle_and_combat_idle_lift_actual_skull_15_degrees_up(self):
+  for slot in [0,1]:
+   previous=parse_motion((ROOT/f'fixtures/reference_v3_idle_s{slot:03}.bin').read_bytes())
+   current=parse_motion((ROOT/f'fixtures/terra_s{slot:03}.bin').read_bytes())
+   for frame in np.linspace(0,current.frames-1,5):
+    old=pose(model,previous,float(frame));new=pose(model,current,float(frame))
+    root_delta=old[0,:3,:3]@model.bind[0,:3,:3].T
+    correction=Rotation.from_rotvec((root_delta@np.array([1.,0.,0.]))*np.deg2rad(-15.)).as_matrix()
+    wanted=correction@old[150,:3,:3]
+    error=Rotation.from_matrix(wanted.T@new[150,:3,:3]).magnitude()
+    self.assertLess(np.rad2deg(error),1.2)
+    old_gaze=root_delta.T@old[150,:3,:3]@model.bind[150,:3,:3].T@np.array([0.,0.,1.])
+    new_gaze=root_delta.T@new[150,:3,:3]@model.bind[150,:3,:3].T@np.array([0.,0.,1.])
+    self.assertGreater(new_gaze[1]-old_gaze[1],.1)
  def test_native_headers_allocations_and_helpers_unchanged(self):
   for profile,row,before,after in records:
    self.assertEqual(len(before.raw),len(after.raw));self.assertEqual(before.raw[:80],after.raw[:80]);self.assertEqual(before.helper_parents,after.helper_parents)

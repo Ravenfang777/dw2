@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "changed_main_body_slots": [
+    0,
+    1,
+    56,
+    57,
+    58,
+    59,
+    81,
+    82,
+    110
+  ],
+  "shared_head_pose_slots": [
+    0,
+    1
+  ],
+  "numbered_combo_payloads_preserved": 70,
+  "numbered_common_rollback_payloads": 11,
+  "reported_air_rejection_bit_removed": "0x40 from unreliable 0x00140000 held-input filter",
+  "native_shared_superglide_not_required_for_main_dash": true,
+  "runtime_tests": 59,
+  "geometry_tests": 14,
+  "clean_export_dll_byte_identical": true
+}

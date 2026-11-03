@@ -404,8 +404,8 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
     requested_page=kGetPrivateProfileIntW(section,page_key,1,ini_path);if(requested_page<1u||requested_page>10u)requested_page=1u;
     profile_override=kGetPrivateProfileIntW(section,override_key,0,ini_path);if(profile_override>TERRA_ABILITIES)profile_override=0u;
-    log_text("KH1FM TERRA ANIMATION TEST v3 loaded: main ground300/411/332 air305/306/353; ground Fire/Blizzard/Gravity315 air316; main tap Superglide uses slide009; ten numbered tests retained");
-    log_text("TERRA NATIVE LOGIC: original Sora/Olympus MSETs on disk; original combo/contact/Guard/spell events and keyblade-tip magic retained; ordinary Glide and damage reactions unchanged; main-only finite Superglide replacement");
+    log_text("KH1FM TERRA ANIMATION TEST v4 loaded: idle/combat idle skull up15; main guard354 (former Cure), Cure/Thunder/Aero/Stop ground317 air318, ground/air items399; ground300/411/332 air305/306/353; airborne Square dash009 input fix");
+    log_text("TERRA NATIVE LOGIC: original Sora/Olympus MSETs on disk; original combo/contact/Guard/spell events and keyblade-tip effects retained; ordinary Glide and damage reactions unchanged; main Terra grants finite Square dash without native Superglide");
     if(remove_mode)log_text("TERRA UNINSTALL MODE: only custom ids116..126 removed from loaded ability list");
     else if(profile_override){log_number("TERRA CONFIG PROFILE OVERRIDE=",profile_override);log_text("TERRA CONFIG: override replaces the ability gate for this run; set profile_override=0 to return to ability selection");}
 }

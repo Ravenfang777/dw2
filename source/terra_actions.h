@@ -1,5 +1,5 @@
-/* Main Terra only: native spell recovery variants and a finite Square tap
- * replacing Superglide. Ordinary Glide and every numbered profile stay native.
+/* Main Terra grants a finite airborne Square dash. Native spell recovery
+ * variants remain scoped to main. Ordinary Glide/numbered profiles stay native.
  * Movement is supplied to native fall physics BEFORE collision, never XYZ.
  */
 typedef void (ABI *SlideControlFn)(uptr,uptr);
@@ -156,7 +156,7 @@ static void slide_start(uptr actor,uptr dir){
     typedef void (ABI *QueueFn)(uptr,u32,float);((QueueFn)(base+0x29f980u))(actor,6u,0.f);
     slide_actor=actor;slide_array=cache_array;slide_active=slide_pending=1;slide_armed=0;slide_wait=0;slide_elapsed=slide_clock=0.f;
     slide_arc_reset(actor);
-    if(slide_notes++<24u)log_text("TERRA SUPERGLIDE TAP: slide009, locked stick/facing direction, speed16 duration39; release does not shorten; native collision; ordinary Glide retained");
+    if(slide_notes++<24u)log_text("TERRA AIR DASH009: fresh airborne Square; locked left-stick/facing direction; speed16 duration39; release does not shorten; native collision");
 }
 static void ABI slide_control(uptr actor,uptr dir){
     uptr pad=base+0x298ca90u;
@@ -169,26 +169,31 @@ static void ABI slide_control(uptr actor,uptr dir){
             u32 reason=0;float x=slide_float(dir),z=slide_float(dir+8),tilt=slide_float(dir+12),height=slide_float(actor+0x3d4);
             if(!slide_armed)reason|=1u;
             if(state!=1u&&state!=2u)reason|=2u;
-            if(!slide_finite(height)||height<=50.f)reason|=4u;
-            if(!(r32(base+0x2d5ec10u)&0x100u))reason|=8u;
+            if(!slide_finite(height)||height<=1.f)reason|=4u;
             if(!slide_free_request(request))reason|=16u;
             if(!slide_finite(x)||!slide_finite(z)||!slide_finite(tilt)||tilt<0.f||x*x+z*z>4.f)reason|=32u;
-            if(r32(pad+4)&0x00140000u)reason|=64u;
+            /* Reported legitimate Square presses hit the 0x00140000 test.
+               These are not reliable shortcut-modifier bits. Native command
+               and queue eligibility below protect actual spell dispatch. */
             u32 command=r32(base+0x2d53a40u);if((command&0xffu)&&!(command&0x01000000u))reason|=128u;
             if(count&&(count!=1u||!slide_free_request(r32(actor+0x17c)&0xffffu)||(r32(actor+0x17c)&0x40000000u)))reason|=256u;
-            uptr work=decode(r32(actor+0x148));
-            if(!memory(work+0x100,4,0)||!slide_finite(slide_float(work+0x100))||slide_float(work+0x100)>0.f)reason|=512u;
             typedef int (ABI *CanFn)(uptr);
             if(!reason&&!((CanFn)(base+0x297870u))(actor))reason|=1024u;
             if(!reason&&(!memory(actor+0x160,0x2c,1)||!memory(actor+0x3b0,0x28,1)||!variant_write(1u,1)))reason|=2048u;
             if(!reason)slide_start(actor,dir);
-            else if(slide_rejections++<20u)log_number("TERRA SUPERGLIDE TAP rejection mask=",reason);
+            else if((state==1u||state==2u)&&slide_rejections++<16u){
+                log_number("TERRA AIR DASH INPUT rejected mask=",reason);
+                log_number("TERRA AIR DASH held=",r32(pad+4));log_number("TERRA AIR DASH pressed=",press);
+                log_number("TERRA AIR DASH state=",state);log_number("TERRA AIR DASH request=",request);
+                log_number("TERRA AIR DASH queued count=",count);
+                if(count)log_number("TERRA AIR DASH first queued=",r32(actor+0x17c));
+            }
         }
     }
     u32 mask=0;
     if(local&&main_super_scope(actor)){
         if(slide_active)mask=0x16u;
-        else if((r32(actor+0x70)==1u||r32(actor+0x70)==2u)&&slide_free_request(r32(actor+0x164)&0xffffu)&&(r32(base+0x2d5ec10u)&0x100u)&&!(r32(pad+4)&0x00140000u))mask=0x10u;
+        else if((r32(actor+0x70)==1u||r32(actor+0x70)==2u)&&slide_free_request(r32(actor+0x164)&0xffffu))mask=0x10u;
     }
     if(mask){
         static const u32 fields[4]={4,8,16,20};u32 saved[4];
@@ -252,5 +257,5 @@ static void actions_install(void){
     slide_jump(patch,(uptr)slide_move);copy((void*)m,patch,16);kFlushInstructionCache((uptr)-1,(void*)m,16);kVirtualProtect((void*)m,16,old_move,&unused);
     slide_jump(patch,(uptr)slide_glide);copy((void*)g,patch,15);kFlushInstructionCache((uptr)-1,(void*)g,15);kVirtualProtect((void*)g,15,old_glide,&unused);
     slide_jump(patch,(uptr)slide_control);copy((void*)a,patch,17);kFlushInstructionCache((uptr)-1,(void*)a,17);kVirtualProtect((void*)a,17,old_code,&unused);
-    actions_ready=1;log_text("TERRA TAP SUPERGLIDE READY: main only, fresh Square with native Superglide equipped; finite009 slide; ordinary Glide and numbered profiles retained");
+    actions_ready=1;log_text("TERRA AIR DASH READY: main terra grants fresh airborne Square slide009; native Superglide not required; Square marker bits accepted; ordinary Glide/numbered profiles retained");
 }

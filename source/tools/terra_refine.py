@@ -100,4 +100,12 @@ def refine(model,local,world,grounded,plan=None):
         for hip,knee,ankle,helper,side in [(17,18,19,16,1),(43,44,45,42,-1)]:
             e=world[knee,:3,3].copy()
             world=solve(model,local,world,hip,knee,ankle,world[ankle,:3,3].copy(),e+right*(side*amount),upper_helpers=(helper,))
+    lift=plan.get('head_pitch_up_degrees',0.) if plan else 0.
+    if lift:
+        # Rotate the actual skinned skull, not hair helper151. Character +Z
+        # faces forward and +Y is up, so negative pitch about character +X
+        # raises the gaze. Account for the root's permuted native bind basis.
+        root_delta=world[0,:3,:3]@model.bind[0,:3,:3].T
+        correction=Rotation.from_rotvec((root_delta@np.array([1.,0.,0.]))*np.deg2rad(-lift)).as_matrix()
+        world=apply_world_rotations(model,local,{150:correction@world[150,:3,:3]})
     return local,world

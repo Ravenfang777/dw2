@@ -12,7 +12,12 @@
     ],
     "ground_fire_blizzard_gravity": "315",
     "air_fire_blizzard_gravity": "316",
-    "superglide": "single tap slide009"
+    "superglide": "replaced by main Square air dash",
+    "ground_cure_thunder_aero_stop": "317",
+    "air_cure_thunder_aero_stop": "318",
+    "guard": "354 (former grounded Cure)",
+    "items": "399 ground and air",
+    "air_dash": "fresh Square, slide009, stick direction, no native Superglide required"
   },
   "tests": [
     {
@@ -163,5 +168,6 @@
   "native_logic": "retained",
   "new_custom_air_dodge": true,
   "terra_specific_guard_logic": false,
-  "native_glide_and_superglide": "ordinary Glide unchanged; main Superglide replaced with tap009"
+  "native_glide_and_superglide": "ordinary Glide unchanged; main Superglide replaced with tap009",
+  "shared_idle_head_pitch_up_degrees": 15
 }

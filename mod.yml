@@ -1,10 +1,11 @@
-title: KH1FM Terra Animation Test v3
+title: KH1FM Terra Animation Test v4
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
   Standalone Terra main plus10 zero-AP animation tests; adaptive ability pages.
   Main ground300/411/332 and air305/306/353; Fire/Blizzard/Gravity315 ground,316 air;
-  tap009 replaces main Superglide. Native events and numbered tests retained. Steam Global/Panacea.
+  Guard354, support magic317/318, items399; Square air dash009 input fix.
+  Idle head up15; native events and numbered combat tests retained. Steam Global/Panacea.
 assets:
 - name: dll/kh1-terra.dll
   method: copy

@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "tests": 13,
+  "tests": 14,
   "failures": 0,
   "errors": 0,
-  "serialized_terra_records": 114,
+  "serialized_terra_records": 121,
   "actual_game_tested": false
 }

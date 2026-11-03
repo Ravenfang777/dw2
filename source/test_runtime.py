@@ -218,7 +218,7 @@ class Host:
         if int(on)>1:
             candidate=ROOT/f'sets/p{int(on)-1}/fixtures'
             if (candidate/f"terra_{r['fixture_stem']}.bin").exists():folder=candidate
-            elif slot in [54,55,79,80]:folder=ROOT/'sets/shared_v2/fixtures'
+            elif (ROOT/f"sets/shared_v2/fixtures/terra_{r['fixture_stem']}.bin").exists():folder=ROOT/'sets/shared_v2/fixtures'
         return self.expected_from(slot,folder/f"{'terra' if on else 'original'}_{r['fixture_stem']}.bin")
     def expected_from(self,slot,path):
         r=self.record_by_slot[slot];data=bytearray(path.read_bytes())
@@ -402,13 +402,16 @@ class RuntimeTests(unittest.TestCase):
         h=Host();put(h.save+0x44,bytes(range(1,38))+bytes(11));h.frame();original=h.abilities();logged=bridge.bridge_log()
         for _ in range(30):h.frame()
         self.assertEqual(h.abilities(),original);self.assertEqual(bridge.bridge_log(),logged)
-    def test_v3_main_sources_are_requested_combos_and_spell_clips(self):
+    def test_v4_main_sources_are_requested_combos_spell_guard_and_item_clips(self):
         rows={r['normal_slot']:r for r in json.loads((ROOT/'curve_validation.json').read_text())['motions']}
         self.assertEqual([rows[s]['donor'] for s in [98,99,100,101,102,103,104]],['300','411','411','332','305','306','353'])
         self.assertEqual([rows[s]['donor'] for s in [54,55,79,80]],['315','315','316','316'])
+        self.assertEqual([rows[s]['donor'] for s in [56,57,81,82]],['317','317','318','318'])
+        self.assertEqual([rows[s]['donor'] for s in [110,58,59]],['354','399','399'])
+        self.assertEqual([rows[s]['head_pitch_up_degrees'] for s in [0,1]],[15.,15.])
         overlays={r['normal_slot']:r for r in json.loads((ROOT/'overlays/curve_validation.json').read_text())['motions']}
         self.assertEqual([overlays[s]['donor'] for s in [10,57,82]],['009','315','316'])
-    def test_main_fire_blizzard_gravity_have_matching_recovery_and_other_spells_keep_v2(self):
+    def test_main_all_spell_families_have_matching_recovery(self):
         for bank in [98,60]:
             h=Host(slot=bank,encoded_fields=True,air=True);h.prepare_slide()
             for start,recovery,slot in [(0x36,0x3d,57),(0x37,0x3d,57),(0x3a,0x3d,57),(0x83,0x8a,82),(0x84,0x8a,82),(0x87,0x8a,82)]:
@@ -475,13 +478,23 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(r32(h.actor+0x70),21);self.assertEqual(bridge.bridge_control_word(0)&6,6)
         bridge.bridge_air_modes(1,6);h.control(state=2,request=6);h.tap_slide()
         self.assertEqual(r32(h.actor+0x70),2);self.assertEqual(h.body(10),h.expected_variant(10))
-    def test_slide_requires_superglide_ability_airborne_height_and_free_action(self):
-        cases=[{'state':0,'request':0},{'state':2,'request':0xcc},{'height':50},{'height':float('nan')},{'x':float('nan')},{'x':3},{'down':0x140010}]
+    def test_slide_requires_airborne_height_and_free_action(self):
+        cases=[{'state':0,'request':0},{'state':2,'request':0xcc},{'height':1},{'height':float('nan')},{'x':float('nan')},{'x':3}]
         for extra in cases:
             h=Host(air=True);h.prepare_slide();args=dict(down=0x10,pressed=0x10,state=2,request=6,height=100,tilt=1,x=1,z=0);args.update(extra);h.control(**args)
             self.assertEqual(bridge.bridge_queue_calls(),0);self.assertEqual(h.body(10),h.expected(10,1))
-        h=Host(air=True);h.prepare_slide();w32(h.game+0x2d5ec10,0x80);h.tap_slide();self.assertEqual(bridge.bridge_queue_calls(),0)
-        h=Host(air=True);h.prepare_slide();put(h.glide_work+0x100,struct.pack('<f',24.));h.tap_slide();self.assertEqual(bridge.bridge_queue_calls(),0)
+    def test_main_grants_air_dash_without_native_superglide_or_legacy_cooldown(self):
+        for height in [2.,10.,49.,50.,100.]:
+            h=Host(air=True);h.prepare_slide();w32(h.game+0x2d5ec10,0);put(h.glide_work+0x100,struct.pack('<f',24.))
+            h.control(down=0x10,pressed=0x10,state=2,request=10,height=height,tilt=1,x=1,z=0)
+            self.assertEqual(bridge.bridge_queue_calls(),1);self.assertEqual(h.body(10),h.expected_variant(10));self.assertEqual(h.move()[0],[16.,0.,0.,16.])
+    def test_reported_square_high_marker_bits_no_longer_cause_rejection_40(self):
+        for square in [0x40010,0x100010,0x140010]:
+            h=Host(air=True);h.prepare_slide()
+            h.control(down=square,pressed=square,state=2,request=10,height=80,tilt=1,x=.6,z=-.8)
+            self.assertEqual(bridge.bridge_queue_calls(),1);self.assertEqual(h.body(10),h.expected_variant(10))
+            delta,_=h.move();self.assertAlmostEqual(delta[0],9.6,places=5);self.assertAlmostEqual(delta[2],-12.8,places=5)
+            self.assertEqual(bridge.bridge_control_word(0)&0x140000,square&0x140000)
     def test_slide_does_not_replace_queued_attack_or_spell_command(self):
         for queued in [0xcc,0x36,0x40000000]:
             h=Host(air=True);h.prepare_slide();w32(h.actor+0x178,1);w32(h.actor+0x17c,queued);h.tap_slide()

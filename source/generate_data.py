@@ -55,5 +55,5 @@ for r in report['motions']:
  records.append('{'+f'{r["request"]},{r["normal_slot"]},{r["olympus_slot"]},{len(before)},{len(parts)},0,0,'+'{'+scalars+'},'+'{'+','.join(parts)+'}}')
 lines+=['static const TerraMotion terra_motions[TERRA_MOTION_COUNT]={',',\n'.join(records),'};']
 (ROOT/'terra_data.h').write_text('\n'.join(lines)+'\n')
-(ROOT/'data_validation.json').write_text(json.dumps({'passed':True,'motions':len(records),'profiles':11,'main_only_body_variants':3,'numbered_cast_payloads_retained_from_v2':4,'headers_counts_and_capacities_unchanged':True,'native_event_and_request_bytes_unchanged':True,'all_changes_inside_existing_body_helper_tables':True,'unique_data_blocks':len(arrays)},indent=2)+'\n')
+(ROOT/'data_validation.json').write_text(json.dumps({'passed':True,'motions':len(records),'profiles':11,'main_only_body_variants':3,'numbered_common_payloads_retained_from_v3':len(shared),'headers_counts_and_capacities_unchanged':True,'native_event_and_request_bytes_unchanged':True,'all_changes_inside_existing_body_helper_tables':True,'unique_data_blocks':len(arrays)},indent=2)+'\n')
 print('Generated',len(records),'mapped motions and11 profiles;',len(arrays),'unique blocks')

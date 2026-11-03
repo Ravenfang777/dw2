@@ -1,6 +1,6 @@
-Generated 37 mapped motions and11 profiles; 572 unique blocks
+Generated 37 mapped motions and11 profiles; 594 unique blocks
 {
-  "dll": "/workspace/scratch/ac59123af99a/terra_work/KH1FM_Terra_Animation_Test_v3/source/kh1-terra.dll",
-  "bytes": 3339585,
-  "sha256": "fd245c52f74e73d7a0208747303fdf98b5e2f5f1c65b7a77c194397f1ea36672"
+  "dll": "/workspace/scratch/ac59123af99a/terra_work/KH1FM_Terra_Animation_Test_v4/source/kh1-terra.dll",
+  "bytes": 3507698,
+  "sha256": "c30fa2659f78da3df20c03bff45a60d2a165516b4d37cf44575eb009245c3c33"
 }

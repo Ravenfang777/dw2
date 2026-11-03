@@ -1,6 +1,6 @@
 ﻿Clip,Frames,FPS,DurationSeconds,Bones,SourceBanks,Assignments,Status,AnimationSHA256
-001,70,30,2.333333,51,p03base.arc,all profiles: idle,Source label; full semantic action name unverified,e62850cb677f07873a36a7c781e8cf76b80cfdf484f10f3fb76845fd3f421e9e
-002,95,30,3.166667,51,p03base.arc,all profiles: combat idle,Source label; full semantic action name unverified,4793712168b9506562ffe51689dc3cb69b11b39184beaa9b465e0368869a26cf
+001,70,30,2.333333,51,p03base.arc,all profiles: idle (head up15),Source label; full semantic action name unverified,e62850cb677f07873a36a7c781e8cf76b80cfdf484f10f3fb76845fd3f421e9e
+002,95,30,3.166667,51,p03base.arc,all profiles: combat idle (head up15),Source label; full semantic action name unverified,4793712168b9506562ffe51689dc3cb69b11b39184beaa9b465e0368869a26cf
 003,40,30,1.333333,51,p03base.arc,all profiles: walk,Source label; full semantic action name unverified,e3a5e55655d4ba82307843195b22e6193f04e703944f088cbf9c131da3c77f04
 004,18,30,0.6,51,p03base.arc,all profiles: run,Source label; full semantic action name unverified,2ce00924ee0e89353161e2a0f19babc4b7748e8292615405a974ab8b7d79ea16
 005,16,30,0.533333,51,p03base.arc,all profiles: jump takeoff; all profiles: jump rise,Source label; full semantic action name unverified,ec1a993208ad23a3face649565da447fe90477bddfaa4be799228b8c27c23917
@@ -54,8 +54,8 @@
 308,37,30,1.233333,51,p03base.arc,terra 5: air finisher,Source label; full semantic action name unverified,6d34f59aeb044b271d3d7e2daff672a8c437e0a89eb3903e484c7fba70ba329f
 315,36,30,1.2,51,p03ex_151.arc,terra: ground Fire release; terra: ground Blizzard/Gravity release; terra 3: ground second; terra 3: ground alternate second; terra only: ground Fire/Blizzard/Gravity recovery,Source label; full semantic action name unverified,c94c49add194d1c36d1c7ce7e26c4e3598418a0dc38522ef024773351d47738c
 316,36,30,1.2,51,p03ex_151.arc,terra: air Fire release; terra: air Blizzard/Gravity release; terra 3: ground finisher; terra only: air Fire/Blizzard/Gravity recovery,Source label; full semantic action name unverified,a1b70c934dc930a8ccdfd8b5b6c713a31323be54df0c838655e2a9d0c17c0fa6
-317,37,30,1.233333,51,p03ex_152.arc,terra 3: air first,Source label; full semantic action name unverified,d53319a920d135e22535a416e0563074bdabcaaa7ae2dd09a6a5c35bd999ba74
-318,37,30,1.233333,51,p03ex_152.arc,terra 3: air second,Source label; full semantic action name unverified,cef10e2bc52d1c431426dd86a0c6036549e29a05ed9ab0f82a71587cbfdae0f9
+317,37,30,1.233333,51,p03ex_152.arc,terra: ground Cure/Thunder/Aero/Stop release; terra: ground Cure/Thunder/Aero/Stop recovery; terra 3: air first,Source label; full semantic action name unverified,d53319a920d135e22535a416e0563074bdabcaaa7ae2dd09a6a5c35bd999ba74
+318,37,30,1.233333,51,p03ex_152.arc,terra: air Cure/Thunder/Aero/Stop release; terra: air Cure/Thunder/Aero/Stop recovery; terra 3: air second,Source label; full semantic action name unverified,cef10e2bc52d1c431426dd86a0c6036549e29a05ed9ab0f82a71587cbfdae0f9
 320,59,30,1.966667,51,p03base.arc,terra 1..10: ground overhead cast; terra 1..10: air overhead cast,Source label; full semantic action name unverified,f133d23825f107803012c7d00f680c71d6b483473a208170dbd5262b7ccec365
 330,31,30,1.033333,51,p03ex_105.arc,Unassigned,Source label; full semantic action name unverified,4153500a65b5c9ff56e23b2f6dddfacaa2ec977af645b5bb5517f1b810f6a33a
 332,41,30,1.366667,51,p03ex_101.arc,terra: ground finisher; terra 1: air first,Source label; full semantic action name unverified,53ce3242d713324168372b0905280e0abce6c6b558e352a8fa1f8c323483af5f
@@ -63,8 +63,8 @@
 351,35,30,1.166667,51,p03ex_710.arc,terra 5: air first,Source label; full semantic action name unverified,c87c9b54719e398ffefc6164ae14caa97454f64f49c2aa3f1d41c3daf2e634b1
 352,36,30,1.2,51,p03ex_352.arc,terra 5: ground second; terra 5: ground alternate second,Source label; full semantic action name unverified,926a63334e9f03316fd303f2edeaeb96a5ee8a26d9f2c6dabe7e8d9d54f2dbf0
 353,44,30,1.466667,51,p03ex_352.arc; p03ex_710.arc,terra: air finisher; terra 5: ground finisher,Source label; full semantic action name unverified,55878be510c09cc0ff075f08ece9530226a8b6e4911cfcf704bccc078654bc23
-354,36,30,1.2,51,p03base.arc,all profiles: ground support cast; all profiles: ground cast recovery; terra 1..10: ground cast release,Source label; full semantic action name unverified,2540ecf6ab18255a550e0a54e1b574071d567a5c9acb868aabd277d24ff411c7
-355,51,30,1.7,51,p03base.arc,all profiles: air support cast; all profiles: air cast recovery; terra 1..10: air cast release,Source label; full semantic action name unverified,7eadfb651fca859afd08750d322eee0d7b2d07221c1da3fbe02e5e595ed5c297
+354,36,30,1.2,51,p03base.arc,terra: Guard pose (former grounded Cure); terra 1..10: ground cast release; terra 1..10: ground support cast; terra 1..10: ground cast recovery,Source label; full semantic action name unverified,2540ecf6ab18255a550e0a54e1b574071d567a5c9acb868aabd277d24ff411c7
+355,51,30,1.7,51,p03base.arc,terra 1..10: air cast release; terra 1..10: air support cast; terra 1..10: air cast recovery,Source label; full semantic action name unverified,7eadfb651fca859afd08750d322eee0d7b2d07221c1da3fbe02e5e595ed5c297
 356,35,30,1.166667,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,9a507c17322b25c9065c12ac29566af2d49d53038495b1e9c8281b1fed4425bb
 357,47,30,1.566667,51,p03ex_102.arc,terra 1: air second,Source label; full semantic action name unverified,d7131c6728099a2bb2299113cf6812f469bee4c84453f3b0a4f62d77c2186bb1
 358,15,30,0.5,51,p03ex_108.arc,Unassigned,Source label; full semantic action name unverified,a86fd6706e3a805c0b8d0202a29918452e689624fc003606a604cb8d3ebfc612
@@ -86,8 +86,8 @@
 392,51,30,1.7,51,p03ex_155.arc,terra 4: ground finisher,Source label; full semantic action name unverified,fc5a27204d62ec77b1ed119465936979df8833eebdfa67d8a5e0bf5512f8961c
 393,43,30,1.433333,51,p03ex_155.arc,terra 4: air first,Source label; full semantic action name unverified,f7e2c91839b3095885b4b66725590c54ac3bf96761b1c457f1d4d71f0b0ed3ee
 395,33,30,1.1,51,p03ex_200.arc,Unassigned,Source label; full semantic action name unverified,a0c45b1dbaf0d1d57d33cb8499637ae7828ddf4a4cca1645421e550cfd71ea68
-399,119,30,3.966667,51,p03ex_346.arc; p03ex_710.arc,terra 4: air finisher,Source label; full semantic action name unverified,64ff082004490219763f14875da1536d59174a3fce892d525b2fe8836b49f152
-400,38,30,1.266667,51,p03base.arc,all profiles: Guard pose,Source label; full semantic action name unverified,f4c9f830863d49844fc8aa8fee101723a8ce709bc52e95b150a75d65625f2087
+399,119,30,3.966667,51,p03ex_346.arc; p03ex_710.arc,terra: ground item; terra: air item; terra 4: air finisher,Source label; full semantic action name unverified,64ff082004490219763f14875da1536d59174a3fce892d525b2fe8836b49f152
+400,38,30,1.266667,51,p03base.arc,terra 1..10: Guard pose,Source label; full semantic action name unverified,f4c9f830863d49844fc8aa8fee101723a8ce709bc52e95b150a75d65625f2087
 405,34,30,1.133333,51,p03ex_605.arc,terra 8: air second,Source label; full semantic action name unverified,b542c8a9a8a0130b12d25454b6e9a5948a7d66b05178a69942f45c0deceb2b4d
 408,18,30,0.6,51,p03base.arc,Unassigned,Source label; full semantic action name unverified,ca1bf70ea2e22412612419b9fa8da269e9e2d5ddef01737f07f2e70e8384f0e5
 410,32,30,1.066667,51,p03ex_140.arc,Unassigned,Source label; full semantic action name unverified,2c8a77292f2ae4bbdb26ea9a12caec4899e87eba94752f6769c1f27ff89b794a
@@ -115,8 +115,8 @@
 519,36,30,1.2,51,p03ex_629.arc,Unassigned bank-specific variant,Source label; full semantic action name unverified,ec9c380fdfc94a809ef5e6d4e69e4e2108f4dcff1a09df8a0a218c6487196398
 550,34,30,1.133333,51,p03ex_204.arc,terra 8: ground second; terra 8: ground alternate second,Source label; full semantic action name unverified,7d907a67d69ec000a393e5a0d7dce14c8ac065a006007b662fe87360e3f3e561
 557,71,30,2.366667,51,p03ex_206.arc,terra 8: air first,Source label; full semantic action name unverified,6d8e81fe12f9e2f4522dd587e2ff5c0733ad82b8ecb8dbb0c5d7d8227e1f6990
-600,42,30,1.4,51,p03base.arc,all profiles: ground item,Source label; full semantic action name unverified,c6b964a60e0cb79b5907c9873deffaf2630fbdc3951dd8661087600140fc64d3
-601,41,30,1.366667,51,p03ex_628.arc,all profiles: air item,Source label; full semantic action name unverified,08bacc18a45de012c538ea73b32b14aa7c3fca9de9c3248bfd333f8129d555c2
+600,42,30,1.4,51,p03base.arc,terra 1..10: ground item,Source label; full semantic action name unverified,c6b964a60e0cb79b5907c9873deffaf2630fbdc3951dd8661087600140fc64d3
+601,41,30,1.366667,51,p03ex_628.arc,terra 1..10: air item,Source label; full semantic action name unverified,08bacc18a45de012c538ea73b32b14aa7c3fca9de9c3248bfd333f8129d555c2
 602,32,30,1.066667,51,p03ex_621.arc,terra 9: air first,Source label; full semantic action name unverified,b8b11db3a989bdd2875ad6bb72661a8130d9aa55dca62206eef10750624f612e
 603,64,30,2.133333,51,p03ex_621.arc,terra 9: air second,Source label; full semantic action name unverified,02870f6026e0d572ecf6a9fb140acb3365a729075316e852bd98b53e61be60c4
 604,26,30,0.866667,51,p03ex_621.arc,terra 9: air finisher,Source label; full semantic action name unverified,48530d415dbf1465b9f2916d1bd64014fdac71b55c2da7d69af2f690f2a092c8

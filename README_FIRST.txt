@@ -1,51 +1,61 @@
-KH1FM TERRA ANIMATION TEST v3 -- STANDALONE
+KH1FM TERRA ANIMATION TEST v4 -- STANDALONE
 KH1FM Steam Global / OpenKH Panacea
 
 INSTALL
-1. Close KH1. Disable Terra v1/v2, standalone Aqua, Dual Wield/Nine Styles,
-   other moveset DLLs and the full KH2 Combat overhaul.
+1. Close KH1. Disable earlier Terra versions, standalone Aqua, Dual Wield/
+   Nine Styles, other moveset DLLs and the full KH2 Combat overhaul.
 2. Import this ZIP into OpenKH Mods Manager, then Build and Run.
-3. Load your save, stand idle, then equip terra. All Terra entries cost 0 AP.
-4. Confirm TERRA ANIMATION TEST v3 in kh1-terra.log beside the game EXE.
-   Restart for DLL updates; F1 cannot reload a DLL.
+3. Load your save, stand idle and equip terra. All Terra entries cost 0 AP.
+4. Confirm TERRA ANIMATION TEST v4 in kh1-terra.log beside the game EXE.
+   DLL changes require a full restart; F1 cannot reload a DLL.
 
-MAIN TERRA CHANGES
-Ground combo: 300 -> 411 -> 332 (both native second-hit variants use 411).
-Air combo: 305 -> 306 -> 353.
-Ground Fire, Blizzard and Gravity: 315.
-Air Fire, Blizzard and Gravity: 316.
-The requested casts use matching recovery tails from the same source clip.
-Thunder, Cure, Aero and Stop retain their v2 cast poses. Native spell release
-events, projectiles, MP costs, hit logic and keyblade-tip effects are retained.
+HEAD POSE
+Idle001 and combat idle002 tilt the whole head UP15 degrees. The correction
+uses actual skinned skull150, so the face and hair follow together. Hair's
+local bind shape, neck/limb lengths and scales are retained. These two shared
+idle-pose changes apply to all Terra profiles; other actions are not tilted.
 
-SINGLE-TAP SUPERGLIDE REPLACEMENT
-With main terra active and native Superglide enabled, tap your normal
-Superglide button (Square by default) in the air. Terra's current ground
-Slide/Dodge Roll source animation 009 plays as a finite aerial slide.
-Holding the button does not extend it; release does not shorten it.
-The move takes the stick direction at the tap, or character facing with a
-neutral stick. It travels horizontally for the animation, then returns to
-normal falling. Native Superglide's height threshold is retained (above 50
-native units); attack, spell, scripted-action and shortcut conflicts reject it.
-Native collision handles walls/floors. No damage protection or extra hitbox
-is granted. A new tap after completion can start another slide when eligible.
-Ordinary Glide remains usable. This replaces main Superglide only.
+MAIN TERRA ANIMATIONS
+Ground combo300 ->411 ->332; air305 ->306 ->353 (unchanged from v3).
+Guard354: the former grounded Cure animation, fitted into the Guard slot.
+Cure/Thunder/Aero/Stop: ground317, air318, with matching recovery tails.
+Fire/Blizzard/Gravity retain ground315, air316 and their recovery tails.
+Item use399 on both ground and air.
+Native Guard and Dodge Roll abilities are still required for ground actions.
+Guard's native defense rules/timing, spell effects/MP costs, item logic,
+native combo/hit timing and keyblade-tip origins are preserved.
 
-TEN NUMBERED TESTS AND SHARED ACTIONS
-terra 1..10 retain their v2 combos, casts and native Superglide controls.
-All profiles retain the existing idle/walk/run/jump/fall/ledge animations,
-Guard400, ground Roll/Slide009 and items600/601. Damage reactions stay native.
-TERRA_ANIMATION_MAP.txt gives all eleven profiles. TERRA_MOVE_INVENTORY.csv
-lists 137 source variants with original frame counts, FPS, banks and hashes.
-Native attack abilities keep their priority. Unequip Slapshot/Vortex and
-similar abilities to isolate basic combos. KH1 combo/hit timing is retained.
-Finish the action and stand idle before switching or unequipping profiles.
+SQUARE AIR DASH FIX
+With main terra active, tap Square in the air while free to act. The move
+uses the same source009 as Terra's ground Slide/Dodge Roll replacement.
+It locks the left-stick direction at the tap, or uses character facing if
+the stick is neutral. Release does not shorten it; holding cannot extend
+or repeat it. A fresh press after completion can start a new eligible dash.
+No shared Superglide ability is needed. Native Superglide's old height50
+threshold and legacy cooldown do not restrict this main-Terra move. Sora
+must be airborne and clear of the floor. Attacks, casts, scripted actions
+and incompatible queued actions retain priority. Native collision handles
+walls/floors; no invulnerability, hitbox or direct actor-position write is added.
+The v3 log showed the held-input mask0x00140000 check rejecting legitimate
+Square presses as bit0x40. v4 removes that false modifier check and keeps
+native command/queue checks. Rejected airborne attempts now log input and
+action details. Successful starts log TERRA AIR DASH009.
+Ordinary Glide remains usable. Held native Superglide stays replaced in main.
+
+NUMBERED TESTS
+terra 1..10 keep their v3 combos, Guard400, casts354/355/320, items600/601
+and native Superglide. They receive only the shared idle head correction.
+TERRA_ANIMATION_MAP.txt lists all assignments. TERRA_MOVE_INVENTORY.csv lists
+137 original source variants, frame counts, FPS, banks and hashes.
+Unequip Slapshot/Vortex and similar attack abilities to isolate basic combos.
+Finish the current action and stand idle when switching/unequipping profiles.
+Damage/knockback reactions and native jump height remain original.
 
 ABILITY STORAGE
-v2's main-first setup and adaptive pages are retained. Only custom IDs
-116..126 are compacted/replaced; native/foreign ability copies, equipped flags
-and AP are preserved. One zero tail byte remains for native list readers.
-Missing/reused custom entries initially start OFF. No native entry is evicted.
+Main-first setup/adaptive pages are retained. Only custom IDs116..126 are
+compacted/replaced. Native/foreign copies, equipped flags and AP are retained,
+and one zero tail byte remains for native list readers. Missing custom entries
+start OFF. No native learned ability is evicted to create space.
 
 NUMBERED TEST PAGES
 If there is room, terra and terra 1..10 all appear together.
@@ -71,20 +81,21 @@ instead of the equipped Terra ability. Set it back to 0 to use abilities.
 If only terra fits, the override also makes the numbered tests accessible.
 
 TEST AND REPORT
-Check the new main ground/air combos and all six requested ground/air casts.
-Test a Superglide tap, release, holding, neutral/directional stick, landing,
-walls, damage interruption and ordinary Glide. Then switch to a numbered
-ability and unequip to verify restoration. Try normal/Olympus saves and a
-room change. Send kh1-terra.log and a short video for visual/timing issues.
+Check idle/combat idle head position, new Guard, all four changed spell
+families on ground/air and both item poses. Jump, hold the stick and tap
+Square. Also test release/holding, neutral stick, ordinary Glide, landing,
+walls, damage interruption, switching and room changes in normal/Olympus.
+Send the new kh1-terra.log and a short video if a pose or input still fails.
 
 VALIDATION
-57 tests execute the actual v3 PE DLL under a Win64 ABI/API mock. They cover
-all profiles/banks, native ability preservation/pages, spell recovery,
-tap/hold/release, finite travel, input conflicts, interruptions, zero-time
-pause, model unloads, native-event preservation and failed-hook rollback.
-13 geometry checks pass over 114 serialized fits. The exported source
-rebuild reproduces the delivered DLL exactly. Live Windows/gameplay testing
-is still required. All poses come from the original Terra source capture.
+59 checks execute the actual v4 PE DLL under a Linux Win64 ABI/API mock.
+They include the reported high-bit Square rejection, direct main-ability
+dash, no shared Superglide prerequisite, finite directional travel, native
+spell/attack priority, restoration, ability pages and both motion banks.
+14 geometry checks pass over121 fits, including a direct 15-degree skull
+comparison and unchanged hair binds, lengths, scales and event payloads.
+A clean exported-source rebuild must reproduce the delivered DLL exactly.
+Live Windows/gameplay testing is still required for v4.
 
 UNINSTALL / RETURN TO OTHER MODS
 Set remove_terra=1 in kh1-terra.ini beside the game EXE. Launch/load, stand

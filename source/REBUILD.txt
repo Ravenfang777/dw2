@@ -1,4 +1,4 @@
-TERRA v3 REBUILD
+TERRA v4 REBUILD
 Run from this source directory with Python 3.12, GCC and GNU binutils:
   python generate_data.py
   python build.py
@@ -9,13 +9,18 @@ Runtime tests execute the actual PE under a Linux Win64 ABI/API mock.
 Geometry / complete retarget (requirements.txt):
   OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python test_geometry.py
   OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python tools/build_terra.py --workers 4 --force
-Then regenerate and rebuild. --force rebuilds all 114 fits from the original
+Then regenerate and rebuild. --force rebuilds all 121 fits from the original
 Terra banks, including main-only overlays and preserved numbered cast poses.
 Derived sampling caches are excluded from delivery. Target Sora MDLS and
 original normal/Olympus MSETs are included as rebuild inputs.
 
 terra_actions.h contains the scoped input/shared-Glide/fall-displacement hooks.
-Only main Terra replaces native Superglide; neither attack nor spell event
+Main Terra grants an airborne Square dash; neither attack nor spell event
 dispatch is hooked. Source byte fixtures admit exact Steam Global prologues.
 No original game executable is included. Original game assets retain their
 owners' rights; they are not freely licensed project code.
+
+v4 corrects the skinned skull150 pitch in idle/combat idle. Two v3 reference
++poses are retained only for the exact 15-degree head regression check.
++Spell/item/Guard common rollback fixtures preserve numbered tests.
++

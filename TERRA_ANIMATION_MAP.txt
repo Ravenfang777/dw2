@@ -1,5 +1,5 @@
-TERRA ANIMATION TEST v3 -- PROFILE MAP
-Native KH1 combo/hit logic retained. Numeric labels are original BBS source IDs.
+TERRA ANIMATION TEST v4 -- PROFILE MAP
+Combo order is first / second / finisher. Original BBS source clip IDs.
 
 Ability       Ground combo         Air combo
 terra         300 / 411 / 332      305 / 306 / 353
@@ -14,14 +14,25 @@ terra 8       519 / 550 / 650      557 / 405 / 616
 terra 9       618 / 619 / 613      602 / 603 / 604
 terra 10      605 / 606 / 617      614 / 615 / 620
 
-Main Fire/Blizzard/Gravity: ground315, air316, matching recovery tails.
-Main Superglide: single airborne tap uses slide009 through native fall/collision.
-Main Guard400; Dodge Roll/Slide009. Native Guard and Dodge Roll abilities must be equipped.
-Movement001..014, ledges020/021; items600/601; generic casts354/355/320.
-Ordinary Glide, native jump height, damage reactions and keyblade-tip spell effects are retained.
-Only main Terra replaces held Superglide; numbered profiles retain native Superglide.
-Clip519 has two different original bank variants; terra8 uses p03ex_511.arc (the earlier canonical bank).
-See TERRA_MOVE_INVENTORY.csv for137 unique source variants, frame counts and hashes.
+ALL TERRA PROFILES: idle001 and combat idle002 head tilted UP15 degrees.
+Whole skinned skull150 rotates; native hair bind/limb lengths retained.
+Walk003/combat012, run004/combat013, jump005/high jump014, fall006,
+landing007, ledges020/021, ground Slide/Dodge Roll009.
 
-Ability pages: main is always prioritized; numbered tests page only if needed.
-Set test_page in kh1-terra.ini; see README_FIRST.txt. Numbered profiles retain their v2 mappings.
+MAIN TERRA ONLY:
+Guard354 -- the former grounded Cure pose; native Guard defense retained.
+Ground Fire/Blizzard/Gravity315; air Fire/Blizzard/Gravity316.
+Ground Cure/Thunder/Aero/Stop317; air Cure/Thunder/Aero/Stop318.
+Matching spell-family recovery tails. Keyblade-tip effects retained.
+Ground and air item use399.
+Fresh airborne Square: dash009 in locked left-stick direction; facing if neutral.
+Main Terra grants the dash without shared Superglide or its height/cooldown gate.
+Held Square does not extend/repeat it. Ordinary Glide remains usable.
+
+NUMBERED TERRA1..10 retain their previous combos, Guard400, items600/601,
+casts354/355/320 and native Superglide. Idle head correction is shared.
+All profiles retain original damage/knockback, native combo/hit/spell timing.
+Native Guard and Dodge Roll abilities remain required for their ground actions.
+
+test_page in kh1-terra.ini controls visibility when slots are limited.
+Clip519 uses the canonical p03ex_511.arc variant. See TERRA_MOVE_INVENTORY.csv.

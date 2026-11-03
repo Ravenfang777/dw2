@@ -24,3 +24,12 @@ main-only Superglide replacement uses original Terra slide009, speed16 and
 39 native clock units in a checked fall/collision callback. Three exact
 native hooks are scoped to Sora/main Terra. Ordinary Glide, numbered casts,
 numbered Superglide and native event/request tables remain intact.
+
+Terra v4 responds to kh1-terra(1).log from v3. Airborne attempts were rejected
+by bit0x40: the 0x00140000 held-input test. That false modifier classification
+is removed; real command/queue/actor eligibility remains. Main Terra now
+grants fresh airborne Square dash009 without native Superglide's shared
+ability, height50 or cooldown requirements. Ground/active action protection
+and one burst per fresh press remain. Ground Cure's354 moves to main Guard;
+Cure/Thunder/Aero/Stop use317 ground and318 air; both item poses399. Idle and
+combat idle rotate actual skinned skull150 up15 degrees for all Terra profiles.
