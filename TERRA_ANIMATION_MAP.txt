@@ -1,4 +1,4 @@
-TERRA ANIMATION TEST v1 -- PROFILE MAP
+TERRA ANIMATION TEST v2 -- PROFILE MAP
 Native KH1 combo/hit logic retained. Numeric labels are original BBS source IDs.
 
 Ability       Ground combo         Air combo
@@ -19,3 +19,6 @@ Movement001..014, ledges020/021; items600/601; generic casts354/355/320.
 Native Glide, Superglide, input, jump height, damage reactions and keyblade-tip magic are unchanged.
 Clip519 has two different original bank variants; terra8 uses p03ex_511.arc (the earlier canonical bank).
 See TERRA_MOVE_INVENTORY.csv for137 unique source variants, frame counts and hashes.
+
+Ability pages: main is always prioritized; numbered tests page only if needed.
+Set test_page in kh1-terra.ini; see README_FIRST.txt. All source mappings remain unchanged.

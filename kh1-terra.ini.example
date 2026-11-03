@@ -1,2 +1,8 @@
 [terra]
+; Change settings beside KINGDOM HEARTS FINAL MIX.exe, then restart KH1.
 remove_terra=0
+; Default 1. The log lists the number of pages for this save.
+test_page=1
+; 0=equipped ability, 1=main terra, 2=terra 1, ... 11=terra 10.
+; Optional direct selection if no additional ability slot is available.
+profile_override=0

@@ -11,3 +11,9 @@ data/mappings and the11 profiles are separate. No Dual Wield DLL/repo changed.
 OpenKH ARC/PAM/PMO format documentation and notices: Apache-2.0; see licenses.
 Project/runtime/retarget code prepared by OpenAI Codex for Raven Fang.
 Original Kingdom Hearts assets remain Disney / Square Enix material.
+
+Terra v2 responds to the v1 ABILITY SLOTS FULL report. The runtime prioritizes
+main, pages numbered tests and retains one zero terminator. Native/foreign
+ability bytes remain ordered with their multiplicity/equipped flags intact.
+Native ability-count fixture: Steam Global timestamp 1721645006, RVA 0x284be0.
+All fitted animation payloads are unchanged from v1.

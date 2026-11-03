@@ -10,7 +10,7 @@ typedef struct {uintptr_t base,allocation;uint32_t allocation_protect;uint16_t p
 static struct {uintptr_t start;size_t size;uint32_t protect;} ranges[128];
 static unsigned nranges,queries,protect_calls;
 static uintptr_t game_base;
-static int remove_mode,conflict;
+static int remove_mode,conflict,test_page=1,profile_override;
 static int glide_eligible=1;
 static int hand_magic=1,air_enabled=1,alloc_failure,protect_failure;
 static unsigned control_calls,control_words[4],control_mode,queue_calls,native_glide_calls;
@@ -20,6 +20,8 @@ void bridge_reset(uintptr_t game){game_base=game;nranges=queries=protect_calls=0
 void bridge_magic_modes(int enabled,int noalloc,int noprotect){hand_magic=enabled;alloc_failure=noalloc;protect_failure=noprotect;}
 void bridge_range(uintptr_t start,size_t size,uint32_t protect){ranges[nranges].start=start;ranges[nranges].size=size;ranges[nranges].protect=protect;nranges++;}
 void bridge_modes(int remove,int other){remove_mode=remove;conflict=other;}
+void bridge_test_options(int page,int override){test_page=page;profile_override=override;}
+uint32_t bridge_ability_count(uintptr_t fn,uint32_t id,uint32_t member){typedef uint32_t (ABI *F)(uint32_t,uint32_t);return ((F)fn)(id,member);}
 const char* bridge_log(void){return output;}
 unsigned bridge_queries(void){return queries;}
 static uintptr_t ABI get_module(const char*name){if(!name)return game_base;return (conflict==1&&strcmp(name,"kh1-dual-wield.dll")==0)||(conflict==2&&strcmp(name,"kh1-aqua.dll")==0)||(conflict==3&&strcmp(name,"kh1-kh2.dll")==0)?1:0;}
@@ -28,7 +30,7 @@ static size_t ABI query(const void*p,MemInfo*out,size_t size){queries++;uintptr_
 static uintptr_t ABI create_file(const uint16_t*path,uint32_t a,uint32_t b,void*c,uint32_t d,uint32_t e,uintptr_t f){(void)path;(void)a;(void)b;(void)c;(void)d;(void)e;(void)f;return 7;}
 static int ABI write_file(uintptr_t f,const void*data,uint32_t n,uint32_t*done,void*overlap){(void)f;(void)overlap;if(used+n>=sizeof(output))return 0;memcpy(output+used,data,n);used+=n;output[used]=0;if(done)*done=n;return 1;}
 static int ABI close_file(uintptr_t f){(void)f;return 1;}
-static uint32_t ABI profile(const uint16_t*a,const uint16_t*b,int c,const uint16_t*d){(void)a;(void)c;(void)d;return b[0]=='h'?(uint32_t)hand_magic:b[0]=='a'?(uint32_t)air_enabled:(uint32_t)remove_mode;}
+static uint32_t ABI profile(const uint16_t*a,const uint16_t*b,int c,const uint16_t*d){(void)a;(void)c;(void)d;return b[0]=='t'?(uint32_t)test_page:b[0]=='p'?(uint32_t)profile_override:b[0]=='h'?(uint32_t)hand_magic:b[0]=='a'?(uint32_t)air_enabled:(uint32_t)remove_mode;}
 static void* ABI valloc(void*p,size_t n,uint32_t kind,uint32_t protect){(void)p;(void)kind;(void)protect;if(alloc_failure)return 0;void*q=mmap(0,n,PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);if(q==MAP_FAILED)return 0;bridge_range((uintptr_t)q,n,0x40);return q;}
 static int ABI vfree(void*p,size_t n,uint32_t kind){(void)n;(void)kind;return munmap(p,4096)==0;}
 static int ABI vprotect(void*p,size_t n,uint32_t protect,uint32_t*old){(void)p;(void)n;(void)protect;protect_calls++;if(protect_failure==1||(protect_failure>1&&protect_calls==(unsigned)protect_failure))return 0;*old=0x20;return 1;}

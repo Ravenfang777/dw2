@@ -10,6 +10,8 @@ subprocess.run(['gcc','-std=c11','-O2','-shared','-fPIC','test_bridge.c','-o','t
 bridge=C.CDLL(str(ROOT/'test_bridge.so'))
 for name,args,ret in [('bridge_reset',[C.c_size_t],None),('bridge_range',[C.c_size_t,C.c_size_t,C.c_uint],None),('bridge_modes',[C.c_int,C.c_int],None),('bridge_log',[],C.c_char_p),('bridge_queries',[],C.c_uint),('bridge_encode',[C.c_size_t],C.c_uint),('bridge_symbol',[C.c_char_p],C.c_size_t),('bridge_call0',[C.c_size_t],None),('bridge_init',[C.c_size_t],None)]:
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
+bridge.bridge_test_options.argtypes=[C.c_int,C.c_int];bridge.bridge_test_options.restype=None
+bridge.bridge_ability_count.argtypes=[C.c_size_t,C.c_uint,C.c_uint];bridge.bridge_ability_count.restype=C.c_uint
 for name,args,ret in [('bridge_magic_modes',[C.c_int,C.c_int,C.c_int],None),('bridge_matrix',[C.c_size_t,C.c_size_t,C.c_uint,C.POINTER(C.c_float)],None),('bridge_point',[C.c_size_t,C.c_size_t,C.c_uint,C.c_float,C.POINTER(C.c_float)],None),('bridge_matrix_code',[],C.c_uint),('bridge_point_code',[],C.c_uint),('bridge_point_fraction',[],C.c_float)]:
     f=getattr(bridge,name);f.argtypes=args;f.restype=ret
 for name,args,ret in [('bridge_air_modes',[C.c_int,C.c_uint],None),('bridge_control',[C.c_size_t,C.c_size_t,C.c_size_t],None),('bridge_control_calls',[],C.c_uint),('bridge_control_word',[C.c_uint],C.c_uint),('bridge_queue_calls',[],C.c_uint),('bridge_commit',[C.c_size_t],None),('bridge_native_glide_calls',[],C.c_uint),('bridge_glide',[C.c_size_t,C.c_size_t],None),('bridge_event',[C.c_size_t,C.c_size_t,C.c_uint,C.c_float],C.c_size_t)]:
@@ -42,8 +44,9 @@ class Host:
         for address in getattr(self,'buffers',[])+[getattr(self,'game',0),getattr(self,'image',0)]:
             size=allocation_sizes.pop(address,0)
             if size:libc.munmap(address,size)
-    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0,guard=False,jump=False):
+    def __init__(self,slot=98,encoded_fields=False,stamp=1721645006,remove=0,conflict=0,magic=False,hand_magic=1,fail_alloc=0,fail_protect=0,air=False,air_dodge=1,control_mode=0,guard=False,jump=False,test_page=1,profile_override=0):
         self.game=allocate(0x3000000);bridge.bridge_reset(self.game);bridge.bridge_range(self.game,0x3000000,0x40);bridge.bridge_modes(remove,conflict)
+        bridge.bridge_test_options(test_page,profile_override)
         w32(self.game+60,0x80);w32(self.game+0x80,0x4550);w32(self.game+0x88,stamp);put(self.game+0x233fbdc,struct.pack('<f',1.))
         self.buffers=[]
         self.actor=self.buffer(bytes(0x800));w32(self.actor+0x374,1);w64(self.game+0x2537e48,self.actor)
@@ -201,6 +204,10 @@ class Host:
         assert set(self.exports)=={'OnInit','OnFrame','DllMain'}
         bridge.bridge_init(self.exports['OnInit'])
     def frame(self):bridge.bridge_call0(self.exports['OnFrame'])
+    def native_count(self,id_):
+        w64(self.game+0x2868ba0,self.save)
+        put(self.game+0x284be0,(ROOT/'fixtures/native_ability_count.bin').read_bytes())
+        return bridge.bridge_ability_count(self.game+0x284be0,id_,0)
     def abilities(self):return C.string_at(self.save+0x44,48)
     def equip(self,on,profile=0):
         id_=116+profile;data=bytearray(self.abilities());i=next(i for i,v in enumerate(data) if v&127==id_);data[i]=id_ if on else id_|128;put(self.save+0x44,bytes(data))
@@ -298,9 +305,91 @@ class RuntimeTests(unittest.TestCase):
     def test_full_native_ability_list_is_never_evicted(self):
         h=Host();data=bytes(range(1,49));put(h.save+0x44,data);h.frame()
         self.assertEqual(h.abilities(),data);h.assert_all(self,False)
-    def test_incomplete_space_reports_full_and_preserves_each_native_byte(self):
+    def test_incomplete_space_prioritizes_main_and_preserves_each_native_byte(self):
         h=Host();data=bytes(range(1,45))+bytes(4);put(h.save+0x44,data);h.frame()
-        self.assertEqual(h.abilities(),data);self.assertIn('TERRA ABILITY SLOTS FULL',bridge.bridge_log().decode());h.assert_all(self,False)
+        self.assertEqual(h.abilities()[:44],data[:44]);self.assertEqual(h.abilities()[44:],bytes([244,245,246,0]))
+        self.assertIn('TERRA PAGED TESTS',bridge.bridge_log().decode());h.assert_all(self,False)
+    def test_legacy_ten_styles_no_longer_block_main_at_47_occupied_slots(self):
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True)
+            native=bytes(v|(128 if v%2 else 0) for v in range(1,38))
+            put(h.save+0x44,native+bytes(range(117,127))+b'\0')
+            outside=C.string_at(h.save,0x44);neighbor=bytes(range(64));put(h.save+0x74,neighbor)
+            h.frame();self.assertEqual(h.abilities()[:37],native)
+            self.assertEqual(set(b&127 for b in h.abilities()[37:-1]),set(range(116,126)))
+            self.assertTrue(all(b&128 for b in h.abilities()[37:-1]));self.assertEqual(h.abilities()[-1],0)
+            self.assertEqual(C.string_at(h.save,0x44),outside);self.assertEqual(C.string_at(h.save+0x74,64),neighbor)
+            self.assertIn('TERRA ABILITY INPUT occupied=47\r\n',bridge.bridge_log().decode())
+            self.assertIn('TERRA TEST PAGES=2\r\n',bridge.bridge_log().decode())
+            h.assert_all(self,False);h.equip(True);h.frame();h.assert_all(self,True)
+            self.assertEqual(h.native_count(116),1);self.assertEqual(h.native_count(126),0)
+    def test_second_page_reaches_test_ten_and_keeps_main_selection_through_restart(self):
+        native=bytes(range(1,38));saved=None
+        h=Host();put(h.save+0x44,native+bytes(i|128 for i in range(117,127))+b'\0');h.frame();h.equip(True);h.frame();saved=h.abilities();del h
+        for bank in [98,60]:
+            h=Host(slot=bank,encoded_fields=True,test_page=2);put(h.save+0x44,saved);h.frame()
+            self.assertEqual(h.abilities()[:37],native)
+            self.assertEqual(set(b&127 for b in h.abilities() if 116<=b&127<=126),{116,126})
+            h.assert_all(self,True);h.equip(True,10);h.frame();h.assert_all(self,11)
+            self.assertEqual(h.native_count(126),1);self.assertEqual(h.native_count(116),0)
+    def test_every_test_is_reachable_on_capacity_driven_pages(self):
+        for other_count in [0,36,37,38,39,40,41,42,43,44,45]:
+            native=bytes((i%35+1)|(128 if i%2 else 0) for i in range(other_count))
+            capacity=min(11,47-other_count);per_page=capacity-1;pages=(10+per_page-1)//per_page;seen=set()
+            for page in range(1,pages+1):
+                h=Host(test_page=page);put(h.save+0x44,native+bytes(48-other_count));h.frame()
+                self.assertEqual(h.abilities()[:other_count],native);self.assertEqual(h.abilities()[-1],0)
+                ids=[b&127 for b in h.abilities() if 116<=b&127<=126];self.assertIn(116,ids)
+                expected={116}|set(range(116+(page-1)*per_page+1,116+min(page*per_page,10)+1))
+                self.assertEqual(set(ids),expected);seen.update(v-116 for v in ids)
+            self.assertEqual(seen,set(range(11)),other_count)
+    def test_exact_fit_36_other_entries_uses_47_bytes_and_native_terminator(self):
+        h=Host(encoded_fields=True);native=bytes(range(1,37));put(h.save+0x44,native+bytes(12));put(h.save+0x74,bytes([116])*48);h.frame()
+        self.assertEqual(h.abilities()[:36],native);self.assertEqual(h.abilities()[47],0)
+        for profile in range(11):
+            h.equip(True,profile);h.frame();h.assert_all(self,profile+1);self.assertEqual(h.native_count(116+profile),1)
+        self.assertEqual(C.string_at(h.save+0x74,48),bytes([116])*48)
+    def test_only_duplicate_terra_entries_compact_native_and_foreign_copies_survive(self):
+        h=Host();original=bytes([1,1,129,66,115,116,116|128,126|128,65,65,66])+bytes(37);put(h.save+0x44,original);h.frame()
+        foreign=lambda data:bytes(b for b in data if b and not 116<=b&127<=126)
+        self.assertEqual(foreign(h.abilities()),foreign(original))
+        for id_ in range(116,127):self.assertEqual(sum(b&127==id_ for b in h.abilities()),1)
+        self.assertEqual([b for b in h.abilities() if 116<=b<=126],[116]);h.assert_all(self,True)
+    def test_one_available_slot_adds_main_and_zero_available_preserves_entire_list(self):
+        for n in [46,47,48]:
+            h=Host();native=bytes((i%35+1)|(128 if i%2 else 0) for i in range(n));put(h.save+0x44,native+bytes(48-n));h.frame()
+            self.assertEqual(h.abilities()[:n],native)
+            if n==46:
+                self.assertEqual(h.abilities()[46:],bytes([244,0]));h.equip(True);h.frame();h.assert_all(self,True)
+            else:self.assertEqual(h.abilities(),native+bytes(48-n));h.assert_all(self,False)
+    def test_full_list_can_test_main_and_last_profile_using_explicit_config_override(self):
+        native=bytes((i%35+1)|128 for i in range(47))+b'\0'
+        for bank in [98,60]:
+            for profile in [1,11]:
+                h=Host(slot=bank,profile_override=profile);put(h.save+0x44,native);h.frame()
+                self.assertEqual(h.abilities(),native);h.assert_all(self,profile)
+    def test_page_setup_waits_for_idle_without_touching_abilities_or_motions(self):
+        h=Host();data=bytes(range(1,38))+bytes(range(117,127))+b'\0';put(h.save+0x44,data);w32(h.actor+0x164,2)
+        h.frame();self.assertEqual(h.abilities(),data);h.assert_all(self,False)
+        w32(h.actor+0x164,0);h.frame();self.assertNotEqual(h.abilities(),data);self.assertIn(244,h.abilities());h.assert_all(self,False)
+    def test_native_reward_can_reduce_test_page_without_losing_a_native_copy(self):
+        h=Host();native=bytes(range(1,37));put(h.save+0x44,native+bytes(12));h.frame();h.equip(True);h.frame()
+        filled=bytearray(h.abilities());filled[-1]=37|128;put(h.save+0x44,bytes(filled));h.frame()
+        self.assertEqual(bytes(b for b in h.abilities() if b and not 116<=b&127<=126),native+bytes([37|128]))
+        self.assertEqual(h.abilities()[-1],0);self.assertNotIn(126|128,h.abilities());h.assert_all(self,True)
+    def test_bad_page_and_override_values_are_bounded(self):
+        native=bytes(range(1,38));data=native+bytes(11)
+        for page in [0,-1,100]:
+            h=Host(test_page=page,profile_override=12);put(h.save+0x44,data);h.frame()
+            self.assertIn(245,h.abilities());self.assertNotIn(254,h.abilities());h.assert_all(self,False)
+        h=Host(test_page=10);put(h.save+0x44,data);h.frame();self.assertIn(254,h.abilities());self.assertNotIn(245,h.abilities())
+    def test_paged_uninstall_removes_all_terra_ids_and_ignores_override(self):
+        h=Host(test_page=2,profile_override=11,remove=1);data=bytes([1,129,115,116,126|128])+bytes(43);put(h.save+0x44,data);h.frame()
+        self.assertEqual(h.abilities(),bytes([1,129,115])+bytes(45));h.assert_all(self,False)
+    def test_paged_layout_and_diagnostics_do_not_repeat_every_frame(self):
+        h=Host();put(h.save+0x44,bytes(range(1,38))+bytes(11));h.frame();original=h.abilities();logged=bridge.bridge_log()
+        for _ in range(30):h.frame()
+        self.assertEqual(h.abilities(),original);self.assertEqual(bridge.bridge_log(),logged)
     def test_unstable_ability_tail_causes_no_save_or_body_write(self):
         h=Host();data=bytes([1,0,2])+bytes(45);put(h.save+0x44,data);h.frame();self.assertEqual(h.abilities(),data);h.assert_all(self,False)
     def test_all_profile_switches_wait_for_idle_during_combat_cast_jump_and_walk(self):

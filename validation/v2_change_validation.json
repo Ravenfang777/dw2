@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "unchanged_source_inputs": 436,
+  "motion_header_sha256": "db9af2b61b89e6aa042944c564265895483b5acddb8e0d3c0d5abf8d78060f6c",
+  "fitted_payloads_changed": 0,
+  "prior_geometry_tests": 13,
+  "clean_export_dll_byte_identical": true,
+  "v2_runtime_tests": 39,
+  "native_ability_count_fixture": {
+    "executable_timestamp": 1721645006,
+    "rva": "0x284be0",
+    "bytes": 75,
+    "sha256": "378b1d94fbf467bb9d925c16f3691788c97e4e3cd27383742cf5ac21764461a4",
+    "observation": "Native count walks to a zero terminator without a 48-byte bound. The mod therefore retains a zero tail byte."
+  }
+}

@@ -1,8 +1,8 @@
-title: KH1FM Terra Animation Test v1
+title: KH1FM Terra Animation Test v2
 game: kh1
 originalAuthor: Raven Fang concept; motion test by OpenAI Codex
 description: >-
-  Standalone Terra main plus10 zero-AP animation test abilities.
+  Standalone Terra main plus10 zero-AP animation tests; adaptive ability pages.
   Main ground300/301/303 and air305/306/307, movement, Guard, slide,
   item and casting poses. Native controllers/events retained. Steam Global/Panacea.
 assets:

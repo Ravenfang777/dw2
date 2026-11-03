@@ -1,0 +1,7 @@
+{
+  "executable_timestamp": 1721645006,
+  "rva": "0x284be0",
+  "bytes": 75,
+  "sha256": "378b1d94fbf467bb9d925c16f3691788c97e4e3cd27383742cf5ac21764461a4",
+  "observation": "Native count walks to a zero terminator without a 48-byte bound. The mod therefore retains a zero tail byte."
+}

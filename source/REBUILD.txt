@@ -1,4 +1,4 @@
-TERRA v1 REBUILD
+TERRA v2 REBUILD
 Linux build: run from this source directory with Python3.12, GCC and GNU binutils:
   python generate_data.py
   python build.py
@@ -14,3 +14,7 @@ all107 fits from the original Terra banks. Caches are excluded from delivery.
 Target Sora MDLS and normal/Olympus MSETs are included as rebuild inputs.
 No original game executable is included. Original game assets retain their
 owners' rights; they are not freely licensed project code.
+
+v2 changes ability-list setup and INI selection only. test_runtime.py includes
+the actual native zero-terminated ability-count routine as a small fixture.
+No retarget or motion rebuild is required for an ability-only change.

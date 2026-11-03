@@ -38,13 +38,13 @@ extern u32 (ABI *kGetPrivateProfileIntW)(const w16*,const w16*,int,const w16*) H
 #define SAVE_RVA 0x2de9360u
 
 static uptr base,log_handle;
-static int checked,ready,remove_mode,learned_reported,conflict_reported,full_reported;
+static int checked,ready,remove_mode,conflict_reported,full_reported;
+static u32 requested_page=1,profile_override,reported_layout=0xffffffffu;
 static u8 table[TABLE_BYTES] __attribute__((aligned(16)));
 static u8 encoded_name[TERRA_ABILITIES][16],encoded_help[TERRA_ABILITIES][128];
 static u32 name_handle[TERRA_ABILITIES],help_handle[TERRA_ABILITIES];
 static uptr choice_save;
 static u32 previous_equipped_mask;
-static int slots_reported;
 static const char *profile_names[TERRA_ABILITIES]={"terra","terra 1","terra 2","terra 3","terra 4","terra 5","terra 6","terra 7","terra 8","terra 9","terra 10"};
 static const char *profile_help[TERRA_ABILITIES]={"Terra Ground 300 301 303 Air 305 306 307","Terra Ground 045 217 218 Air 332 357 361","Terra Ground 362 363 350 Air 370 371 372","Terra Ground 373 315 316 Air 317 318 391","Terra Ground 390 427 392 Air 393 428 399","Terra Ground 411 352 353 Air 351 304 308","Terra Ground 500 501 503 Air 510 511 512","Terra Ground 513 514 507 Air 508 517 518","Terra Ground 519 550 650 Air 557 405 616","Terra Ground 618 619 613 Air 602 603 604","Terra Ground 605 606 617 Air 614 615 620"};
 static int table_reported;
@@ -85,6 +85,12 @@ static void log_number(const char*label,uptr value){
     out[n++]='0';out[n++]='x';int begun=0;
     for(int shift=60;shift>=0;shift-=4){unsigned v=(unsigned)((value>>shift)&15);if(v||begun||shift==0){out[n++]="0123456789ABCDEF"[v];begun=1;}}
     out[n]=0;log_text(out);
+}
+static void log_count(const char*label,u32 value){
+    char out[160],digits[10];usize n=0;unsigned count=0;
+    while(label[n]&&n<120){out[n]=label[n];n++;}
+    do{digits[count++]=(char)('0'+value%10u);value/=10u;}while(value);
+    while(count)out[n++]=digits[--count];out[n]=0;log_text(out);
 }
 static void path_for(w16*out,const char*name){
     u32 n=kGetModuleFileNameW(0,out,1000);if(!n||n>=1000){out[0]=0;return;}
@@ -172,32 +178,77 @@ static int ensure_table(void){
     if(!table_reported){log_text("TERRA ABILITY TABLE READY: terra plus terra 1..10 ids116..126 AP=0; original65 native records copied unchanged");table_reported=1;}
     return 1;
 }
-static int choice_and_learn(uptr save){
+/* Native readers scan to a zero terminator, so keep one of the 48 bytes zero.
+ * All eleven profiles remain available. If the save cannot hold eleven real
+ * entries, retain the main entry and page only our numbered tests via the INI.
+ * Never remove, deduplicate or toggle a non-Terra byte (native copies stack).
+ */
+static int choice_and_learn(uptr save,uptr actor){
     u8 before[ABILITY_SLOTS],list[ABILITY_SLOTS];copy(before,(void*)(save+0x44),sizeof(before));copy(list,before,sizeof(list));
     unsigned end=0;while(end<ABILITY_SLOTS&&list[end])end++;
     for(unsigned i=end;i<ABILITY_SLOTS;i++)if(list[i])return -1;
-    u32 present=0,enabled=0;
-    for(unsigned i=0;i<end;i++)if(own_id(list[i])){u32 bit=1u<<((list[i]&0x7fu)-TERRA_ID);present|=bit;if(!(list[i]&0x80u))enabled|=bit;}
-    unsigned missing=0;for(unsigned i=0;i<TERRA_ABILITIES;i++)if(!(present&(1u<<i)))missing++;
-    if(missing&&end+missing<ABILITY_SLOTS){
-        if(!(present&1u)){
-            for(unsigned i=0;i<end;i++)if(own_id(list[i]))list[i]|=0x80u;
-            enabled=0;
-            log_text("TERRA FIRST SETUP: reused custom test entries116..126 start UNEQUIPPED; native abilities/AP untouched");
+    u32 present=0,enabled=0;unsigned others=0,natives=0;
+    for(unsigned i=0;i<end;i++){
+        if(own_id(list[i])){u32 bit=1u<<((list[i]&0x7fu)-TERRA_ID);present|=bit;if(!(list[i]&0x80u))enabled|=bit;}
+        else {others++;if((list[i]&0x7fu)>=1u&&(list[i]&0x7fu)<=65u)natives++;}
+    }
+    unsigned capacity=others<ABILITY_SLOTS-1u?ABILITY_SLOTS-1u-others:0u;
+    if(capacity>TERRA_ABILITIES)capacity=TERRA_ABILITIES;
+    unsigned per_page=capacity>1u?capacity-1u:0u;
+    unsigned pages=per_page?(10u+per_page-1u)/per_page:1u;
+    unsigned page=requested_page>pages?pages:requested_page;
+    unsigned first=per_page?(page-1u)*per_page+1u:0u;
+    unsigned last=per_page?first+per_page-1u:0u;if(last>10u)last=10u;
+    u32 wanted=capacity?1u:0u;
+    if(per_page)for(unsigned i=first;i<=last;i++)wanted|=1u<<i;
+    int first_setup=!(present&1u);
+    if(first_setup)enabled=0;
+    /* Stable compaction of only our IDs; native/foreign bytes keep their
+       order, multiplicity and equipped state, including legitimate copies. */
+    unsigned count=0;u32 retained=0;
+    for(unsigned i=0;i<end;i++){
+        u8 value=before[i];
+        if(own_id(value)){
+            u32 index=(value&0x7fu)-TERRA_ID,bit=1u<<index;
+            if(!(wanted&bit)||(retained&bit))continue;
+            retained|=bit;value=(u8)((TERRA_ID+index)|((enabled&bit)?0u:0x80u));
         }
-        for(unsigned i=0;i<TERRA_ABILITIES;i++)if(!(present&(1u<<i)))list[end++]=(u8)(TERRA_OFF+i);
-        if(!learned_reported){log_text("TERRA ABILITIES LEARNED: missing terra entries added UNEQUIPPED; native abilities and AP untouched");learned_reported=1;}
-        slots_reported=0;
-    }else if(missing&&!slots_reported){log_text("TERRA ABILITY SLOTS FULL: eleven entries need free tail slots; native entries retained");slots_reported=1;}
-    if(choice_save!=save){choice_save=save;previous_equipped_mask=0;}
+        list[count++]=value;
+    }
+    for(unsigned i=0;i<TERRA_ABILITIES;i++)if((wanted&~retained)&(1u<<i))list[count++]=(u8)(TERRA_OFF+i);
+    for(unsigned i=count;i<ABILITY_SLOTS;i++)list[i]=0;
+    /* Page installation happens at idle, before a menu can select the new
+       records. Native body switching has its separate full-record admission. */
+    if(!equal(before,list,sizeof(list))&&(r32(actor+0x164)&0xfffu)!=0)return -1;
+    enabled&=wanted;
+    int new_save=choice_save!=save;
+    if(new_save){choice_save=save;previous_equipped_mask=0;}
     u32 newly_enabled=enabled&~previous_equipped_mask;int chosen=-1;
     for(unsigned i=0;i<TERRA_ABILITIES;i++)if((newly_enabled?newly_enabled:enabled)&(1u<<i))chosen=(int)i;
     if(chosen>=0){
-        for(unsigned i=0;i<end;i++)if(own_id(list[i])&&(list[i]&0x7fu)!=TERRA_ID+(u32)chosen)list[i]|=0x80u;
+        for(unsigned i=0;i<count;i++)if(own_id(list[i])&&(list[i]&0x7fu)!=TERRA_ID+(u32)chosen)list[i]|=0x80u;
         if(enabled!=(1u<<chosen))log_text("TERRA EXCLUSIVE SELECTION: other Terra entries unequipped");
     }
     if(!equal(before,(void*)(save+0x44),sizeof(before)))return -1;
-    if(!equal(before,list,sizeof(before)))copy((void*)(save+0x44),list,sizeof(list));
+    if(!equal(before,list,sizeof(before))){
+        copy((void*)(save+0x44),list,sizeof(list));
+        if(first_setup&&capacity)log_text("TERRA FIRST SETUP: reused custom test entries116..126 start UNEQUIPPED; native abilities/AP untouched");
+        log_text("TERRA ABILITY PAGE INSTALLED: main prioritized; visible numbered tests added UNEQUIPPED; only custom ids116..126 compacted");
+    }
+    u32 layout=others|(capacity<<6)|(page<<10)|(pages<<14)|(first<<18)|(last<<22);
+    if(new_save||layout!=reported_layout){
+        reported_layout=layout;
+        log_count("TERRA ABILITY INPUT occupied=",end);
+        log_number("TERRA ABILITY INPUT existing Terra mask=",present);
+        log_count("TERRA ABILITY INPUT native entries=",natives);
+        log_count("TERRA ABILITY INPUT other mod entries=",others-natives);
+        log_count("TERRA ABILITY OUTPUT Terra entries=",count-others);
+        log_count("TERRA TEST PAGE=",page);log_count("TERRA TEST PAGES=",pages);
+        if(per_page){log_count("TERRA FIRST VISIBLE TEST=",first);log_count("TERRA LAST VISIBLE TEST=",last);}
+        if(pages>1u)log_text("TERRA PAGED TESTS: set test_page=1..page count in kh1-terra.ini beside the game EXE, then restart; main is available on every page");
+        if(!capacity)log_text("TERRA ABILITY SLOTS FULL: native/foreign entries retained; profile_override=1 enables main without a new ability, 2..11 select tests");
+        else if(!per_page)log_text("TERRA MAIN ONLY: main ability available; no numbered-test slots free; profile_override=2..11 selects any test without another entry");
+    }
     previous_equipped_mask=chosen<0?0:1u<<chosen;
     return chosen+1;
 }
@@ -335,10 +386,14 @@ EXPORT void ABI OnInit(const w16 *mod_path){
     path_for(log_path,"kh1-terra.log");path_for(ini_path,"kh1-terra.ini");
     log_handle=kCreateFileW(log_path,0x40000000u,3,NULL,2,0x80,0);
     static const w16 section[]={'t','e','r','r','a',0},key[]={'r','e','m','o','v','e','_','t','e','r','r','a',0};
+    static const w16 page_key[]={'t','e','s','t','_','p','a','g','e',0},override_key[]={'p','r','o','f','i','l','e','_','o','v','e','r','r','i','d','e',0};
     remove_mode=(int)kGetPrivateProfileIntW(section,key,0,ini_path);
-    log_text("KH1FM TERRA ANIMATION TEST v1 loaded: standalone main terra plus10 numbered test abilities; main ground300/301/303 air305/306/307; Terra51-bone source mapped by original bone names; skinned skull150 and native hair/limb lengths; no Aqua poses");
+    requested_page=kGetPrivateProfileIntW(section,page_key,1,ini_path);if(requested_page<1u||requested_page>10u)requested_page=1u;
+    profile_override=kGetPrivateProfileIntW(section,override_key,0,ini_path);if(profile_override>TERRA_ABILITIES)profile_override=0u;
+    log_text("KH1FM TERRA ANIMATION TEST v2 loaded: main-first adaptive ability pages; standalone main terra plus10 numbered tests; main ground300/301/303 air305/306/307; Terra51-bone source mapped by original bone names; skinned skull150 and native hair/limb lengths; no Aqua poses");
     log_text("TERRA NATIVE LOGIC: original Sora/Olympus MSETs on disk; body tables only; native combo/contact/Guard/magic/item/input/travel unchanged; original Glide, Superglide and damage reactions");
     if(remove_mode)log_text("TERRA UNINSTALL MODE: only custom ids116..126 removed from loaded ability list");
+    else if(profile_override){log_number("TERRA CONFIG PROFILE OVERRIDE=",profile_override);log_text("TERRA CONFIG: override replaces the ability gate for this run; set profile_override=0 to return to ability selection");}
 }
 EXPORT void ABI OnFrame(void){
     if(!checked){
@@ -364,7 +419,7 @@ EXPORT void ABI OnFrame(void){
     uptr save=save_block();if(!save){cache_choice=-1;return;}
     int choice=0;
     if(remove_mode){remove_ability(save);choice=0;}
-    else {if(!ensure_table())return;choice=choice_and_learn(save);if(choice<0){if(!full_reported){log_text("TERRA WAITING: ability list is not stable; no native entry overwritten");full_reported=1;}return;}full_reported=0;}
+    else {if(!ensure_table())return;choice=choice_and_learn(save,actor);if(choice<0){if(!full_reported){log_text("TERRA WAITING: stand idle for stable ability setup; existing entries retained");full_reported=1;}return;}full_reported=0;if(profile_override)choice=(int)profile_override;}
     if(choice!=last_choice){log_text(choice?profile_names[choice-1]:"TERRA UNEQUIPPED");last_choice=choice;}
     motion_gate(actor,choice);
     u32 action=r32(actor+0x164)&0xfffu;
